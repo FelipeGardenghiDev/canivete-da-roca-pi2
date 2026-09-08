@@ -1,0 +1,36 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Python / Virtual Environments
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+ENV/
+
+# Environment Variables
+*.env
+*.env.*
+!.env.example
+
+# Production & Build outputs
+build/
+dist/
+.next/
+out/
+
+# Database files
+*.sqlite
+*.sqlite3
+*.db
+*.log
+
+# IDEs & OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
