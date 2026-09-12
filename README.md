@@ -2,6 +2,8 @@
 
 Repositório oficial do **Projeto Integrador 2** do grupo para o projeto **Canivete da Roça**.
 
+> 📖 **Consulte as [Diretrizes do Projeto](./DIRETRIZES_DO_PROJETO.md)** para entender a arquitetura técnica (HTML/CSS/JS + Node.js + Supabase), hospedagem, integrações (Pagar.me e Melhor Envio) e divisão de tarefas do grupo.
+
 ## 🏗️ Estrutura Monorepo
 
 Este repositório está organizado em formato monorepo contendo os módulos principais:
