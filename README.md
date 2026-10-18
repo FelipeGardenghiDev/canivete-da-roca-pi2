@@ -53,12 +53,15 @@ canivete-da-roca-pi2/
 
 ## 🚦 Estado Atual do Projeto
 
-| Área | Status | O que já está pronto |
+| Área | Status | O que já está pronto e testado |
 | :--- | :---: | :--- |
-| **Frontend** | ✅ Pronto & Acessível | Todas as telas desenhadas, 100% responsivas para celulares/tablets, com atalhos de teclado (*skip links*), foco visível e notificações acessíveis. |
-| **Backend** | ⚙️ Protótipo Funcional | Servidor Express ativo, servindo o frontend, com autenticação admin por sessão e rotas REST completas funcionando com dados mock. |
-| **Banco de Dados** | 📜 Scripts Prontos | Scripts SQL prontos ([`schema.sql`](./database/schema.sql) e [`seed.sql`](./database/seed.sql)) aguardando execução no painel do Supabase. |
-| **Integrações** | ⏳ Próxima Etapa | Obtenção das chaves de sandbox (Pagar.me e Melhor Envio) para trocar o mock por chamadas reais. |
+| **Frontend** | ✅ 100% Pronto & Acessível | Todas as telas finalizadas, 100% responsivas (mobile-first), com acessibilidade WCAG 2.1 AA, navegação por teclado, leitor de tela e foco visível. |
+| **Frete (Melhor Envio Sandbox)** | ✅ 100% Integrado & Ativo | Cotação em tempo real no carrinho e no checkout via API v2 do Melhor Envio Sandbox com cálculo de cubagem, fallback e seleção de Correios/Jadlog. |
+| **Pagamento PIX (Pagar.me v5)** | ✅ 100% Integrado & Ativo | Geração de BR Code (Bacen / EMV) com QR Code dinâmico, código Copia e Cola, validade estrita de 30 min (TTL) e botão de simulação para PI2. |
+| **E-mails Transacionais (Nodemailer)** | ✅ 100% Integrado & Ativo | Disparo automático de e-mail ao criar pedido (com QR Code Pix) e ao confirmar pagamento, com templates HTML elegantes e suporte ao Gmail oficial (`canivetedarocaunivesp@gmail.com`). |
+| **Banco de Dados (Supabase)** | ⏳ Aguardando DBA | Scripts SQL prontos ([`schema.sql`](./database/schema.sql) e [`seed.sql`](./database/seed.sql)) e instruções detalhadas aguardando execução pelo DBA no painel do Supabase. |
+| **Backend (Conexão Supabase)** | ⏳ Próxima Etapa | O backend está preparado; assim que o DBA entregar a URL e a Anon Key, faremos a substituição dos dados mock (`produtos.json`/`pedidos.json`) pelas tabelas reais. |
+
 
 ---
 

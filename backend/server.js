@@ -3,8 +3,11 @@ const cors = require("cors");
 const fs = require("fs");
 const path = require("path");
 const crypto = require("crypto");
-require("dotenv").config();
+require("dotenv").config({ path: path.join(__dirname, ".env") });
 const session = require("express-session");
+const { criarCobrancaPixPagarme } = require("./pix");
+const { calcularFrete } = require("./frete");
+const { enviarEmailPedidoCriado, enviarEmailPagamentoAprovado } = require("./email");
 
 const app = express();
 const PORTA = process.env.PORT || 3000;
@@ -436,13 +439,44 @@ app.post("/api/produtos", exigirAdmin, (req, res) => {
 });
 
 // ======================================================
+// CÁLCULO DE FRETE (Melhor Envio Sandbox)
+// ======================================================
+
+app.post("/api/frete/calcular", async (req, res) => {
+    try {
+        const corpo = req.body || {};
+        const { cep, itens } = corpo;
+        const cepLimpo = String(cep || "").replace(/\D/g, "");
+
+        if (!cepLimpo || cepLimpo.length !== 8) {
+            return res.status(400).json({
+                erro: "Informe um CEP válido com 8 números para cotação."
+            });
+        }
+
+        const opcoes = await calcularFrete(cepLimpo, itens);
+
+        return res.json({
+            cep: cepLimpo,
+            opcoes
+        });
+    } catch (erro) {
+        console.error("Erro ao calcular frete:", erro);
+
+        return res.status(500).json({
+            erro: erro.message || "Não foi possível calcular o frete."
+        });
+    }
+});
+
+// ======================================================
 // REGISTRAR PEDIDO
 // ======================================================
 
-app.post("/api/pedidos", (req, res) => {
+app.post("/api/pedidos", async (req, res) => {
     try {
         const corpo = req.body || {};
-        const { cliente, itens } = corpo;
+        const { cliente, itens, frete: freteInformado } = corpo;
 
         if (
             !cliente ||
@@ -593,6 +627,29 @@ app.post("/api/pedidos", (req, res) => {
             });
         }
 
+        // Processamento do frete
+        let subtotalProdutosCentavos = totalCentavos;
+        let freteCentavos = 0;
+        let freteObj = null;
+
+        if (freteInformado && typeof freteInformado === "object" && !Array.isArray(freteInformado)) {
+            const valorFreteNum = Number(freteInformado.valor || 0);
+            if (Number.isFinite(valorFreteNum) && valorFreteNum >= 0) {
+                freteCentavos = Math.round(valorFreteNum * 100);
+                freteObj = {
+                    id: freteInformado.id || null,
+                    nome: String(freteInformado.nome || "Frete Padrão").slice(0, 80),
+                    transportadora: String(freteInformado.transportadora || "").slice(0, 60),
+                    servico: String(freteInformado.servico || "").slice(0, 60),
+                    valor: freteCentavos / 100,
+                    prazo: Number(freteInformado.prazo || 0),
+                    foto: freteInformado.foto || null
+                };
+            }
+        }
+
+        const totalFinalCentavos = subtotalProdutosCentavos + freteCentavos;
+
         const pedidos = carregarPedidos();
         const numero = gerarNumeroPedido();
 
@@ -609,23 +666,33 @@ app.post("/api/pedidos", (req, res) => {
                 estado
             },
             itens: itensPedido,
-            total: totalCentavos / 100,
+            subtotal: subtotalProdutosCentavos / 100,
+            frete: freteObj,
+            total: totalFinalCentavos / 100,
             criadoEm: new Date().toISOString(),
             status: "Aguardando pagamento",
-            pagamento: {
-                metodo: null,
-                status: "Não iniciado"
-            }
+            pagamento: await criarCobrancaPixPagarme({
+                pedidoNumero: numero,
+                valor: totalFinalCentavos / 100,
+                clienteNome: nome
+            })
         };
 
         pedidos.push(pedido);
         salvarPedidos(pedidos);
 
+        // Disparo assíncrono de confirmação de pedido por e-mail com Pix
+        enviarEmailPedidoCriado(pedido).catch(erroEmail => {
+            console.error("[EMAIL] Erro no envio assíncrono do pedido criado:", erroEmail.message);
+        });
+
         return res.status(201).json({
-            mensagem: "Pedido registrado. O pagamento ainda não foi realizado.",
+            mensagem: "Pedido registrado com sucesso. Aguardando pagamento via PIX.",
             pedido: {
                 numero: pedido.numero,
                 itens: pedido.itens,
+                subtotal: pedido.subtotal,
+                frete: pedido.frete,
                 total: pedido.total,
                 status: pedido.status,
                 pagamento: pedido.pagamento
@@ -716,7 +783,7 @@ app.patch("/api/admin/pedidos/:numero/status", exigirAdmin, (req, res) => {
 // CONSULTAR STATUS DO PAGAMENTO
 // ======================================================
 
-app.get("/api/pedidos/:numero/pagamento", (req, res) => {
+app.get("/api/pedidos/:numero/pagamento", async (req, res) => {
     try {
         const numero = String(req.params.numero || "").trim();
         const pedidos = carregarPedidos();
@@ -728,15 +795,24 @@ app.get("/api/pedidos/:numero/pagamento", (req, res) => {
             });
         }
 
+        // Se o pedido ainda não tiver o QR Code do Pix, gera na hora
+        if (!pedido.pagamento || !pedido.pagamento.qr_code) {
+            pedido.pagamento = await criarCobrancaPixPagarme({
+                pedidoNumero: pedido.numero,
+                valor: pedido.total,
+                clienteNome: pedido.cliente?.nome
+            });
+            salvarPedidos(pedidos);
+        }
+
         return res.json({
             numero: pedido.numero,
             itens: pedido.itens || [],
+            subtotal: pedido.subtotal ?? pedido.total,
+            frete: pedido.frete || null,
             total: pedido.total,
             status: pedido.status,
-            pagamento: pedido.pagamento || {
-                metodo: null,
-                status: "Não iniciado"
-            }
+            pagamento: pedido.pagamento
         });
     } catch (erro) {
         console.error("Erro ao consultar pagamento:", erro);
@@ -748,8 +824,7 @@ app.get("/api/pedidos/:numero/pagamento", (req, res) => {
 });
 
 // ======================================================
-// SIMULAR INÍCIO DO PAGAMENTO
-// Não cria cobrança nem confirma transação bancária.
+// SIMULAR APROVAÇÃO DO PAGAMENTO PIX (Pagar.me v5)
 // ======================================================
 
 app.post("/api/pedidos/:numero/pagamento/simular", (req, res) => {
@@ -770,103 +845,38 @@ app.post("/api/pedidos/:numero/pagamento/simular", (req, res) => {
             });
         }
 
-        if (
-            pedido.pagamento?.status === "Aprovado" ||
-            pedido.status === "Pagamento aprovado"
-        ) {
-            return res.json({
-                mensagem: "O sistema já registra este pagamento como aprovado.",
-                pedido: {
-                    numero: pedido.numero,
-                    itens: pedido.itens || [],
-                    total: pedido.total,
-                    status: pedido.status,
-                    pagamento: pedido.pagamento
-                }
-            });
-        }
-
         pedido.pagamento = {
-            metodo: "PIX_DEMONSTRATIVO",
-            status: "Pendente",
-            demonstrativo: true
+            ...(pedido.pagamento || {}),
+            status: "Aprovado",
+            confirmadoEm: new Date().toISOString()
         };
 
-        pedido.status = "Aguardando pagamento";
+        pedido.status = "Pagamento aprovado";
 
         salvarPedidos(pedidos);
 
+        // Disparo assíncrono de e-mail de pagamento aprovado
+        enviarEmailPagamentoAprovado(pedido).catch(erroEmail => {
+            console.error("[EMAIL] Erro no envio assíncrono do pagamento aprovado:", erroEmail.message);
+        });
+
         return res.json({
-            mensagem: "Simulação iniciada. Nenhum pagamento real foi realizado.",
+            mensagem: "Pagamento aprovado com sucesso via simulação PI2.",
             pedido: {
                 numero: pedido.numero,
                 itens: pedido.itens || [],
+                subtotal: pedido.subtotal ?? pedido.total,
+                frete: pedido.frete || null,
                 total: pedido.total,
                 status: pedido.status,
                 pagamento: pedido.pagamento
             }
         });
     } catch (erro) {
-        console.error("Erro ao iniciar simulação:", erro);
+        console.error("Erro ao confirmar pagamento:", erro);
 
         return res.status(500).json({
-            erro: "Não foi possível iniciar a simulação do pagamento."
-        });
-    }
-});
-
-// ======================================================
-// INICIAR FLUXO DE PAGAMENTO
-// ======================================================
-
-// Esta rota registra a intenção de pagar por PIX.
-// Não cria uma cobrança real nem aprova pagamento.
-app.post("/api/pedidos/:numero/pagamento/simular", (req, res) => {
-    try {
-        const numero = String(req.params.numero || "").trim();
-        const pedidos = carregarPedidos();
-        const pedido = encontrarPedido(pedidos, numero);
-
-        if (!pedido) {
-            return res.status(404).json({
-                erro: "Pedido não encontrado."
-            });
-        }
-
-        if (pedido.status === "Cancelado") {
-            return res.status(400).json({
-                erro: "Este pedido foi cancelado."
-            });
-        }
-
-        if (
-            pedido.pagamento?.status === "Aprovado" ||
-            pedido.status === "Pagamento aprovado"
-        ) {
-            return res.json({
-                mensagem: "O pagamento já consta como aprovado.",
-                pedido
-            });
-        }
-
-        pedido.pagamento = {
-            metodo: "PIX",
-            status: "Pendente"
-        };
-
-        pedido.status = "Aguardando pagamento";
-
-        salvarPedidos(pedidos);
-
-        return res.json({
-            mensagem: "Pedido aguardando confirmação do pagamento.",
-            pedido
-        });
-    } catch (erro) {
-        console.error("Erro ao iniciar pagamento:", erro);
-
-        return res.status(500).json({
-            erro: "Não foi possível iniciar o pagamento."
+            erro: "Não foi possível confirmar o pagamento."
         });
     }
 });

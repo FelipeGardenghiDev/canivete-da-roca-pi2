@@ -213,6 +213,58 @@
             background: var(--oliva-escuro);
         }
 
+        .pix-timer {
+            margin: 12px auto;
+            padding: 8px 14px;
+            background: #fff8e6;
+            border: 1px solid #e6c875;
+            border-radius: 6px;
+            font-size: 13px;
+            color: #8a6508;
+            font-weight: 500;
+            text-align: center;
+            max-width: 320px;
+        }
+
+        .pix-timer strong {
+            font-size: 15px;
+            color: #b33900;
+        }
+
+        .pix-copia-cola {
+            margin: 14px 0 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .pix-copia-cola input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--borda);
+            border-radius: 5px;
+            background: #fdfcf9;
+            color: var(--texto);
+            font-family: monospace;
+            font-size: 12px;
+        }
+
+        .btn-copiar {
+            padding: 11px 16px;
+            background: var(--aco);
+            color: #fff;
+            border: 0;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+
+        .btn-copiar:hover {
+            background: var(--carvao);
+        }
+
         .pix-botao:disabled {
             opacity: .6;
             cursor: not-allowed;
@@ -334,20 +386,39 @@
                 PAGAMENTO VIA PIX
             </span>
 
-            <h3 id="titulo-pix">Pagamento via PIX</h3>
+            <h3 id="titulo-pix">Pagamento via PIX (Padrão Pagar.me v5)</h3>
 
-            <p>
-                Escaneie o QR Code para acessar a página do pedido.
-                Consulte abaixo o valor e o estado atual do pagamento.
+            <p id="instrucoes-pix">
+                Abra o aplicativo do seu banco, escolha a opção <strong>PIX</strong> e aponte a câmera para o QR Code abaixo ou use o código Copia e Cola.
             </p>
+
+            <div id="bloco-cronometro" class="pix-timer" role="timer" aria-live="polite">
+                ⏱️ Pague em até: <strong id="contador-tempo">30:00</strong>
+            </div>
 
             <div class="pix-qr">
                 <img
                     id="qr-code"
-                    alt="QR Code para acessar a página do pedido"
+                    alt="QR Code dinâmico oficial para pagamento via PIX"
                     width="220"
                     height="220"
                 >
+            </div>
+
+            <div class="pix-copia-cola">
+                <label for="pix-codigo" style="font-size: 13px; font-weight: bold; text-align: left;">
+                    Código PIX Copia e Cola:
+                </label>
+                <input
+                    id="pix-codigo"
+                    type="text"
+                    readonly
+                    value="Carregando código PIX..."
+                    aria-label="Código PIX Copia e Cola"
+                >
+                <button id="btn-copiar-pix" type="button" class="btn-copiar">
+                    📋 Copiar Código PIX
+                </button>
             </div>
 
             <p id="valor-pix">
@@ -359,7 +430,7 @@
                 class="pix-botao"
                 type="button"
             >
-                Confirmar pagamento
+                Confirmar pagamento (Simulação)
             </button>
 
             <p
@@ -367,14 +438,23 @@
                 role="status"
                 aria-live="polite"
             ></p>
-
         </section>
+
+        <div id="aviso-email-cliente" style="margin: 18px 0; padding: 12px 16px; background: #f0f7f0; border: 1px solid #c3e6cb; border-radius: 6px; font-size: 13px; color: #1e7e34; display: none;">
+            📧 Uma confirmação do pedido e as instruções de pagamento foram enviadas por e-mail para <strong id="email-confirmado"></strong>.
+        </div>
 
         <h3>Itens do pedido</h3>
 
         <ul id="itens"></ul>
 
+        <div id="detalhes-valores-pedido" style="margin-top: 15px; font-size: 14px; line-height: 1.8;">
+            <p id="subtotal-pedido" style="display: flex; justify-content: space-between; margin: 4px 0;"></p>
+            <p id="frete-pedido" style="display: flex; justify-content: space-between; margin: 4px 0; color: #555;"></p>
+        </div>
+
         <h2 id="total"></h2>
+
 
         <nav class="confirmacao-acoes" aria-label="Opções após o pedido">
             <a href="index.html">Voltar ao catálogo</a>

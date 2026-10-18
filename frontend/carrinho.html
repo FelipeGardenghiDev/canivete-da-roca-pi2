@@ -206,6 +206,76 @@
             text-align: center;
         }
 
+        /* Simulador de Frete no Carrinho */
+        .bloco-frete-carrinho {
+            margin: 18px 0;
+            padding: 14px;
+            background: #fff;
+            border: 1px solid var(--borda);
+            border-radius: 6px;
+        }
+
+        .label-frete {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 13px;
+            font-weight: bold;
+            color: var(--texto);
+        }
+
+        .linha-cep-carrinho {
+            display: flex;
+            gap: 8px;
+        }
+
+        .linha-cep-carrinho input {
+            flex: 1;
+            min-height: 38px;
+            padding: 8px 10px;
+            border: 1px solid #d6d2c8;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+
+        .linha-cep-carrinho button {
+            padding: 8px 14px;
+            border: 0;
+            border-radius: 4px;
+            background: var(--oliva);
+            color: #fff;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background .2s;
+        }
+
+        .linha-cep-carrinho button:hover {
+            background: var(--oliva-escuro);
+        }
+
+        .resultado-frete-carrinho {
+            margin-top: 10px;
+            font-size: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .item-frete-carrinho {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 8px;
+            border-radius: 4px;
+            background: #faf8f5;
+            border: 1px solid #eae5db;
+        }
+
+        .item-frete-carrinho strong {
+            color: var(--oliva-escuro);
+        }
+
+
         .rodape-carrinho {
             padding: 25px 4%;
             background: var(--carvao);
@@ -319,13 +389,23 @@
                 <strong id="total-carrinho">R$ 0,00</strong>
             </p>
 
+            <!-- Simulação de Frete no Carrinho (Melhor Envio Sandbox) -->
+            <div class="bloco-frete-carrinho">
+                <label for="cep-simulacao" class="label-frete">Calcular frete e prazo:</label>
+                <div class="linha-cep-carrinho">
+                    <input id="cep-simulacao" type="text" placeholder="00000-000" maxlength="9">
+                    <button id="btn-calcular-frete-carrinho" type="button">Calcular</button>
+                </div>
+                <div id="resultado-frete-carrinho" class="resultado-frete-carrinho"></div>
+            </div>
+
             <button id="botao-finalizar" type="button">
                 Continuar para finalizar →
             </button>
 
             <p class="aviso-seguranca">
-                O frete e as opções de pagamento serão apresentados
-                conforme as etapas de finalização da compra.
+                O frete oficial e opções de pagamento serão confirmados
+                na próxima etapa com Pix dinâmico e Melhor Envio.
             </p>
         </aside>
 

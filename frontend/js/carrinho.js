@@ -196,4 +196,101 @@ if (botaoFinalizar) {
     });
 }
 
+// ======================================================
+// SIMULAÇÃO DE FRETE (Melhor Envio Sandbox)
+// ======================================================
+
+const inputCepCarrinho = document.querySelector("#cep-simulacao");
+const btnCalcularFreteCarrinho = document.querySelector("#btn-calcular-frete-carrinho");
+const resultadoFreteCarrinho = document.querySelector("#resultado-frete-carrinho");
+
+async function simularFreteCarrinho() {
+    if (!inputCepCarrinho || !resultadoFreteCarrinho) return;
+
+    const cep = inputCepCarrinho.value.replace(/\D/g, "");
+
+    if (cep.length !== 8) {
+        resultadoFreteCarrinho.innerHTML = `
+            <span style="color: #c53030;">Informe um CEP com 8 dígitos.</span>
+        `;
+        return;
+    }
+
+    const carrinho = agruparProdutos(lerCarrinho());
+
+    if (carrinho.length === 0) {
+        resultadoFreteCarrinho.innerHTML = `
+            <span style="color: #777;">Adicione produtos para simular o frete.</span>
+        `;
+        return;
+    }
+
+    resultadoFreteCarrinho.innerHTML = `
+        <span style="color: #555;">Consultando Melhor Envio Sandbox...</span>
+    `;
+
+    try {
+        const resposta = await fetch("http://localhost:3000/api/frete/calcular", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                cep,
+                itens: carrinho.map(item => ({ id: item.id, quantidade: item.quantidade }))
+            })
+        });
+
+        const dados = await resposta.json().catch(() => ({}));
+
+        if (!resposta.ok) {
+            throw new Error(dados.erro || "Falha ao consultar frete.");
+        }
+
+        const opcoes = Array.isArray(dados.opcoes) ? dados.opcoes : [];
+
+        if (opcoes.length === 0) {
+            resultadoFreteCarrinho.innerHTML = `
+                <span style="color: #777;">Nenhuma opção disponível para este trecho.</span>
+            `;
+            return;
+        }
+
+        localStorage.setItem("cep_cotado", cep);
+
+        resultadoFreteCarrinho.innerHTML = opcoes.map(op => `
+            <div class="item-frete-carrinho">
+                <div>
+                    <strong>${op.nome}</strong><br>
+                    <small style="color: #666;">${op.prazo > 0 ? `Entrega em até ${op.prazo} dias úteis` : 'Prazo estimado'}</small>
+                </div>
+                <strong>${formatarPreco(op.valor)}</strong>
+            </div>
+        `).join("");
+
+    } catch (erro) {
+        resultadoFreteCarrinho.innerHTML = `
+            <span style="color: #c53030;">Não foi possível cotar o frete (${erro.message}).</span>
+        `;
+    }
+}
+
+if (btnCalcularFreteCarrinho) {
+    btnCalcularFreteCarrinho.addEventListener("click", simularFreteCarrinho);
+}
+
+if (inputCepCarrinho) {
+    inputCepCarrinho.addEventListener("keydown", function(e) {
+        if (e.key === "Enter") {
+            e.preventDefault();
+            simularFreteCarrinho();
+        }
+    });
+
+    const cepSalvo = localStorage.getItem("cep_cotado");
+    if (cepSalvo) {
+        inputCepCarrinho.value = cepSalvo;
+    }
+}
+
 mostrarCarrinho();
