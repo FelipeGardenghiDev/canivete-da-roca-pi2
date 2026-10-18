@@ -1,0 +1,48 @@
+[
+  {
+    "id": 1,
+    "nome": "Canivete Brabo",
+    "preco": 89.9,
+    "categoria": "canivetes",
+    "descricao": "Produto artesanal.",
+    "imagem": ""
+  },
+  {
+    "id": 2,
+    "nome": "Bainha de couro",
+    "preco": 35.99,
+    "categoria": "bainhas",
+    "descricao": "Bainha confeccionada em couro.",
+    "imagem": ""
+  },
+  {
+    "id": 3,
+    "nome": "Faca artesanal",
+    "preco": 105.98,
+    "categoria": "facas",
+    "descricao": "Faca artesanal.",
+    "imagem": ""
+  },
+  {
+    "id": 4,
+    "nome": "Cutelo",
+    "preco": 75.45,
+    "categoria": "facas",
+    "descricao": "Cutelo corta tudo.",
+    "imagem": ""
+  },
+  {
+    "id": 5,
+    "nome": "Faca",
+    "preco": 35.99,
+    "categoria": "facas",
+    "descricao": "faca boa"
+  },
+  {
+    "id": 6,
+    "nome": "faca teste",
+    "preco": 25.99,
+    "categoria": "facas",
+    "descricao": "faca boa"
+  }
+]

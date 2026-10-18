@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Conheça os produtos artesanais da Canivete da Roça">
+    <meta name="theme-color" content="#171816">
+
+    <title>Detalhes do Produto | Canivete da Roça</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        :root {
+            --carvao: #171816;
+            --aco: #363833;
+            --bege: #e9dfcd;
+            --fundo: #f7f4ed;
+            --oliva: #65734b;
+            --oliva-escuro: #485438;
+            --borda: #ded8cb;
+            --texto: #292a26;
+            --secundario: #77776e;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: var(--fundo);
+            color: var(--texto);
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        /* CABEÇALHO */
+
+        .produto-cabecalho {
+            background: var(--carvao);
+            color: var(--bege);
+            border-bottom: 3px solid var(--oliva);
+        }
+
+        .produto-cabecalho-conteudo {
+            width: min(1180px, 92%);
+            min-height: 84px;
+            margin: auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 18px;
+        }
+
+        .produto-logo {
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .produto-logo span {
+            display: block;
+            margin-top: 5px;
+            color: #b7b8a5;
+            font-family: Arial, sans-serif;
+            font-size: 10px;
+            font-weight: normal;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .produto-navegacao {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .produto-navegacao a {
+            padding: 11px 14px;
+            border: 1px solid #777a6c;
+            border-radius: 5px;
+            color: #f3eadb;
+            font-size: 13px;
+            transition: background 0.2s;
+        }
+
+        .produto-navegacao a:hover {
+            background: var(--aco);
+        }
+
+        /* BANNER */
+
+        .produto-banner {
+            padding: 32px 4%;
+            background: linear-gradient(115deg, #252722, #41443a);
+            color: var(--bege);
+        }
+
+        .produto-banner-conteudo {
+            width: min(1180px, 100%);
+            margin: auto;
+        }
+
+        .produto-banner p {
+            margin: 0 0 9px;
+            color: #c4c7b5;
+            font-size: 11px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .produto-banner h1 {
+            margin: 0;
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: clamp(28px, 4vw, 38px);
+        }
+
+        /* ÁREA PRINCIPAL */
+
+        .produto-principal {
+            width: min(1100px, 92%);
+            margin: 38px auto 65px;
+        }
+
+        .produto-caminho {
+            margin-bottom: 22px;
+            color: var(--secundario);
+            font-size: 13px;
+        }
+
+        .produto-caminho a {
+            color: var(--oliva-escuro);
+            text-decoration: underline;
+            text-underline-offset: 3px;
+        }
+
+        /* DETALHES DO PRODUTO */
+
+        .detalhes-produto {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+            align-items: stretch;
+            gap: 32px;
+            padding: 30px;
+            background: #fff;
+            border: 1px solid var(--borda);
+            border-radius: 8px;
+            box-shadow: 0 5px 18px rgba(35, 34, 28, 0.04);
+        }
+
+        /* IMAGEM */
+
+        .imagem-detalhe {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 350px;
+            padding: 20px;
+            overflow: hidden;
+            border: 1px solid var(--borda);
+            border-radius: 6px;
+            background: linear-gradient(145deg, #f1ebdf, #e4dac8);
+            color: var(--secundario);
+            text-align: center;
+        }
+
+        .imagem-detalhe img {
+            display: block;
+            width: 100%;
+            max-height: 430px;
+            object-fit: contain;
+        }
+
+        /* INFORMAÇÕES */
+
+        .informacoes-produto {
+            align-self: center;
+            min-width: 0;
+            padding: 8px 0;
+        }
+
+        .produto-etiqueta {
+            display: inline-block;
+            margin-bottom: 14px;
+            padding: 7px 10px;
+            border-radius: 3px;
+            background: #edf0e6;
+            color: var(--oliva-escuro);
+            font-size: 10px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        #nome-produto {
+            margin: 0 0 18px;
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: clamp(27px, 3vw, 36px);
+            line-height: 1.2;
+            overflow-wrap: anywhere;
+        }
+
+        .preco-detalhe {
+            margin: 0 0 20px;
+            color: var(--oliva-escuro);
+            font-size: 30px;
+            font-weight: bold;
+        }
+
+        #descricao-produto {
+            margin: 0 0 24px;
+            color: var(--secundario);
+            font-size: 15px;
+            line-height: 1.8;
+            overflow-wrap: anywhere;
+        }
+
+        .produto-disponibilidade {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            margin: 0 0 25px;
+            padding: 13px;
+            border: 1px solid var(--borda);
+            border-radius: 5px;
+            background: var(--fundo);
+            font-size: 13px;
+        }
+
+        .produto-disponibilidade span {
+            width: 8px;
+            height: 8px;
+            flex: 0 0 8px;
+            border-radius: 50%;
+            background: var(--oliva);
+        }
+
+        /* BOTÃO DO CARRINHO */
+
+        #botao-adicionar {
+            width: 100%;
+            min-height: 50px;
+            padding: 14px 18px;
+            border: 0;
+            border-radius: 5px;
+            background: var(--oliva);
+            color: #fff;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        #botao-adicionar:hover {
+            background: var(--oliva-escuro);
+        }
+
+        #botao-adicionar:disabled {
+            opacity: 0.65;
+            cursor: not-allowed;
+        }
+
+        .produto-nota {
+            margin: 15px 0 0;
+            color: var(--secundario);
+            font-size: 12px;
+            line-height: 1.7;
+            text-align: center;
+        }
+
+        /* RODAPÉ */
+
+        .produto-rodape {
+            padding: 24px 4%;
+            background: var(--carvao);
+            color: #c9c5b9;
+            font-size: 12px;
+            text-align: center;
+        }
+
+        /* TABLETS E CELULARES */
+
+        @media (max-width: 760px) {
+            .produto-cabecalho-conteudo {
+                padding: 18px 0;
+            }
+
+            .detalhes-produto {
+                grid-template-columns: 1fr;
+                gap: 22px;
+                padding: 20px;
+            }
+
+            .imagem-detalhe {
+                min-height: 250px;
+            }
+
+            .produto-principal {
+                margin-top: 25px;
+            }
+        }
+
+        @media (max-width: 440px) {
+            .produto-logo {
+                font-size: 20px;
+            }
+
+            .produto-navegacao {
+                width: 100%;
+            }
+
+            .produto-navegacao a {
+                flex: 1;
+                text-align: center;
+                font-size: 12px;
+            }
+
+            .detalhes-produto {
+                padding: 15px;
+            }
+
+            .imagem-detalhe {
+                min-height: 210px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <a href="#detalhe-produto" class="skip-link">Pular para os detalhes do produto</a>
+
+    <header class="produto-cabecalho">
+        <div class="produto-cabecalho-conteudo">
+
+            <a href="index.html" class="produto-logo">
+                Canivete da Roça
+                <span>Tradição e qualidade artesanal</span>
+            </a>
+
+            <nav class="produto-navegacao" aria-label="Navegação principal">
+                <a href="index.html">← Voltar para a loja</a>
+                
+<a href="carrinho.html" class="home-carrinho">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M3 4h2l2.2 11.1a2 2 0 0 0 2 1.6h8.6a2 2 0 0 0 1.9-1.4L22 8H6"></path>
+        <circle cx="10" cy="20" r="1.2"></circle>
+        <circle cx="18" cy="20" r="1.2"></circle>
+    </svg>
+    <span>Carrinho (<span id="quantidade-carrinho">0</span>)</span>
+</a>
+
+            </nav>
+
+        </div>
+    </header>
+
+    <section class="produto-banner">
+        <div class="produto-banner-conteudo">
+            <p>Cutelaria artesanal</p>
+            <h1>Detalhes do produto</h1>
+        </div>
+    </section>
+
+    <main class="produto-principal">
+
+        <div class="produto-caminho">
+            <a href="index.html">Início</a>
+            <span> / Detalhes do produto</span>
+        </div>
+
+        <section class="detalhes-produto" id="detalhe-produto">
+
+            <div class="imagem-detalhe" id="imagem-produto">
+                Imagem do produto
+            </div>
+
+            <div class="informacoes-produto">
+
+                <span class="produto-etiqueta">
+                    Produção artesanal
+                </span>
+
+                <h1 id="nome-produto">Carregando...</h1>
+
+                <p class="preco-detalhe" id="preco-produto">
+                    R$ 0,00
+                </p>
+
+                <p id="descricao-produto">
+                    Carregando descrição...
+                </p>
+
+                <p class="produto-disponibilidade">
+                    <span></span>
+                    Disponibilidade: consulte as informações do produto
+                </p>
+
+                <button id="botao-adicionar" type="button">
+                    Adicionar ao carrinho
+                </button>
+
+                <p class="produto-nota">
+                    Confira os detalhes do produto antes de adicioná-lo
+                    ao seu carrinho.
+                </p>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <footer class="produto-rodape">
+        Canivete da Roça · Cutelaria artesanal
+    </footer>
+
+    <script src="js/produto.js"></script>
+
+</body>
+
+</html>

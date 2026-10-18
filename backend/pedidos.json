@@ -1,0 +1,406 @@
+[
+  {
+    "numero": "PED-1792003723152",
+    "cliente": {
+      "nome": "arroz",
+      "email": "marcela627.silva@gmail.com",
+      "telefone": "1799584135",
+      "cep": "14771196",
+      "endereco": "Rua 9",
+      "complemento": "",
+      "cidade": "Colina",
+      "estado": "SP"
+    },
+    "itens": [
+      {
+        "id": 2,
+        "nome": "Bainha de couro",
+        "preco": 35.99,
+        "quantidade": 9,
+        "subtotal": 323.91
+      },
+      {
+        "id": 3,
+        "nome": "Faca artesanal",
+        "preco": 105.98,
+        "quantidade": 1,
+        "subtotal": 105.98
+      }
+    ],
+    "total": 429.89,
+    "criadoEm": "2026-10-14T18:48:43.152Z",
+    "status": "Aguardando pagamento",
+    "pagamento": {
+      "metodo": null,
+      "status": "Não iniciado"
+    }
+  },
+  {
+    "numero": "PED-1792003974934",
+    "cliente": {
+      "nome": "Sidney Nunes Ferreira",
+      "email": "sidneyferreira91@gmail.com",
+      "telefone": "179898989898",
+      "cep": "14771196",
+      "endereco": "Rua 9",
+      "complemento": "",
+      "cidade": "Colina",
+      "estado": "SP"
+    },
+    "itens": [
+      {
+        "id": 2,
+        "nome": "Bainha de couro",
+        "preco": 35.99,
+        "quantidade": 1,
+        "subtotal": 35.99
+      }
+    ],
+    "total": 35.99,
+    "criadoEm": "2026-10-14T18:52:54.934Z",
+    "status": "Aguardando pagamento",
+    "pagamento": {
+      "metodo": null,
+      "status": "Não iniciado"
+    }
+  },
+  {
+    "numero": "PED-1792006013249",
+    "cliente": {
+      "nome": "Sidney Nunes Ferreira",
+      "email": "sidneyferreira91@gmail.com",
+      "telefone": "99999999",
+      "cep": "14771196",
+      "endereco": "Rua 9",
+      "complemento": "",
+      "cidade": "Colina",
+      "estado": "SP"
+    },
+    "itens": [
+      {
+        "id": 1,
+        "nome": "Canivete Brabo",
+        "preco": 89.9,
+        "quantidade": 2,
+        "subtotal": 179.8
+      }
+    ],
+    "total": 179.8,
+    "criadoEm": "2026-10-14T19:26:53.249Z",
+    "status": "Aguardando pagamento",
+    "pagamento": {
+      "metodo": null,
+      "status": "Não iniciado"
+    }
+  },
+  {
+    "numero": "PED-1792064632497",
+    "cliente": {
+      "nome": "sidney  nunes ferreira",
+      "email": "sidneyferreira91@gmail.com",
+      "telefone": "17999999",
+      "cep": "14771196",
+      "endereco": "Rua 9",
+      "complemento": "",
+      "cidade": "Colina",
+      "estado": "SP"
+    },
+    "itens": [
+      {
+        "id": 4,
+        "nome": "Cutelo",
+        "preco": 75.45,
+        "quantidade": 1,
+        "subtotal": 75.45
+      }
+    ],
+    "total": 75.45,
+    "criadoEm": "2026-10-15T11:43:52.497Z",
+    "status": "Aguardando pagamento",
+    "pagamento": {
+      "metodo": null,
+      "status": "Não iniciado"
+    }
+  },
+  {
+    "numero": "PED-1792065107494",
+    "cliente": {
+      "nome": "marcela",
+      "email": "m@gmil.com",
+      "telefone": "17995847666",
+      "cep": "14771196",
+      "endereco": "Rua 9",
+      "complemento": "",
+      "cidade": "Colina",
+      "estado": "SP"
+    },
+    "itens": [
+      {
+        "id": 2,
+        "nome": "Bainha de couro",
+        "preco": 35.99,
+        "quantidade": 5,
+        "subtotal": 179.95
+      }
+    ],
+    "total": 179.95,
+    "criadoEm": "2026-10-15T11:51:47.494Z",
+    "status": "Aguardando pagamento",
+    "pagamento": {
+      "metodo": null,
+      "status": "Não iniciado"
+    }
+  },
+  {
+    "numero": "PED-1792070571539",
+    "cliente": {
+      "nome": "joao",
+      "email": "joao@gmail.com",
+      "telefone": "1744455566",
+      "cep": "14771196",
+      "endereco": "Rua 9",
+      "complemento": "",
+      "cidade": "Colina",
+      "estado": "SP"
+    },
+    "itens": [
+      {
+        "id": 1,
+        "nome": "Canivete Brabo",
+        "preco": 89.9,
+        "quantidade": 3,
+        "subtotal": 269.7
+      },
+      {
+        "id": 2,
+        "nome": "Bainha de couro",
+        "preco": 35.99,
+        "quantidade": 1,
+        "subtotal": 35.99
+      },
+      {
+        "id": 3,
+        "nome": "Faca artesanal",
+        "preco": 105.98,
+        "quantidade": 1,
+        "subtotal": 105.98
+      }
+    ],
+    "total": 411.67,
+    "criadoEm": "2026-10-15T13:22:51.539Z",
+    "status": "Cancelado",
+    "pagamento": {
+      "metodo": "PIX_DEMONSTRATIVO",
+      "status": "Aprovado",
+      "confirmadoEm": "2026-10-15T13:23:16.247Z",
+      "demonstrativo": true
+    }
+  },
+  {
+    "numero": "PED-1792071561483",
+    "cliente": {
+      "nome": "maria",
+      "email": "maria@gmail.com",
+      "telefone": "17896532144",
+      "cep": "14771196",
+      "endereco": "Rua 9",
+      "complemento": "",
+      "cidade": "Colina",
+      "estado": "SP"
+    },
+    "itens": [
+      {
+        "id": 1,
+        "nome": "Canivete Brabo",
+        "preco": 89.9,
+        "quantidade": 3,
+        "subtotal": 269.7
+      }
+    ],
+    "total": 269.7,
+    "criadoEm": "2026-10-15T13:39:21.483Z",
+    "status": "Cancelado",
+    "pagamento": {
+      "metodo": "PIX_DEMONSTRATIVO",
+      "status": "Aprovado",
+      "confirmadoEm": "2026-10-15T14:02:34.468Z",
+      "demonstrativo": true
+    }
+  },
+  {
+    "numero": "PED-1792073227380",
+    "cliente": {
+      "nome": "joana",
+      "email": "joana@gmail.com",
+      "telefone": "1698989898",
+      "cep": "14771196",
+      "endereco": "Rua 9",
+      "complemento": "",
+      "cidade": "Colina",
+      "estado": "SP"
+    },
+    "itens": [
+      {
+        "id": 1,
+        "nome": "Canivete Brabo",
+        "preco": 89.9,
+        "quantidade": 1,
+        "subtotal": 89.9
+      }
+    ],
+    "total": 89.9,
+    "criadoEm": "2026-10-15T14:07:07.380Z",
+    "status": "Aguardando pagamento",
+    "pagamento": {
+      "metodo": "PIX",
+      "status": "Pendente",
+      "demonstrativo": true
+    }
+  },
+  {
+    "numero": "PED-1792073891545",
+    "cliente": {
+      "nome": "mario",
+      "email": "mario@gmail.com",
+      "telefone": "1547899999",
+      "cep": "14771196",
+      "endereco": "Rua 9",
+      "complemento": "",
+      "cidade": "Colina",
+      "estado": "SP"
+    },
+    "itens": [
+      {
+        "id": 1,
+        "nome": "Canivete Brabo",
+        "preco": 89.9,
+        "quantidade": 6,
+        "subtotal": 539.4
+      }
+    ],
+    "total": 539.4,
+    "criadoEm": "2026-10-15T14:18:11.545Z",
+    "status": "Aguardando pagamento",
+    "pagamento": {
+      "metodo": "PIX",
+      "status": "Pendente",
+      "demonstrativo": true
+    }
+  },
+  {
+    "numero": "PED-1792075475440",
+    "cliente": {
+      "nome": "mario",
+      "email": "mario@gmail.com",
+      "telefone": "1598747899",
+      "cep": "14771196",
+      "endereco": "Rua 9",
+      "complemento": "",
+      "cidade": "Colina",
+      "estado": "SP"
+    },
+    "itens": [
+      {
+        "id": 2,
+        "nome": "Bainha de couro",
+        "preco": 35.99,
+        "quantidade": 1,
+        "subtotal": 35.99
+      }
+    ],
+    "total": 35.99,
+    "criadoEm": "2026-10-15T14:44:35.440Z",
+    "status": "Aguardando pagamento",
+    "pagamento": {
+      "metodo": null,
+      "status": "Não iniciado"
+    }
+  },
+  {
+    "numero": "PED-1792075790677-6E5FB3",
+    "cliente": {
+      "nome": "sidney",
+      "email": "sidney@gmail.com",
+      "telefone": "17788555555",
+      "cep": "14771196",
+      "endereco": "Rua 9",
+      "complemento": "",
+      "cidade": "Colina",
+      "estado": "SP"
+    },
+    "itens": [
+      {
+        "id": 6,
+        "nome": "faca teste",
+        "preco": 25.99,
+        "quantidade": 1,
+        "subtotal": 25.99
+      }
+    ],
+    "total": 25.99,
+    "criadoEm": "2026-10-15T14:49:50.696Z",
+    "status": "Aguardando pagamento",
+    "pagamento": {
+      "metodo": null,
+      "status": "Não iniciado"
+    }
+  },
+  {
+    "numero": "PED-1792083097223-59B731",
+    "cliente": {
+      "nome": "Sidney Ferreira",
+      "email": "sidneyferreira91@gmail.com",
+      "telefone": "11799542364",
+      "cep": "14771196",
+      "endereco": "Rua 9",
+      "complemento": "",
+      "cidade": "Colina",
+      "estado": "SP"
+    },
+    "itens": [
+      {
+        "id": 2,
+        "nome": "Bainha de couro",
+        "preco": 35.99,
+        "quantidade": 1,
+        "subtotal": 35.99
+      }
+    ],
+    "total": 35.99,
+    "criadoEm": "2026-10-15T16:51:37.223Z",
+    "status": "Aguardando pagamento",
+    "pagamento": {
+      "metodo": null,
+      "status": "Não iniciado"
+    }
+  },
+  {
+    "numero": "PED-1792360724271-18EDB0",
+    "cliente": {
+      "nome": "teste",
+      "email": "aaa@mail.com",
+      "telefone": "1612345677",
+      "cep": "10495402",
+      "endereco": "rua teste, 502",
+      "complemento": "",
+      "cidade": "sertaozinho",
+      "estado": "SP"
+    },
+    "itens": [
+      {
+        "id": 1,
+        "nome": "Canivete Brabo",
+        "preco": 89.9,
+        "quantidade": 1,
+        "subtotal": 89.9
+      }
+    ],
+    "total": 89.9,
+    "criadoEm": "2026-10-18T21:58:44.271Z",
+    "status": "Aguardando pagamento",
+    "pagamento": {
+      "metodo": null,
+      "status": "Não iniciado"
+    }
+  }
+]

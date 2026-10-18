@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Resumo e acompanhamento do pedido Canivete da Roça">
+    <title>Pedido | Canivete da Roça</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        :root {
+            --carvao: #171816;
+            --bege: #e9dfcd;
+            --fundo: #f7f4ed;
+            --oliva: #65734b;
+            --oliva-escuro: #485438;
+            --borda: #ded8cb;
+            --texto: #292a26;
+            --secundario: #77776e;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: var(--fundo);
+            color: var(--texto);
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        .confirmacao-cabecalho {
+            background: var(--carvao);
+            color: var(--bege);
+            border-bottom: 3px solid var(--oliva);
+        }
+
+        .confirmacao-cabecalho-conteudo {
+            width: min(1100px, 92%);
+            min-height: 82px;
+            margin: auto;
+            display: flex;
+            align-items: center;
+        }
+
+        .confirmacao-logo {
+            color: var(--bege);
+            font-family: Georgia, serif;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .confirmacao-logo span {
+            display: block;
+            margin-top: 5px;
+            color: #b7b8a5;
+            font-family: Arial, sans-serif;
+            font-size: 10px;
+            font-weight: normal;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .confirmacao-banner {
+            padding: 35px 4%;
+            background: linear-gradient(115deg, #252722, #41443a);
+            color: var(--bege);
+        }
+
+        .confirmacao-banner-conteudo {
+            width: min(900px, 100%);
+            margin: auto;
+        }
+
+        .confirmacao-banner p {
+            margin: 0 0 9px;
+            color: #c4c7b5;
+            font-size: 11px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .confirmacao-banner h1 {
+            margin: 0;
+            font-family: Georgia, serif;
+            font-size: clamp(29px, 4vw, 40px);
+        }
+
+        .confirmacao {
+            width: min(900px, 92%);
+            margin: 35px auto 60px;
+            padding: 30px;
+            background: #fff;
+            border: 1px solid var(--borda);
+            border-radius: 8px;
+            box-shadow: 0 5px 18px rgba(35, 34, 28, .04);
+        }
+
+        .confirmacao-status {
+            margin-bottom: 25px;
+            padding: 17px;
+            border: 1px solid var(--borda);
+            border-left: 4px solid var(--oliva);
+            border-radius: 5px;
+            background: var(--fundo);
+        }
+
+        .confirmacao-status h2,
+        .confirmacao h3 {
+            font-family: Georgia, serif;
+        }
+
+        .confirmacao-status h2 {
+            margin: 0 0 8px;
+            font-size: 22px;
+        }
+
+        #numero {
+            margin: 0;
+            color: var(--secundario);
+            font-size: 14px;
+            line-height: 1.7;
+            overflow-wrap: anywhere;
+        }
+
+        #aviso {
+            margin: 14px 0 28px;
+            padding: 13px 15px;
+            border: 1px solid var(--borda);
+            border-radius: 5px;
+            background: #f5f5ef;
+            color: var(--oliva-escuro);
+            font-size: 13px;
+            line-height: 1.7;
+            overflow-wrap: anywhere;
+        }
+
+        .pix-pagamento {
+            margin: 25px 0;
+            padding: 22px;
+            border: 1px solid var(--borda);
+            border-radius: 8px;
+            background: #fffdf8;
+        }
+
+        .pix-pagamento h3 {
+            margin-top: 15px;
+            font-size: 23px;
+        }
+
+        .pix-etiqueta {
+            display: inline-block;
+            padding: 7px 10px;
+            border-radius: 4px;
+            background: #e8eddf;
+            color: var(--oliva-escuro);
+            font-size: 11px;
+            font-weight: bold;
+            letter-spacing: .5px;
+        }
+
+        .pix-qr {
+            width: 240px;
+            height: 240px;
+            max-width: 100%;
+            padding: 10px;
+            margin: 16px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border: 1px solid var(--borda);
+            border-radius: 12px;
+            background: #fff;
+        }
+
+        .pix-qr img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            max-width: 220px;
+            max-height: 220px;
+            object-fit: contain;
+        }
+
+        .pix-pagamento p {
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .pix-botao {
+            width: 100%;
+            padding: 14px 18px;
+            border: 0;
+            border-radius: 5px;
+            background: var(--oliva);
+            color: #fff;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background .2s ease;
+        }
+
+        .pix-botao:hover {
+            background: var(--oliva-escuro);
+        }
+
+        .pix-botao:disabled {
+            opacity: .6;
+            cursor: not-allowed;
+        }
+
+        #status-pagamento {
+            margin-bottom: 0;
+            color: var(--secundario);
+        }
+
+        #itens {
+            margin: 0 0 25px;
+            padding: 0;
+            list-style: none;
+        }
+
+        #itens li {
+            padding: 14px 0;
+            border-bottom: 1px solid var(--borda);
+            font-size: 14px;
+            line-height: 1.7;
+            overflow-wrap: anywhere;
+        }
+
+        #total {
+            margin: 0;
+            padding: 20px 0;
+            border-top: 1px solid var(--borda);
+            color: var(--oliva-escuro);
+            font-size: 25px;
+            overflow-wrap: anywhere;
+        }
+
+        .confirmacao-acoes {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 22px;
+        }
+
+        .confirmacao-acoes a {
+            display: inline-block;
+            padding: 13px 18px;
+            border: 1px solid var(--oliva);
+            border-radius: 5px;
+            background: var(--oliva);
+            color: #fff;
+            font-size: 13px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .confirmacao-acoes a.secundario {
+            background: #fff;
+            color: var(--oliva-escuro);
+        }
+
+        .confirmacao-rodape {
+            padding: 24px 4%;
+            background: var(--carvao);
+            color: #c9c5b9;
+            font-size: 12px;
+            text-align: center;
+        }
+
+        @media (max-width: 520px) {
+            .confirmacao-logo {
+                font-size: 20px;
+            }
+
+            .confirmacao {
+                padding: 20px;
+                margin-top: 22px;
+            }
+
+            .confirmacao-acoes {
+                flex-direction: column;
+            }
+
+            .confirmacao-acoes a {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="confirmacao-cabecalho">
+        <div class="confirmacao-cabecalho-conteudo">
+            <a href="index.html" class="confirmacao-logo">
+                Canivete da Roça
+                <span>Tradição e qualidade artesanal</span>
+            </a>
+        </div>
+    </header>
+
+    <section class="confirmacao-banner">
+        <div class="confirmacao-banner-conteudo">
+            <p>Canivete da Roça</p>
+            <h1>Resumo do pedido</h1>
+        </div>
+    </section>
+
+    <main class="confirmacao">
+
+        <section class="confirmacao-status">
+            <h2>Detalhes do pedido</h2>
+            <p id="numero">Carregando pedido...</p>
+        </section>
+
+        <p id="aviso" role="status" aria-live="polite">
+            Consultando o estado do pedido...
+        </p>
+
+        <section class="pix-pagamento" aria-labelledby="titulo-pix">
+
+            <span class="pix-etiqueta">
+                PAGAMENTO VIA PIX
+            </span>
+
+            <h3 id="titulo-pix">Pagamento via PIX</h3>
+
+            <p>
+                Escaneie o QR Code para acessar a página do pedido.
+                Consulte abaixo o valor e o estado atual do pagamento.
+            </p>
+
+            <div class="pix-qr">
+                <img
+                    id="qr-code"
+                    alt="QR Code para acessar a página do pedido"
+                    width="220"
+                    height="220"
+                >
+            </div>
+
+            <p id="valor-pix">
+                Valor do pedido: consultando...
+            </p>
+
+            <button
+                id="simular-pagamento"
+                class="pix-botao"
+                type="button"
+            >
+                Confirmar pagamento
+            </button>
+
+            <p
+                id="status-pagamento"
+                role="status"
+                aria-live="polite"
+            ></p>
+
+        </section>
+
+        <h3>Itens do pedido</h3>
+
+        <ul id="itens"></ul>
+
+        <h2 id="total"></h2>
+
+        <nav class="confirmacao-acoes" aria-label="Opções após o pedido">
+            <a href="index.html">Voltar ao catálogo</a>
+
+            <a href="carrinho.html" class="secundario">
+                Voltar ao carrinho
+            </a>
+        </nav>
+
+    </main>
+
+    <footer class="confirmacao-rodape">
+        Canivete da Roça
+    </footer>
+
+    <script src="js/pedido-confirmado.js"></script>
+
+</body>
+</html>

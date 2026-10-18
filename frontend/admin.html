@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description" content="Painel de administração da loja Canivete da Roça">
+    <title>Administração | Canivete da Roça</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        :root {
+            --carvao: #20211f;
+            --aco: #454844;
+            --bege: #f2eee4;
+            --bege-claro: #faf8f2;
+            --oliva: #596449;
+            --borda: #d8d3c7;
+            --texto: #292b27;
+            --texto-suave: #686a63;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: var(--bege);
+            color: var(--texto);
+            font-family: Arial, Helvetica, sans-serif;
+            line-height: 1.6;
+        }
+
+        header {
+            padding: 28px 20px;
+            background: var(--carvao);
+            color: var(--bege-claro);
+            border-bottom: 4px solid var(--oliva);
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 30px;
+            letter-spacing: 1px;
+        }
+
+        header p {
+            margin: 5px 0 14px;
+            color: #d1d0c8;
+        }
+
+        header a {
+            display: inline-block;
+            padding: 9px 16px;
+            border: 1px solid #777b70;
+            border-radius: 6px;
+            color: var(--bege-claro);
+            text-decoration: none;
+            transition: background .2s;
+        }
+
+        header a:hover {
+            background: var(--aco);
+        }
+
+        .admin-container {
+            width: calc(100% - 32px);
+            max-width: 850px;
+            margin: 36px auto;
+            padding: 32px;
+            background: var(--bege-claro);
+            border: 1px solid var(--borda);
+            border-radius: 12px;
+            box-shadow: 0 8px 28px rgba(32, 33, 31, .08);
+        }
+
+        .titulo-secao {
+            margin: 0 0 8px;
+            color: var(--carvao);
+            font-size: 25px;
+        }
+
+        .introducao {
+            margin: 0;
+            color: var(--texto-suave);
+        }
+
+        .admin-form {
+            display: grid;
+            gap: 20px;
+            margin-top: 28px;
+        }
+
+        .admin-form label {
+            display: block;
+            margin-bottom: 7px;
+            color: var(--carvao);
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .admin-form input,
+        .admin-form select,
+        .admin-form textarea {
+            display: block;
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #c9c7bd;
+            border-radius: 7px;
+            background: #fff;
+            color: var(--texto);
+            font: inherit;
+            transition: border-color .2s, box-shadow .2s;
+        }
+
+        .admin-form input:focus,
+        .admin-form select:focus,
+        .admin-form textarea:focus {
+            outline: none;
+            border-color: var(--oliva);
+            box-shadow: 0 0 0 3px rgba(89, 100, 73, .14);
+        }
+
+        .admin-form textarea {
+            resize: vertical;
+            min-height: 110px;
+        }
+
+        .orientacao {
+            margin: 7px 0 0;
+            color: var(--texto-suave);
+            font-size: 13px;
+        }
+
+        .admin-form button {
+            width: 100%;
+            padding: 14px 20px;
+            border: none;
+            border-radius: 7px;
+            background: var(--oliva);
+            color: white;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background .2s, transform .2s;
+        }
+
+        .admin-form button:hover:not(:disabled) {
+            background: #46513a;
+            transform: translateY(-1px);
+        }
+
+        .admin-form button:disabled {
+            opacity: .6;
+            cursor: wait;
+        }
+
+        #mensagem {
+            margin-top: 18px;
+            font-weight: 700;
+            overflow-wrap: anywhere;
+        }
+
+        .sucesso {
+            color: #216e39;
+        }
+
+        .erro {
+            color: #b42318;
+        }
+
+        .lista-admin {
+            margin-top: 40px;
+            padding-top: 28px;
+            border-top: 1px solid var(--borda);
+        }
+
+        .lista-admin h2 {
+            margin: 0 0 18px;
+            color: var(--carvao);
+            font-size: 22px;
+        }
+
+        .item-admin {
+            margin-bottom: 12px;
+            padding: 16px;
+            border: 1px solid var(--borda);
+            border-radius: 8px;
+            background: #fff;
+            overflow-wrap: anywhere;
+        }
+
+        .previsualizacao {
+            display: none;
+            margin-top: 14px;
+            padding: 16px;
+            background: #eeece4;
+            border: 1px solid var(--borda);
+            border-radius: 8px;
+        }
+
+        .previsualizacao.visivel {
+            display: block;
+        }
+
+        .previsualizacao img {
+            display: block;
+            width: 100%;
+            max-width: 320px;
+            max-height: 240px;
+            object-fit: contain;
+            margin: 0 auto;
+            border-radius: 6px;
+        }
+
+        footer {
+            padding: 22px 16px;
+            background: var(--carvao);
+            color: #d1d0c8;
+            text-align: center;
+            font-size: 13px;
+        }
+
+        @media (max-width: 600px) {
+            header h1 {
+                font-size: 25px;
+            }
+
+            .admin-container {
+                margin: 20px auto;
+                padding: 22px 18px;
+            }
+
+            .titulo-secao {
+                font-size: 22px;
+            }
+        }
+
+    
+.produtos-admin {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 18px;
+    margin-top: 22px;
+}
+
+.item-admin {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 0;
+    padding: 18px;
+    background: #fff;
+    border: 1px solid var(--borda);
+    border-radius: 10px;
+    box-shadow: 0 3px 10px rgba(32, 33, 31, .05);
+    overflow-wrap: anywhere;
+    transition: transform .2s, box-shadow .2s;
+}
+
+.item-admin:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 7px 18px rgba(32, 33, 31, .10);
+}
+
+.item-admin strong {
+    color: var(--carvao);
+    font-size: 17px;
+    line-height: 1.4;
+}
+
+.item-admin .preco-admin {
+    margin: 0;
+    color: var(--oliva);
+    font-size: 21px;
+    font-weight: 700;
+}
+
+.item-admin .categoria-admin {
+    align-self: flex-start;
+    margin: 0;
+    padding: 4px 9px;
+    background: #eeece4;
+    border-radius: 5px;
+    color: var(--aco);
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.item-admin .descricao-admin {
+    margin: 0;
+    color: var(--texto-suave);
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.item-admin img {
+    width: 100% !important;
+    height: 170px !important;
+    object-fit: contain;
+    margin-top: 4px !important;
+    background: #f4f1e9 !important;
+    border-radius: 7px;
+}
+
+@media (max-width: 520px) {
+    .produtos-admin {
+        grid-template-columns: 1fr;
+    }
+}
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>CANIVETE DA ROÇA</h1>
+        <p>Painel de administração</p>
+        
+<a href="index.html">← Voltar ao catálogo</a>
+
+<button
+    id="botao-sair"
+    type="button"
+    style="margin-left: 8px; padding: 10px 16px; border: 1px solid #777b70; border-radius: 6px; background: transparent; color: #faf8f2; cursor: pointer;"
+>
+    Sair
+</button>
+
+    </header>
+
+    <main class="admin-container">
+        <h1 class="titulo-secao">Cadastrar produto</h1>
+        <p class="introducao">
+            Preencha os dados abaixo para adicionar um produto ao catálogo da loja.
+        </p>
+
+        <form id="form-produto" class="admin-form">
+            <div>
+                <label for="nome">Nome do produto</label>
+                <input
+                    id="nome"
+                    name="nome"
+                    type="text"
+                    required
+                    maxlength="120"
+                    placeholder="Ex.: Canivete artesanal"
+                >
+            </div>
+
+            <div>
+                <label for="preco">Preço (R$)</label>
+                <input
+                    id="preco"
+                    name="preco"
+                    type="number"
+                    min="0.01"
+                    step="0.01"
+                    required
+                    placeholder="Ex.: 89.90"
+                >
+            </div>
+
+            <div>
+                <label for="categoria">Categoria</label>
+                <select id="categoria" name="categoria" required>
+                    <option value="">Selecione uma categoria</option>
+                    <option value="canivetes">Canivetes</option>
+                    <option value="bainhas">Bainhas</option>
+                    <option value="kits">Kits</option>
+                    <option value="polimento">Polimento</option>
+                    <option value="facas">Facas</option>
+                    <option value="afiacao">Afiação</option>
+                    <option value="outros">Outros</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="descricao">Descrição</label>
+                <textarea
+                    id="descricao"
+                    name="descricao"
+                    rows="4"
+                    maxlength="2000"
+                    placeholder="Descreva os materiais, características e diferenciais do produto."
+                ></textarea>
+            </div>
+
+            <div>
+                <label for="imagem">Endereço da imagem (URL)</label>
+                <input
+                    id="imagem"
+                    name="imagem"
+                    type="url"
+                    placeholder="https://exemplo.com/foto.jpg"
+                >
+
+                <p class="orientacao">
+                    Informe o endereço público de uma fotografia do produto.
+                    Este campo é opcional.
+                </p>
+
+                <div id="previsualizacao" class="previsualizacao">
+                    <img
+                        id="imagem-preview"
+                        alt="Prévia da imagem do produto"
+                    >
+                </div>
+            </div>
+
+            <button id="botao-cadastrar" type="submit">
+                Cadastrar produto
+            </button>
+        </form>
+
+        <p id="mensagem" role="status" aria-live="polite"></p>
+
+        <section class="lista-admin">
+    <h2>Produtos cadastrados</h2>
+    <p class="introducao">
+        Visualize todos os produtos registrados no catálogo.
+    </p>
+
+    <div id="lista-admin" class="produtos-admin">
+        <p>Carregando produtos...</p>
+    </div>
+</section>
+
+    </main>
+
+    <footer>
+        Canivete da Roça — Cutelaria e afiação artesanal
+    </footer>
+
+    <script>
+        const campoImagem = document.querySelector("#imagem");
+        const imagemPreview = document.querySelector("#imagem-preview");
+        const previsualizacao = document.querySelector("#previsualizacao");
+
+        campoImagem.addEventListener("input", () => {
+            const endereco = campoImagem.value.trim();
+
+            previsualizacao.classList.remove("visivel");
+            imagemPreview.removeAttribute("src");
+
+            if (!endereco) return;
+
+            try {
+                const url = new URL(endereco);
+
+                if (url.protocol !== "https:" && url.protocol !== "http:") {
+                    return;
+                }
+
+                imagemPreview.onload = () => {
+                    previsualizacao.classList.add("visivel");
+                };
+
+                imagemPreview.onerror = () => {
+                    previsualizacao.classList.remove("visivel");
+                };
+
+                imagemPreview.src = url.href;
+            } catch {
+                previsualizacao.classList.remove("visivel");
+            }
+        });
+    </script>
+
+    <script src="js/admin.js"></script>
+    <script src="js/sair-admin.js"></script>
+</body>
+</html>

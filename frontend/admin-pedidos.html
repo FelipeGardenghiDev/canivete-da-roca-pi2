@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pedidos | Canivete da Roça</title>
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        :root {
+            --fundo: #f7f4ed;
+            --carvao: #171816;
+            --oliva: #65734b;
+            --borda: #ded8cb;
+            --texto: #292a26;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: var(--fundo);
+            color: var(--texto);
+            font-family: Arial, sans-serif;
+        }
+
+        header {
+            padding: 24px 0;
+            background: #e9dfcd;
+            color: #292a26;
+            border-bottom: 4px solid var(--oliva);
+        }
+
+        header h1,
+        header p {
+            width: min(1200px, 94%);
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        header h1 {
+            margin-top: 0;
+            margin-bottom: 8px;
+            color: #292a26;
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: 30px;
+            font-weight: bold;
+        }
+
+        header p {
+            margin-top: 0;
+            margin-bottom: 0;
+            color: #292a26;
+            font-size: 15px;
+            font-weight: 600;
+            line-height: 1.5;
+        }
+
+        main {
+            width: min(1200px, 94%);
+            margin: 30px auto;
+        }
+
+        .indicadores {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+
+        .indicador {
+            padding: 18px;
+            background: #fff;
+            border: 1px solid var(--borda);
+            border-radius: 8px;
+        }
+
+        .indicador span {
+            display: block;
+            margin-bottom: 8px;
+            color: #666;
+            font-size: 13px;
+        }
+
+        .indicador strong {
+            font-size: 24px;
+        }
+
+        .painel {
+            padding: 22px;
+            margin-bottom: 20px;
+            background: white;
+            border: 1px solid var(--borda);
+            border-radius: 8px;
+        }
+
+        .filtros {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        input,
+        select,
+        button {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid var(--borda);
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        button {
+            background: var(--oliva);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background: #485438;
+        }
+
+        .tabela-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        th,
+        td {
+            padding: 13px 10px;
+            border-bottom: 1px solid var(--borda);
+            text-align: left;
+            font-size: 13px;
+            vertical-align: top;
+        }
+
+        th {
+            background: #efede5;
+            white-space: nowrap;
+        }
+
+        td select {
+            min-width: 170px;
+        }
+
+        .detalhes {
+            min-width: 210px;
+            margin-top: 8px;
+            padding: 9px;
+            background: #f7f4ed;
+            border-radius: 5px;
+            line-height: 1.6;
+        }
+
+        .mensagem {
+            margin: 12px 0;
+            line-height: 1.6;
+        }
+
+        .erro {
+            color: #a32222;
+        }
+
+        .sucesso {
+            color: #286536;
+        }
+
+        .acoes {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 18px;
+        }
+
+        .acoes a {
+            display: inline-block;
+            padding: 12px 16px;
+            background: var(--oliva);
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 13px;
+        }
+
+        .acoes a:hover {
+            background: #485438;
+        }
+
+        @media (max-width: 650px) {
+            .filtros {
+                grid-template-columns: 1fr;
+            }
+
+            .painel {
+                padding: 14px;
+            }
+
+            header h1 {
+                font-size: 26px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Canivete da Roça</h1>
+        <p>Área administrativa — Gerenciamento de pedidos</p>
+    </header>
+
+    <main>
+        <section class="indicadores">
+            <div class="indicador">
+                <span>Total de pedidos</span>
+                <strong id="total-pedidos">0</strong>
+            </div>
+
+            <div class="indicador">
+                <span>Aguardando pagamento</span>
+                <strong id="pendentes">0</strong>
+            </div>
+
+            <div class="indicador">
+                <span>Pagamentos aprovados</span>
+                <strong id="aprovados">0</strong>
+            </div>
+
+            <div class="indicador">
+                <span>Valor dos pedidos</span>
+                <strong id="valor-total">R$ 0,00</strong>
+            </div>
+        </section>
+
+        <section class="painel">
+            <h2>Pedidos cadastrados</h2>
+            <p>Pesquise os pedidos e acompanhe o andamento das compras.</p>
+
+            <div class="filtros">
+                <input
+                    id="busca"
+                    type="search"
+                    placeholder="Buscar por número ou nome do cliente"
+                    aria-label="Buscar pedidos"
+                >
+
+                <select id="filtro-status" aria-label="Filtrar por status">
+                    <option value="">Todos os status</option>
+                    <option value="Aguardando pagamento">Aguardando pagamento</option>
+                    <option value="Pagamento aprovado">Pagamento aprovado</option>
+                    <option value="Em preparação">Em preparação</option>
+                    <option value="Enviado">Enviado</option>
+                    <option value="Entregue">Entregue</option>
+                    <option value="Cancelado">Cancelado</option>
+                </select>
+            </div>
+
+            <div
+                id="mensagem"
+                class="mensagem"
+                role="status"
+                aria-live="polite"
+            ></div>
+
+            <div class="tabela-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Pedido / Data</th>
+                            <th>Cliente</th>
+                            <th>Itens</th>
+                            <th>Total</th>
+                            <th>Pagamento</th>
+                            <th>Status do pedido</th>
+                            <th>Ação</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="lista-pedidos"></tbody>
+                </table>
+            </div>
+
+            
+<div class="acoes">
+    <a href="index.html">Voltar ao catálogo</a>
+    <a href="admin.html">Administração de produtos</a>
+
+    <button
+        id="botao-sair"
+        type="button"
+        style="width: auto; padding: 12px 16px; background: #292a26;"
+    >
+        Sair
+    </button>
+</div>
+
+        </section>
+    </main>
+
+   
+<script src="js/admin-pedidos.js"></script>
+<script src="js/sair-admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Canivete da Roça: cutelaria artesanal, canivetes, bainhas e acessórios para afiação.">
+    <meta name="theme-color" content="#191a18">
+
+    <title>Canivete da Roça | Cutelaria Artesanal</title>
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/home.css">
+
+    <script src="js/app.js" defer></script>
+</head>
+
+<body class="pagina-home">
+    <a href="#catalogo" class="skip-link">Pular para os produtos</a>
+
+    <div class="faixa-superior">
+        CUTELARIA ARTESANAL <span>•</span> TRADIÇÃO E QUALIDADE
+    </div>
+
+    <header class="home-cabecalho">
+        <a class="home-logo" href="index.html" aria-label="Canivete da Roça - página inicial">
+            <span class="logo-simbolo" aria-hidden="true">CR</span>
+            <span class="logo-textos">
+                <strong>CANIVETE <span>DA ROÇA</span></strong>
+                <small>TRADIÇÃO EM CADA DETALHE</small>
+            </span>
+        </a>
+
+        <form class="home-busca" id="form-busca" role="search">
+            <label class="sr-only" for="campo-busca">Buscar produtos</label>
+            <input
+                id="campo-busca"
+                type="search"
+                placeholder="O que você está procurando?"
+                autocomplete="off"
+            >
+            <button type="submit" aria-label="Buscar produtos">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <circle cx="10.8" cy="10.8" r="6.8"></circle>
+                    <path d="m16 16 4.5 4.5"></path>
+                </svg>
+            </button>
+        </form>
+
+        <a class="home-carrinho" href="carrinho.html">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M3 4h2l2.2 11.1a2 2 0 0 0 2 1.6h8.6a2 2 0 0 0 1.9-1.4L22 8H6"></path>
+                <circle cx="10" cy="20" r="1.2"></circle>
+                <circle cx="18" cy="20" r="1.2"></circle>
+            </svg>
+            <span>Carrinho (<span id="quantidade-carrinho">0</span>)</span>
+        </a>
+    </header>
+
+    <nav class="home-menu" aria-label="Menu principal">
+        <a href="#inicio" class="menu-inicio">INÍCIO</a>
+        <a href="#categorias">CATEGORIAS</a>
+        <a href="#catalogo">PRODUTOS</a>
+        <a href="#sobre">NOSSA ESSÊNCIA</a>
+    </nav>
+
+    <main>
+        <section class="home-hero" id="inicio">
+            <div class="hero-textura" aria-hidden="true"></div>
+
+            <div class="hero-conteudo">
+                <p class="hero-etiqueta">
+                    <span></span> FEITO PARA QUEM VALORIZA O OFÍCIO
+                </p>
+
+                <h1>
+                    A tradição<br>
+                    está nos <span>detalhes.</span>
+                </h1>
+
+                <p class="hero-descricao">
+                    Cutelaria, acessórios e produtos para afiação
+                    selecionados para quem respeita a qualidade
+                    e o trabalho bem-feito.
+                </p>
+
+                <div class="hero-acoes">
+                    <a href="#catalogo" class="home-botao home-botao-oliva">
+                        EXPLORAR PRODUTOS <span aria-hidden="true">→</span>
+                    </a>
+                    <a href="#categorias" class="hero-link-secundario">
+                        Conheça nossas categorias
+                    </a>
+                </div>
+
+                <div class="hero-assinatura">
+                    <span class="assinatura-linha"></span>
+                    <span>ARTESANAL POR ESSÊNCIA. DURÁVEL POR ESCOLHA.</span>
+                </div>
+            </div>
+
+            <div class="hero-selo" aria-label="Identidade artesanal">
+                <span class="selo-topo">CANIVETE</span>
+                <span class="selo-centro">CR</span>
+                <span class="selo-base">DA ROÇA</span>
+                <span class="selo-detalhe">✦</span>
+            </div>
+
+            <div class="hero-indicador">
+                <span>01</span>
+                <span class="indicador-linha"></span>
+                <span>TRADIÇÃO</span>
+            </div>
+        </section>
+
+        <section class="home-valores" aria-label="Características da loja">
+            <div class="valor-item">
+                <span class="valor-icone" aria-hidden="true">✦</span>
+                <div>
+                    <strong>CUTELARIA</strong>
+                    <small>Peças e acessórios</small>
+                </div>
+            </div>
+
+            <span class="valor-divisor" aria-hidden="true"></span>
+
+            <div class="valor-item">
+                <span class="valor-icone" aria-hidden="true">◈</span>
+                <div>
+                    <strong>CUIDADO NOS DETALHES</strong>
+                    <small>Qualidade em cada escolha</small>
+                </div>
+            </div>
+
+            <span class="valor-divisor" aria-hidden="true"></span>
+
+            <div class="valor-item">
+                <span class="valor-icone" aria-hidden="true">⌁</span>
+                <div>
+                    <strong>AFIAÇÃO</strong>
+                    <small>Produtos para seu ofício</small>
+                </div>
+            </div>
+        </section>
+
+        <!-- CATEGORIAS -->
+        <section class="home-categorias home-secao" id="categorias">
+            <div class="home-titulo-secao">
+                <div>
+                    <p class="home-overline">ENCONTRE O QUE PRECISA</p>
+                    <h2>Explore nossas <span>categorias</span></h2>
+                </div>
+                <p class="home-intro-secao">
+                    Do corte ao acabamento, encontre os produtos
+                    para o seu trabalho.
+                </p>
+            </div>
+
+            <div class="categorias-grade">
+                <button class="categoria-card categoria-canivetes filtro-categoria"
+                        type="button" data-categoria="canivetes">
+                    <span class="categoria-numero">01 / CUTELARIA</span>
+                    <span class="categoria-conteudo">
+                        <strong>Canivetes</strong>
+                        <small>Conheça os modelos</small>
+                    </span>
+                    <span class="categoria-seta" aria-hidden="true">↗</span>
+                </button>
+
+                <button class="categoria-card categoria-bainhas filtro-categoria"
+                        type="button" data-categoria="bainhas">
+                    <span class="categoria-numero">02 / PROTEÇÃO</span>
+                    <span class="categoria-conteudo">
+                        <strong>Bainhas</strong>
+                        <small>Praticidade e cuidado</small>
+                    </span>
+                    <span class="categoria-seta" aria-hidden="true">↗</span>
+                </button>
+
+                <button class="categoria-card categoria-facas filtro-categoria"
+                        type="button" data-categoria="facas">
+                    <span class="categoria-numero">03 / CUTELARIA</span>
+                    <span class="categoria-conteudo">
+                        <strong>Facas</strong>
+                        <small>Peças de cutelaria</small>
+                    </span>
+                    <span class="categoria-seta" aria-hidden="true">↗</span>
+                </button>
+
+                <button class="categoria-card categoria-strops filtro-categoria"
+                        type="button" data-categoria="strops">
+                    <span class="categoria-numero">04 / AFIAÇÃO</span>
+                    <span class="categoria-conteudo">
+                        <strong>Strops</strong>
+                        <small>Acessórios para acabamento</small>
+                    </span>
+                    <span class="categoria-seta" aria-hidden="true">↗</span>
+                </button>
+
+                <button class="categoria-card categoria-kits filtro-categoria"
+                        type="button" data-categoria="kits-de-afiacao">
+                    <span class="categoria-numero">05 / MANUTENÇÃO</span>
+                    <span class="categoria-conteudo">
+                        <strong>Kits de Afiação</strong>
+                        <small>Cuidados e manutenção</small>
+                    </span>
+                    <span class="categoria-seta" aria-hidden="true">↗</span>
+                </button>
+
+                <button class="categoria-card categoria-polimento filtro-categoria"
+                        type="button" data-categoria="polimento-e-afiacao">
+                    <span class="categoria-numero">06 / ACABAMENTO</span>
+                    <span class="categoria-conteudo">
+                        <strong>Polimento e Afiação</strong>
+                        <small>Produtos para acabamento</small>
+                    </span>
+                    <span class="categoria-seta" aria-hidden="true">↗</span>
+                </button>
+            </div>
+
+            <button class="home-ver-todos filtro-categoria"
+                    type="button" data-categoria="todos">
+                VER TODOS OS PRODUTOS <span aria-hidden="true">→</span>
+            </button>
+        </section>
+
+        <!-- CATÁLOGO -->
+        <section class="home-catalogo" id="catalogo">
+            <div class="home-secao">
+                <div class="home-titulo-secao catalogo-cabecalho">
+                    <div>
+                        <p class="home-overline">SELEÇÃO CANIVETE DA ROÇA</p>
+                        <h2 id="titulo-catalogo">Produtos em <span>destaque</span></h2>
+                    </div>
+
+                    <p id="mensagem-resultados"
+                       class="home-mensagem"
+                       role="status"
+                       aria-live="polite">
+                        Carregando produtos...
+                    </p>
+                </div>
+
+                <div class="catalogo-filtros" aria-label="Filtrar catálogo">
+                    <button type="button"
+                            class="filtro-categoria filtro-pill ativa"
+                            data-categoria="todos">Todos</button>
+
+                    <button type="button"
+                            class="filtro-categoria filtro-pill"
+                            data-categoria="canivetes">Canivetes</button>
+
+                    <button type="button"
+                            class="filtro-categoria filtro-pill"
+                            data-categoria="bainhas">Bainhas</button>
+
+                    <button type="button"
+                            class="filtro-categoria filtro-pill"
+                            data-categoria="facas">Facas</button>
+
+                    <button type="button"
+                            class="filtro-categoria filtro-pill"
+                            data-categoria="strops">Strops</button>
+
+                    <button type="button"
+                            class="filtro-categoria filtro-pill"
+                            data-categoria="kits-de-afiacao">Kits de Afiação</button>
+
+                    <button type="button"
+                            class="filtro-categoria filtro-pill"
+                            data-categoria="polimento-e-afiacao">Polimento e Afiação</button>
+                </div>
+
+                <div id="lista-produtos" class="home-lista-produtos">
+                    <p class="home-carregando">Carregando o catálogo...</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SOBRE A MARCA -->
+        <section class="home-sobre" id="sobre">
+            <div class="sobre-marca">
+                <div class="sobre-monograma" aria-hidden="true">
+                    <span>CR</span>
+                    <small>DESDE A ESSÊNCIA</small>
+                </div>
+
+                <div class="sobre-texto">
+                    <p class="home-overline">NOSSA ESSÊNCIA</p>
+                    <h2>Respeito pelo ofício.<br><span>Valor em cada detalhe.</span></h2>
+                    <p>
+                        A Canivete da Roça reúne produtos de cutelaria e
+                        afiação para quem valoriza ferramentas, cuidado
+                        e trabalho bem-feito.
+                    </p>
+                    <a href="#catalogo" class="sobre-link">
+                        ENCONTRE SEU PRÓXIMO PRODUTO <span aria-hidden="true">→</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="home-rodape">
+        <div class="rodape-principal">
+            <a class="home-logo rodape-logo" href="index.html">
+                <span class="logo-simbolo" aria-hidden="true">CR</span>
+                <span class="logo-textos">
+                    <strong>CANIVETE <span>DA ROÇA</span></strong>
+                    <small>TRADIÇÃO EM CADA DETALHE</small>
+                </span>
+            </a>
+
+            <p>
+                Cutelaria artesanal e produtos para afiação.
+                Qualidade que começa nos detalhes.
+            </p>
+
+            <div class="rodape-links">
+                <strong>NAVEGAÇÃO</strong>
+                <a href="#inicio">Início</a>
+                <a href="#categorias">Categorias</a>
+                <a href="#catalogo">Produtos</a>
+                <a href="carrinho.html">Meu carrinho</a>
+                <a href="admin.html">Administração</a>
+            </div>
+        </div>
+
+        <div class="rodape-final">
+            <span>© <span id="ano-atual">2026</span> Canivete da Roça</span>
+            <span>TRADIÇÃO • CUIDADO • QUALIDADE</span>
+        </div>
+    </footer>
+
+    <div id="notificacao-acessivel" role="status" aria-live="polite"></div>
+
+</body>
+</html>

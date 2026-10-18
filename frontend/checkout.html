@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Finalize seu pedido na Canivete da Roça">
+    <title>Finalizar compra | Canivete da Roça</title>
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        :root {
+            --carvao: #171816;
+            --aco: #363833;
+            --bege: #e9dfcd;
+            --fundo: #f7f4ed;
+            --oliva: #65734b;
+            --oliva-escuro: #485438;
+            --borda: #ded8cb;
+            --texto: #292a26;
+            --secundario: #77776e;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            background: var(--fundo);
+            color: var(--texto);
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        a { color: inherit; text-decoration: none; }
+
+        .checkout-cabecalho {
+            background: var(--carvao);
+            color: var(--bege);
+            border-bottom: 3px solid var(--oliva);
+        }
+
+        .checkout-cabecalho-conteudo {
+            width: min(1120px, 92%);
+            min-height: 82px;
+            margin: auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+        }
+
+        .checkout-logo {
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .checkout-logo span {
+            display: block;
+            margin-top: 5px;
+            color: #b7b8a5;
+            font-family: Arial, sans-serif;
+            font-size: 10px;
+            font-weight: normal;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .checkout-voltar {
+            padding: 11px 15px;
+            border: 1px solid #777a6c;
+            border-radius: 5px;
+            color: #f3eadb;
+            font-size: 13px;
+        }
+
+        .checkout-voltar:hover { background: var(--aco); }
+
+        .checkout-banner {
+            padding: 32px 4%;
+            background: linear-gradient(115deg, #252722, #41443a);
+            color: var(--bege);
+        }
+
+        .checkout-banner-conteudo {
+            width: min(1120px, 100%);
+            margin: auto;
+        }
+
+        .checkout-banner p {
+            margin: 0 0 9px;
+            color: #c4c7b5;
+            font-size: 11px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .checkout-banner h1 {
+            margin: 0;
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: clamp(29px, 4vw, 40px);
+        }
+
+        .checkout-etapas {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+            color: #e9dfcd;
+            font-size: 12px;
+        }
+
+        .checkout-etapas span {
+            padding: 8px 12px;
+            border: 1px solid #696d5c;
+            border-radius: 20px;
+        }
+
+        .checkout-etapas .etapa-atual {
+            background: var(--oliva);
+            border-color: var(--oliva);
+            color: #fff;
+        }
+
+        .checkout-layout {
+            width: min(1120px, 92%);
+            margin: 32px auto 60px;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 330px;
+            align-items: start;
+            gap: 25px;
+        }
+
+        .checkout-formulario,
+        .checkout-resumo {
+            padding: 27px;
+            background: #fff;
+            border: 1px solid var(--borda);
+            border-radius: 8px;
+            box-shadow: 0 5px 18px rgba(35, 34, 28, .04);
+        }
+
+        .checkout-titulo-secao {
+            margin: 0 0 8px;
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: 25px;
+        }
+
+        .checkout-subtitulo {
+            margin: 0 0 25px;
+            color: var(--secundario);
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        .checkout form {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .checkout-campo { min-width: 0; }
+
+        .checkout-campo.largura-total { grid-column: 1 / -1; }
+
+        .checkout label {
+            display: block;
+            margin-bottom: 7px;
+            color: var(--texto);
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .checkout input {
+            display: block;
+            width: 100%;
+            min-height: 46px;
+            padding: 12px 13px;
+            border: 1px solid #d6d2c8;
+            border-radius: 5px;
+            background: #fdfcf9;
+            color: var(--texto);
+            font: inherit;
+            font-size: 14px;
+            transition: border-color .2s, box-shadow .2s;
+        }
+
+        .checkout input:focus {
+            outline: none;
+            border-color: var(--oliva);
+            box-shadow: 0 0 0 3px rgba(101, 115, 75, .13);
+        }
+
+        .checkout input::placeholder { color: #a09e94; }
+
+        .checkout-botao {
+            grid-column: 1 / -1;
+            width: 100%;
+            min-height: 49px;
+            margin-top: 5px;
+            padding: 14px 18px;
+            border: 0;
+            border-radius: 5px;
+            background: var(--oliva);
+            color: #fff;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background .2s;
+        }
+
+        .checkout-botao:hover { background: var(--oliva-escuro); }
+
+        .checkout-botao:disabled {
+            opacity: .65;
+            cursor: not-allowed;
+        }
+
+        .checkout-resumo {
+            position: sticky;
+            top: 20px;
+        }
+
+        .checkout-resumo h2 {
+            margin: 0 0 20px;
+            padding-bottom: 17px;
+            border-bottom: 1px solid var(--borda);
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: 22px;
+        }
+
+        #resumo {
+            padding: 15px;
+            border: 1px solid var(--borda);
+            border-radius: 6px;
+            background: var(--fundo);
+            font-size: 14px;
+            line-height: 1.8;
+            overflow-wrap: anywhere;
+        }
+
+        .checkout-nota {
+            margin: 17px 0 0;
+            color: var(--secundario);
+            font-size: 12px;
+            line-height: 1.7;
+        }
+
+        #mensagem {
+            margin: 18px 0 0;
+            font-size: 14px;
+            font-weight: bold;
+            line-height: 1.6;
+            overflow-wrap: anywhere;
+        }
+
+        .checkout-link-carrinho {
+            display: inline-block;
+            margin-top: 18px;
+            color: var(--oliva-escuro);
+            font-size: 13px;
+            font-weight: bold;
+            text-decoration: underline;
+            text-underline-offset: 4px;
+        }
+
+        .checkout-rodape {
+            padding: 24px 4%;
+            background: var(--carvao);
+            color: #c9c5b9;
+            font-size: 12px;
+            text-align: center;
+        }
+
+        @media (max-width: 800px) {
+            .checkout-layout { grid-template-columns: 1fr; }
+            .checkout-resumo { position: static; grid-row: 1; }
+        }
+
+        @media (max-width: 520px) {
+            .checkout-cabecalho-conteudo { min-height: 75px; }
+            .checkout-logo { font-size: 19px; }
+
+            .checkout-logo span {
+                font-size: 8px;
+                letter-spacing: 1px;
+            }
+
+            .checkout-voltar {
+                padding: 9px;
+                font-size: 11px;
+            }
+
+            .checkout-layout { margin-top: 20px; }
+
+            .checkout-formulario,
+            .checkout-resumo { padding: 20px; }
+
+            .checkout form {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .checkout-campo.largura-total,
+            .checkout-botao { grid-column: auto; }
+        }
+    </style>
+</head>
+
+<body>
+    <a href="#form-checkout" class="skip-link">Pular para o formulário de pedido</a>
+    <header class="checkout-cabecalho">
+        <div class="checkout-cabecalho-conteudo">
+            <a href="index.html" class="checkout-logo">
+                Canivete da Roça
+                <span>Tradição e qualidade artesanal</span>
+            </a>
+
+            <a href="carrinho.html" class="checkout-voltar">
+                ← Voltar ao carrinho
+            </a>
+        </div>
+    </header>
+
+    <section class="checkout-banner">
+        <div class="checkout-banner-conteudo">
+            <p>Estamos quase lá</p>
+            <h1>Finalizar compra</h1>
+
+            <div class="checkout-etapas">
+                <span>1. Produtos</span>
+                <span class="etapa-atual">2. Seus dados</span>
+                <span>3. Confirmação</span>
+            </div>
+        </div>
+    </section>
+
+    <main class="checkout checkout-layout">
+        <section class="checkout-formulario">
+            <h2 class="checkout-titulo-secao">Seus dados</h2>
+
+            <p class="checkout-subtitulo">
+                Preencha as informações para identificar seu pedido
+                e informar o endereço de entrega.
+            </p>
+
+            <form id="form-checkout">
+                <div class="checkout-campo largura-total">
+                    <label for="nome">Nome completo</label>
+                    <input id="nome" name="nome" autocomplete="name"
+                        required maxlength="120"
+                        placeholder="Digite seu nome completo">
+                </div>
+
+                <div class="checkout-campo">
+                    <label for="cpf">CPF *</label>
+                    <input id="cpf" name="cpf" type="text"
+                        placeholder="000.000.000-00"
+                        maxlength="14" inputmode="numeric"
+                        autocomplete="off" required>
+                </div>
+
+                <div class="checkout-campo">
+                    <label for="email">E-mail</label>
+                    <input id="email" name="email" type="email"
+                        autocomplete="email" required maxlength="160"
+                        placeholder="seuemail@exemplo.com">
+                </div>
+
+                <div class="checkout-campo">
+                    <label for="telefone">Telefone</label>
+                    <input id="telefone" name="telefone" type="tel"
+                        autocomplete="tel" required maxlength="25"
+                        placeholder="(00) 00000-0000">
+                </div>
+
+                <div class="checkout-campo">
+                    <label for="cep">CEP</label>
+                    <input id="cep" name="cep" autocomplete="postal-code"
+                        required maxlength="9" placeholder="00000-000">
+                </div>
+
+                <div class="checkout-campo largura-total">
+                    <label for="endereco">Rua e número</label>
+                    <input id="endereco" name="endereco"
+                        autocomplete="street-address" required
+                        maxlength="200" placeholder="Rua, avenida e número">
+                </div>
+
+                <div class="checkout-campo largura-total">
+                    <label for="complemento">Complemento (opcional)</label>
+                    <input id="complemento" name="complemento"
+                        maxlength="100"
+                        placeholder="Casa, apartamento, referência...">
+                </div>
+
+                <div class="checkout-campo">
+                    <label for="cidade">Cidade</label>
+                    <input id="cidade" name="cidade"
+                        autocomplete="address-level2" required
+                        maxlength="100" placeholder="Sua cidade">
+                </div>
+
+                <div class="checkout-campo">
+                    <label for="estado">Estado (UF)</label>
+                    <input id="estado" name="estado"
+                        autocomplete="address-level1" required
+                        minlength="2" maxlength="2" placeholder="SP">
+                </div>
+
+                <button id="confirmar-pedido" class="checkout-botao"
+                    type="submit">
+                    Confirmar pedido
+                </button>
+            </form>
+
+            <p id="mensagem" role="status" aria-live="polite"></p>
+
+            <a href="carrinho.html" class="checkout-link-carrinho">
+                ← Revisar produtos no carrinho
+            </a>
+        </section>
+
+        <aside class="checkout-resumo">
+            <h2>Resumo do pedido</h2>
+
+            <div id="resumo">Carregando pedido...</div>
+
+            <p class="checkout-nota">
+                O valor do frete e as opções de pagamento deverão
+                ser confirmados conforme a configuração da loja.
+            </p>
+        </aside>
+    </main>
+
+    <footer class="checkout-rodape">
+        Canivete da Roça · Cutelaria artesanal
+    </footer>
+
+    <script src="js/checkout.js"></script>
+</body>
+</html>

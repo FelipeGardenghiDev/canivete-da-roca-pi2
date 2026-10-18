@@ -1,0 +1,864 @@
+
+/* =====================================================
+   CANIVETE DA ROÇA
+   Identidade: aço, carvão, bege natural e verde oliva
+   ===================================================== */
+
+:root {
+    --carvao: #242628;
+    --carvao-claro: #303336;
+    --aco: #777d81;
+    --aco-claro: #d4d7d7;
+    --bege: #f1eee6;
+    --bege-claro: #faf9f5;
+    --oliva: #596449;
+    --oliva-escuro: #424d37;
+    --texto: #292c2e;
+    --texto-suave: #62676a;
+    --borda: #d9d8d0;
+    --branco: #ffffff;
+    --sucesso: #28633d;
+    --erro: #a32d2d;
+    --sombra: 0 5px 18px rgba(36, 38, 40, 0.08);
+}
+
+/* ==================== BASE ==================== */
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background: var(--bege);
+    color: var(--texto);
+    font-family: Arial, Helvetica, sans-serif;
+    line-height: 1.6;
+}
+
+h1,
+h2,
+h3,
+h4 {
+    color: var(--carvao);
+    line-height: 1.3;
+}
+
+h1 {
+    text-align: center;
+}
+
+p {
+    color: var(--texto-suave);
+}
+
+a {
+    color: var(--oliva-escuro);
+}
+
+button,
+input,
+select,
+textarea {
+    font: inherit;
+}
+
+button {
+    transition:
+        background-color 0.2s ease,
+        transform 0.2s ease;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+    outline: 3px solid var(--aco);
+    outline-offset: 3px;
+}
+
+/* ==================== CABEÇALHO ==================== */
+
+.cabecalho {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 22px 5%;
+    background: var(--carvao);
+    border-bottom: 4px solid var(--aco);
+}
+
+.logo {
+    color: var(--bege-claro);
+    font-size: 25px;
+    font-weight: bold;
+    text-decoration: none;
+    letter-spacing: 0.3px;
+}
+
+.busca {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    max-width: 480px;
+}
+
+.busca input {
+    width: 100%;
+    min-width: 0;
+    padding: 11px 14px;
+    background: var(--branco);
+    color: var(--texto);
+    border: 1px solid var(--aco-claro);
+    border-radius: 6px;
+}
+
+.busca button,
+.botao-comprar,
+#botao-adicionar {
+    padding: 12px 18px;
+    background: var(--oliva);
+    color: var(--branco);
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.busca button:hover,
+.botao-comprar:hover,
+#botao-adicionar:hover {
+    background: var(--oliva-escuro);
+}
+
+.carrinho {
+    color: var(--bege-claro);
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.carrinho:hover {
+    color: var(--aco-claro);
+}
+
+/* ==================== MENU ==================== */
+
+.menu {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 14px 20px;
+    background: var(--carvao-claro);
+    border-bottom: 1px solid var(--aco);
+}
+
+.menu a {
+    padding: 8px 13px;
+    color: var(--bege-claro);
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.2s ease;
+}
+
+.menu a:hover,
+.menu a.ativa {
+    color: var(--branco);
+    background: var(--oliva);
+}
+
+/* ==================== APRESENTAÇÃO ==================== */
+
+.apresentacao {
+    padding: 42px 20px;
+    text-align: center;
+    background: linear-gradient(
+        135deg,
+        #e1e0d9,
+        var(--bege-claro)
+    );
+    border-bottom: 1px solid var(--borda);
+}
+
+.apresentacao h1 {
+    margin-top: 0;
+    font-size: clamp(26px, 4vw, 38px);
+}
+
+.apresentacao p {
+    max-width: 720px;
+    margin: 12px auto 0;
+    text-align: center;
+    font-size: 17px;
+}
+
+/* ==================== CATÁLOGO ==================== */
+
+.produtos {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 42px 28px;
+}
+
+.produtos h2 {
+    margin-bottom: 30px;
+    text-align: center;
+    font-size: 29px;
+}
+
+#mensagem-resultados {
+    margin-bottom: 24px;
+    text-align: center;
+}
+
+.lista-produtos {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 26px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.produto {
+    min-width: 0;
+    padding: 20px;
+    overflow: hidden;
+    text-align: center;
+    background: var(--bege-claro);
+    border: 1px solid var(--borda);
+    border-radius: 10px;
+    box-shadow: var(--sombra);
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.produto:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 9px 24px rgba(36, 38, 40, 0.14);
+}
+
+.produto[hidden] {
+    display: none !important;
+}
+
+.link-produto {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+}
+
+.link-produto:hover {
+    text-decoration: none;
+}
+
+.link-produto h3,
+.produto h3 {
+    margin: 14px 0 10px;
+    color: var(--carvao);
+    font-size: 19px;
+}
+
+.imagem-produto {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 210px;
+    margin-bottom: 15px;
+    padding: 12px;
+    color: var(--texto-suave);
+    background: #e4e4df;
+    border: 1px solid var(--aco-claro);
+    border-radius: 7px;
+}
+
+.preco {
+    margin: 14px 0;
+    color: var(--oliva-escuro);
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.botao-comprar {
+    width: 100%;
+    margin-top: 8px;
+}
+
+/* ==================== DETALHES DO PRODUTO ==================== */
+
+.pagina-produto {
+    padding: 42px 24px;
+}
+
+.detalhes-produto {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 38px;
+    max-width: 1050px;
+    margin: 0 auto;
+    padding: 32px;
+    background: var(--bege-claro);
+    border: 1px solid var(--borda);
+    border-radius: 10px;
+    box-shadow: var(--sombra);
+}
+
+.imagem-detalhe {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 350px;
+    padding: 20px;
+    background: #e4e4df;
+    border: 1px solid var(--aco-claro);
+    border-radius: 8px;
+}
+
+.informacoes-produto {
+    padding: 12px;
+}
+
+.informacoes-produto h1 {
+    text-align: left;
+    font-size: 30px;
+}
+
+.preco-detalhe {
+    color: var(--oliva-escuro);
+    font-size: 30px;
+    font-weight: bold;
+}
+
+#botao-adicionar {
+    margin-top: 16px;
+    padding: 14px 24px;
+}
+
+/* ==================== CARRINHO ==================== */
+
+.item-carrinho {
+    margin-bottom: 16px;
+    padding: 22px;
+    background: var(--bege-claro);
+    border: 1px solid var(--borda);
+    border-radius: 8px;
+    box-shadow: 0 2px 9px rgba(36, 38, 40, 0.05);
+}
+
+.controle-quantidade {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 15px 0;
+}
+
+.controle-quantidade button {
+    width: 38px;
+    height: 38px;
+    background: var(--carvao);
+    color: var(--branco);
+    border: none;
+    border-radius: 5px;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.controle-quantidade button:hover {
+    background: var(--oliva);
+}
+
+.controle-quantidade span {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.remover {
+    padding: 9px 15px;
+    background: #8d3333;
+    color: var(--branco);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.remover:hover {
+    background: #702626;
+}
+
+/* ==================== ADMINISTRAÇÃO E CHECKOUT ==================== */
+
+.admin-container,
+.checkout,
+.confirmacao {
+    color: var(--texto);
+    background: var(--bege-claro);
+    border: 1px solid var(--borda);
+    border-radius: 10px;
+    box-shadow: var(--sombra);
+}
+
+.admin-form,
+.checkout form {
+    display: grid;
+    gap: 16px;
+}
+
+.admin-form label,
+.checkout label {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--carvao);
+    font-weight: bold;
+}
+
+.admin-form input,
+.admin-form select,
+.admin-form textarea,
+.checkout input,
+.checkout select,
+.checkout textarea {
+    width: 100%;
+    padding: 12px 14px;
+    background: var(--branco);
+    color: var(--texto);
+    border: 1px solid var(--aco-claro);
+    border-radius: 6px;
+}
+
+.admin-form input:focus,
+.admin-form select:focus,
+.admin-form textarea:focus,
+.checkout input:focus,
+.checkout select:focus,
+.checkout textarea:focus {
+    border-color: var(--oliva);
+}
+
+.admin-form button,
+.checkout button,
+#botao-cadastrar,
+#confirmar-pedido {
+    padding: 14px 20px;
+    background: var(--oliva);
+    color: var(--branco);
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.admin-form button:hover,
+.checkout button:hover,
+#botao-cadastrar:hover,
+#confirmar-pedido:hover {
+    background: var(--oliva-escuro);
+}
+
+button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+#mensagem {
+    overflow-wrap: anywhere;
+}
+
+.sucesso {
+    color: var(--sucesso);
+}
+
+.erro {
+    color: var(--erro);
+}
+
+.item-admin {
+    padding: 15px 0;
+    border-bottom: 1px solid var(--borda);
+}
+
+/* ==================== RESUMO DO PEDIDO ==================== */
+
+#resumo {
+    padding: 18px;
+    background: #e9e8e1;
+    border: 1px solid var(--borda);
+    border-radius: 8px;
+}
+
+.confirmacao h1 {
+    color: var(--oliva-escuro);
+}
+
+#aviso {
+    padding: 12px;
+    background: #ece7d8;
+    color: #62552e;
+    border-radius: 6px;
+}
+
+/* ==================== RODAPÉ ==================== */
+
+.rodape {
+    margin-top: 35px;
+    padding: 24px 20px;
+    text-align: center;
+    background: var(--carvao);
+    border-top: 4px solid var(--aco);
+}
+
+.rodape p {
+    margin: 0;
+    color: var(--bege-claro);
+    text-align: center;
+}
+
+/* ==================== RESPONSIVIDADE ==================== */
+
+@media (max-width: 900px) {
+    .lista-produtos {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+    }
+
+    .detalhes-produto {
+        gap: 20px;
+        padding: 22px;
+    }
+
+    .cabecalho {
+        padding: 20px 24px;
+    }
+}
+
+@media (max-width: 768px) {
+    .cabecalho {
+        flex-wrap: wrap;
+        gap: 15px;
+        padding: 18px;
+    }
+
+    .logo {
+        font-size: 21px;
+    }
+
+    .busca {
+        order: 3;
+        width: 100%;
+        max-width: none;
+    }
+
+    .menu {
+        gap: 7px;
+        padding: 12px;
+    }
+
+    .menu a {
+        padding: 8px 10px;
+        font-size: 14px;
+    }
+
+    .apresentacao {
+        padding: 30px 18px;
+    }
+
+    .produtos {
+        padding: 28px 16px;
+    }
+
+    .produtos h2 {
+        font-size: 25px;
+    }
+
+    .produto {
+        padding: 14px;
+    }
+
+    .imagem-produto {
+        height: 160px;
+    }
+
+    .detalhes-produto {
+        grid-template-columns: 1fr;
+        padding: 20px;
+    }
+
+    .imagem-detalhe {
+        min-height: 250px;
+    }
+
+    .informacoes-produto {
+        padding: 0;
+    }
+
+    .informacoes-produto h1 {
+        font-size: 25px;
+    }
+
+    .pagina-produto {
+        padding: 22px 14px;
+    }
+
+    .checkout,
+    .admin-container,
+    .confirmacao {
+        margin: 20px 12px;
+        padding: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .lista-produtos {
+        grid-template-columns: 1fr;
+    }
+
+    .imagem-produto {
+        height: 200px;
+    }
+
+    .preco {
+        font-size: 20px;
+    }
+
+    .detalhes-produto {
+        padding: 15px;
+    }
+
+    .controle-quantidade {
+        gap: 10px;
+    }
+}
+
+
+/* ===== Aprimoramento dos cartões de produtos ===== */
+
+.lista-produtos {
+    align-items: stretch;
+}
+
+.produto {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 16px;
+}
+
+.link-produto {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+}
+
+.imagem-produto {
+    width: 100%;
+    height: 230px;
+    margin-bottom: 14px;
+    padding: 0;
+    overflow: hidden;
+    background: #e5e3dc;
+    border: 1px solid var(--borda);
+    border-radius: 8px;
+}
+
+.imagem-produto img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 10px;
+    transition: transform 0.3s ease;
+}
+
+.produto:hover .imagem-produto img {
+    transform: scale(1.04);
+}
+
+.imagem-produto.imagem-indisponivel {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #e9e7df, #d7d8d3);
+}
+
+.imagem-indisponivel span {
+    padding: 10px;
+    color: #62676a;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.produto .descricao-produto {
+    display: -webkit-box;
+    overflow: hidden;
+    margin: 4px 0 10px;
+    color: var(--texto-suave);
+    font-size: 14px;
+    line-height: 1.5;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+}
+
+.produto .preco {
+    margin-top: auto;
+    padding-top: 12px;
+    font-size: 23px;
+}
+
+.produto .botao-comprar {
+    min-height: 46px;
+    margin-top: 12px;
+}
+
+@media (max-width: 768px) {
+    .imagem-produto {
+        height: 200px;
+    }
+}
+
+@media (max-width: 480px) {
+    .imagem-produto {
+        height: 230px;
+    }
+}
+
+.home-carrinho {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 6px;
+    white-space: nowrap;
+}
+
+.home-carrinho > svg {
+    flex-shrink: 0;
+    width: 22px;
+    height: 22px;
+}
+
+.home-carrinho > span {
+    display: inline;
+    white-space: nowrap;
+}
+
+#quantidade-carrinho {
+    display: inline;
+}
+
+
+/* Correção definitiva do alinhamento do carrinho */
+a.home-carrinho {
+    display: inline-flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    justify-content: center;
+    gap: 8px;
+    width: max-content;
+    min-width: max-content;
+    white-space: nowrap !important;
+    text-decoration: none;
+}
+
+a.home-carrinho svg {
+    display: block;
+    flex: 0 0 22px;
+    width: 22px;
+    height: 22px;
+}
+
+a.home-carrinho > span {
+    display: inline-block !important;
+    width: auto !important;
+    min-width: max-content;
+    white-space: nowrap !important;
+}
+
+a.home-carrinho #quantidade-carrinho {
+    display: inline !important;
+    white-space: nowrap !important;
+}
+
+/* =====================================================
+   ACESSIBILIDADE (A11Y) - WCAG 2.1
+   ===================================================== */
+
+/* Oculto visualmente, mas legível por leitores de tela */
+.sr-only {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+}
+
+/* Atalho para pular navegação com a tecla Tab */
+.skip-link {
+    position: absolute;
+    top: -50px;
+    left: 15px;
+    background: var(--oliva);
+    color: #ffffff !important;
+    padding: 10px 18px;
+    z-index: 10000;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: bold;
+    text-decoration: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    transition: top 0.2s ease-in-out;
+}
+
+.skip-link:focus {
+    top: 15px;
+}
+
+/* Foco visível com alto contraste para navegação por teclado */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+    outline: 3px solid var(--oliva, #596449) !important;
+    outline-offset: 3px !important;
+}
+
+/* Notificação acessível (Toast) para leitores de tela e visual */
+#notificacao-acessivel {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--carvao);
+    color: var(--bege);
+    padding: 14px 20px;
+    border-radius: 6px;
+    border-left: 5px solid var(--oliva);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    font-size: 14px;
+    font-weight: 500;
+    z-index: 99999;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    pointer-events: none;
+}
+
+#notificacao-acessivel.ativo {
+    opacity: 1;
+    transform: translateY(0);
+}
+

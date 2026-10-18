@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Seu carrinho de compras Canivete da Roça">
+
+    <title>Meu Carrinho | Canivete da Roça</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        :root {
+            --carvao: #171816;
+            --aco: #343733;
+            --bege: #e9dfcd;
+            --bege-claro: #f7f4ed;
+            --oliva: #65734b;
+            --oliva-escuro: #485438;
+            --borda: #ded8cb;
+            --texto: #292a26;
+            --secundario: #77776e;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: var(--bege-claro);
+            color: var(--texto);
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .cabecalho-carrinho {
+            background: var(--carvao);
+            color: var(--bege);
+            border-bottom: 3px solid var(--oliva);
+        }
+
+        .cabecalho-conteudo {
+            width: min(1180px, 92%);
+            min-height: 86px;
+            margin: auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .logo-carrinho {
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: 25px;
+            font-weight: bold;
+            letter-spacing: .4px;
+        }
+
+        .logo-carrinho span {
+            display: block;
+            margin-top: 5px;
+            color: #b7b8a5;
+            font-family: Arial, sans-serif;
+            font-size: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .link-voltar {
+            padding: 12px 17px;
+            border: 1px solid #777a6c;
+            border-radius: 5px;
+            color: #f3eadb;
+            font-size: 14px;
+            transition: background .2s;
+        }
+
+        .link-voltar:hover {
+            background: var(--aco);
+        }
+
+        .banner-carrinho {
+            padding: 38px 4%;
+            background: linear-gradient(115deg, #252722, #41443a);
+            color: var(--bege);
+        }
+
+        .banner-conteudo {
+            width: min(1180px, 100%);
+            margin: auto;
+        }
+
+        .banner-carrinho p {
+            margin: 0 0 10px;
+            color: #c4c7b5;
+            font-size: 12px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .banner-carrinho h1 {
+            margin: 0;
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: clamp(30px, 5vw, 43px);
+        }
+
+        .conteudo-carrinho {
+            width: min(1180px, 92%);
+            margin: 35px auto 65px;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 330px;
+            align-items: start;
+            gap: 28px;
+        }
+
+        .painel-produtos,
+        .resumo-carrinho {
+            padding: 26px;
+            background: #fff;
+            border: 1px solid var(--borda);
+            border-radius: 8px;
+            box-shadow: 0 5px 18px rgba(35, 34, 28, .04);
+        }
+
+        .painel-produtos h2,
+        .resumo-carrinho h2 {
+            margin: 0 0 22px;
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: 23px;
+        }
+
+        #lista-carrinho {
+            min-width: 0;
+        }
+
+        #lista-carrinho:empty::before {
+            content: "Seu carrinho está vazio. Explore nossos produtos artesanais e escolha seus favoritos.";
+            display: block;
+            padding: 28px 15px;
+            background: var(--bege-claro);
+            border: 1px dashed var(--borda);
+            border-radius: 6px;
+            color: var(--secundario);
+            font-size: 14px;
+            line-height: 1.7;
+            text-align: center;
+        }
+
+        .resumo-carrinho {
+            position: sticky;
+            top: 20px;
+        }
+
+        .resumo-carrinho h2 {
+            padding-bottom: 18px;
+            border-bottom: 1px solid var(--borda);
+        }
+
+        .resumo-carrinho p {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin: 0 0 22px;
+            color: var(--secundario);
+            font-size: 15px;
+        }
+
+        #total-carrinho {
+            color: var(--texto);
+            font-size: 23px;
+            font-weight: bold;
+        }
+
+        #botao-finalizar {
+            width: 100%;
+            min-height: 48px;
+            padding: 13px 18px;
+            border: 0;
+            border-radius: 5px;
+            background: var(--oliva);
+            color: #fff;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background .2s, transform .2s;
+        }
+
+        #botao-finalizar:hover {
+            background: var(--oliva-escuro);
+            transform: translateY(-1px);
+        }
+
+        .aviso-seguranca {
+            margin: 17px 0 0;
+            color: var(--secundario);
+            font-size: 12px;
+            line-height: 1.6;
+            text-align: center;
+        }
+
+        .rodape-carrinho {
+            padding: 25px 4%;
+            background: var(--carvao);
+            color: #c9c5b9;
+            font-size: 12px;
+            text-align: center;
+        }
+
+        /* Estilos para itens inseridos pelo JavaScript */
+        #lista-carrinho > div {
+            margin-bottom: 14px;
+            padding: 16px;
+            border: 1px solid var(--borda);
+            border-radius: 6px;
+            background: #fff;
+        }
+
+        #lista-carrinho button {
+            margin: 5px 5px 5px 0;
+            padding: 9px 12px;
+            border: 1px solid var(--borda);
+            border-radius: 4px;
+            background: var(--bege-claro);
+            color: var(--texto);
+            cursor: pointer;
+        }
+
+        #lista-carrinho button:hover {
+            border-color: var(--oliva);
+        }
+
+        @media (max-width: 760px) {
+            .cabecalho-conteudo {
+                min-height: 76px;
+            }
+
+            .logo-carrinho {
+                font-size: 20px;
+            }
+
+            .link-voltar {
+                padding: 10px;
+                font-size: 12px;
+            }
+
+            .conteudo-carrinho {
+                grid-template-columns: 1fr;
+                margin-top: 22px;
+            }
+
+            .painel-produtos,
+            .resumo-carrinho {
+                padding: 20px;
+            }
+
+            .resumo-carrinho {
+                position: static;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .logo-carrinho {
+                font-size: 17px;
+            }
+
+            .logo-carrinho span {
+                font-size: 8px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <a href="#lista-carrinho" class="skip-link">Pular para os itens do carrinho</a>
+
+    <header class="cabecalho-carrinho">
+        <div class="cabecalho-conteudo">
+            <a href="index.html" class="logo-carrinho">
+                Canivete da Roça
+                <span>Tradição e qualidade artesanal</span>
+            </a>
+
+            <a href="index.html" class="link-voltar">
+                ← Continuar comprando
+            </a>
+        </div>
+    </header>
+
+    <section class="banner-carrinho">
+        <div class="banner-conteudo">
+            <p>Sua seleção artesanal</p>
+            <h1>Meu carrinho</h1>
+        </div>
+    </section>
+
+    <main class="conteudo-carrinho">
+
+        <section class="painel-produtos">
+            <h2>Produtos selecionados</h2>
+
+            <div id="lista-carrinho">
+                <!-- Os produtos serão carregados pelo JavaScript -->
+            </div>
+        </section>
+
+        <aside class="resumo-carrinho">
+            <h2>Resumo do pedido</h2>
+
+            <p>
+                <span>Total dos produtos</span>
+                <strong id="total-carrinho">R$ 0,00</strong>
+            </p>
+
+            <button id="botao-finalizar" type="button">
+                Continuar para finalizar →
+            </button>
+
+            <p class="aviso-seguranca">
+                O frete e as opções de pagamento serão apresentados
+                conforme as etapas de finalização da compra.
+            </p>
+        </aside>
+
+    </main>
+
+    <footer class="rodape-carrinho">
+        Canivete da Roça · Cutelaria artesanal
+    </footer>
+
+    <script src="js/carrinho.js"></script>
+
+</body>
+</html>

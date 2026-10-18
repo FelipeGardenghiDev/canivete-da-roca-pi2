@@ -1,0 +1,116 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acesso administrativo | Canivete da Roça</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body {
+            min-height: 100vh;
+            display: grid;
+            place-items: center;
+            margin: 0;
+            padding: 20px;
+            background: #191a18;
+            color: #f1eadf;
+            font-family: Arial, sans-serif;
+        }
+        .login-box {
+            width: 100%;
+            max-width: 420px;
+            box-sizing: border-box;
+            padding: 32px;
+            border: 1px solid #66513e;
+            border-radius: 12px;
+            background: #25251f;
+        }
+        .login-box h1 {
+            margin-top: 0;
+            color: #d4b58a;
+            font-size: 26px;
+        }
+        .login-box p {
+            color: #c6bdae;
+            line-height: 1.5;
+        }
+        .login-box label {
+            display: block;
+            margin: 18px 0 7px;
+        }
+        .login-box input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 12px;
+            border: 1px solid #74624e;
+            border-radius: 6px;
+            background: #191a18;
+            color: #fff;
+            font-size: 16px;
+        }
+        .login-box button {
+            width: 100%;
+            margin-top: 22px;
+            padding: 13px;
+            border: 0;
+            border-radius: 6px;
+            background: #718052;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .login-box button:disabled {
+            opacity: .6;
+            cursor: wait;
+        }
+        #mensagem {
+            overflow-wrap: anywhere;
+        }
+        .voltar {
+            display: inline-block;
+            margin-top: 12px;
+            color: #d4b58a;
+        }
+    </style>
+</head>
+<body>
+    <main class="login-box">
+        <h1>Canivete da Roça</h1>
+        <p>Acesso restrito à administração da loja.</p>
+
+        <form id="form-login">
+            <label for="usuario">Usuário</label>
+            <input
+                id="usuario"
+                name="usuario"
+                type="text"
+                autocomplete="username"
+                required
+                maxlength="100"
+            >
+
+            <label for="senha">Senha</label>
+            <input
+                id="senha"
+                name="senha"
+                type="password"
+                autocomplete="current-password"
+                required
+                maxlength="200"
+            >
+
+            <button id="botao-login" type="submit">
+                Entrar
+            </button>
+
+            <p id="mensagem" role="alert" aria-live="polite"></p>
+        </form>
+
+        <a class="voltar" href="index.html">Voltar à loja</a>
+    </main>
+
+    <script src="js/login-admin.js"></script>
+</body>
+</html>

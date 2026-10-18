@@ -7,7 +7,8 @@ Documento oficial de alinhamento técnico, arquitetural e regras de negócio do 
 ## 🎯 1. Visão Geral e Escopo
 
 * **Nicho do E-commerce:** Cutelaria artesanal, canivetes, facas, bainhas em couro, strops e pastas para polimento/afiação de lâminas.
-* **Proposta Arquitetural:** Simplicidade máxima para estudantes (HTML5/CSS3/JS puro no Frontend + Node.js/Express no Backend), rodando unificados no **Render** com custo fixo de infraestrutura de **R$ 0,00**.
+* **Proposta Arquitetural:** Simplicidade máxima para estudantes (HTML5/CSS3/JS puro no Frontend + Node.js/Express no Backend), com persistência relacional e armazenamento de arquivos no **Supabase** (PostgreSQL + Supabase Storage).
+* **Decisão de Infraestrutura:** **O serviço Render NÃO será utilizado.** A hospedagem da aplicação/API será definida separadamente pela equipe, mantendo a centralização dos dados no Supabase.
 * **Modelo de Compra:** **Guest Checkout (Sem Login Obrigatório)**. O cliente preenche seus dados diretamente na finalização da compra, eliminando o atrito de senhas e aumentando a taxa de conversão. O acompanhamento de compras é feito via consulta rápida por **CPF ou Código do Pedido**.
 * **Imagens de Produtos:** Hospedadas no **Supabase Storage** (armazenamento em nuvem gratuito de arquivos). O banco de dados guarda apenas o link (URL pública em texto).
 * **Escopo de Pagamento:** Exclusivo via **PIX (Pagar.me v5)** com QR Code dinâmico e expiração estrita de 30 minutos.
@@ -24,11 +25,7 @@ flowchart TD
         User["Visitante / Cliente"] --> Telas["Frontend (HTML5 + CSS3 + JS Puro)"]
     end
 
-    subgraph Monitoramento ["Disponibilidade 24/7"]
-        Uptime["UptimeRobot / cron-job.org"] -.->|"Ping a cada 10-14 min (Sem hibernação)"| RenderApp
-    end
-
-    subgraph RenderApp ["Hospedagem Render (100% Gratuito - 1 Serviço Web)"]
+    subgraph AppServer ["Servidor da Aplicação (Node.js + Express)"]
         ServerExpress["Servidor Node.js + Express"]
         ServerExpress -->|"app.use(express.static)"| Telas
         ServerExpress -->|"Rotas (/api/...)"| API["API REST"]
@@ -51,13 +48,12 @@ flowchart TD
 
 ### 📊 Resumo das Ferramentas Escolhidas
 
-| Camada | Ferramenta | Hospedagem / Plano | Custo | Finalidade Principal |
+| Camada | Ferramenta | Hospedagem / Nuvem | Custo | Finalidade Principal |
 | :--- | :--- | :--- | :--- | :--- |
-| **Frontend** | HTML5, CSS3, JS Vanilla | **Render** (junto com a API) | R$ 0,00 | Telas leves, sem build, facilidade de edição por qualquer membro. |
-| **Backend** | Node.js + Express | **Render** (Web Service Free) | R$ 0,00 | Rotas limpas, leitura direta de JSON (`req.body`), regras comerciais. |
-| **Banco de Dados**| PostgreSQL | **Supabase** (Free Tier) | R$ 0,00 | Armazenamento relacional de produtos, categorias, pedidos e clientes. |
+| **Frontend** | HTML5, CSS3, JS Vanilla | Servido junto com a API | R$ 0,00 | Telas leves, sem build, facilidade de edição por qualquer membro. |
+| **Backend** | Node.js + Express | Servidor Node.js *(Sem Render)* | R$ 0,00 | Rotas limpas, leitura direta de JSON (`req.body`), regras comerciais. |
+| **Banco de Dados**| **PostgreSQL** | **Supabase** (Free Tier) | R$ 0,00 | Armazenamento relacional de produtos, categorias, pedidos e clientes. |
 | **Fotos / Imagens**| **Supabase Storage** | Bucket público (`produtos`) | R$ 0,00 | Hospedagem das fotos dos produtos; o banco guarda apenas a URL. |
-| **Keep-Alive** | UptimeRobot / cron-job | Web gratuito | R$ 0,00 | Pings a cada 10-14 min no `/api/health` para evitar hibernação. |
 | **Pagamentos** | API REST v5 (Stone) | **Pagar.me** (Sandbox / Prod) | Por transação | Pix com QR Code dinâmico, código copia-e-cola e Webhook `order.paid`. |
 | **Logística** | API v2 de Cotação | **Melhor Envio** (Sandbox / Prod)| R$ 0,00 (API) | Cotação em tempo real de PAC, SEDEX e Jadlog com base no CEP. |
 | **E-mails** | Nodemailer (SMTP Gmail) | Google App Password | R$ 0,00 (até 500/dia)| Confirmação imediata do pagamento e envio do código de rastreio. |
