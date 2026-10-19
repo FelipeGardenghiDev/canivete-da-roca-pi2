@@ -377,6 +377,83 @@
                 </select>
             </div>
 
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px;">
+                <div>
+                    <label for="estoque">Estoque</label>
+                    <input
+                        id="estoque"
+                        name="estoque"
+                        type="number"
+                        min="0"
+                        step="1"
+                        required
+                        value="10"
+                    >
+                </div>
+
+                <div>
+                    <label for="tipo">Tipo</label>
+                    <select id="tipo" name="tipo" required>
+                        <option value="simples" selected>Simples</option>
+                        <option value="kit">Kit</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="peso_g">Peso (g)</label>
+                    <input
+                        id="peso_g"
+                        name="peso_g"
+                        type="number"
+                        min="1"
+                        step="1"
+                        required
+                        value="250"
+                    >
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px;">
+                <div>
+                    <label for="altura_cm">Altura (cm)</label>
+                    <input
+                        id="altura_cm"
+                        name="altura_cm"
+                        type="number"
+                        min="1"
+                        step="0.5"
+                        required
+                        value="5"
+                    >
+                </div>
+
+                <div>
+                    <label for="largura_cm">Largura (cm)</label>
+                    <input
+                        id="largura_cm"
+                        name="largura_cm"
+                        type="number"
+                        min="1"
+                        step="0.5"
+                        required
+                        value="12"
+                    >
+                </div>
+
+                <div>
+                    <label for="comprimento_cm">Comprimento (cm)</label>
+                    <input
+                        id="comprimento_cm"
+                        name="comprimento_cm"
+                        type="number"
+                        min="1"
+                        step="0.5"
+                        required
+                        value="22"
+                    >
+                </div>
+            </div>
+
             <div>
                 <label for="descricao">Descrição</label>
                 <textarea

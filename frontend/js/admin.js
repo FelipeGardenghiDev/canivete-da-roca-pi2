@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:3000/api/produtos";
+const API_URL = "/api/produtos";
 
 const formulario = document.querySelector("#form-produto");
 const mensagem = document.querySelector("#mensagem");
@@ -65,24 +65,55 @@ async function verificarAcessoAdmin() {
     return true;
 }
 
+async function removerProduto(produto) {
+    if (!confirm(`Deseja realmente remover "${produto.nome}" (ID #${produto.id}) do banco Supabase?`)) {
+        return;
+    }
+
+    try {
+        const resposta = await fetch(`${API_URL}/${produto.id}`, {
+            method: "DELETE",
+            credentials: "same-origin"
+        });
+
+        const resultado = await resposta.json();
+
+        if (!resposta.ok) {
+            throw new Error(resultado.erro || "Não foi possível remover o produto.");
+        }
+
+        mensagem.className = "sucesso";
+        mensagem.textContent = `Produto "${produto.nome}" (ID #${produto.id}) removido com sucesso!`;
+        await carregarProdutos();
+    } catch (erro) {
+        console.error(erro);
+        mensagem.className = "erro";
+        mensagem.textContent = `Erro ao remover: ${erro.message}`;
+    }
+}
+
 async function carregarProdutos() {
     listaAdmin.replaceChildren(
-        criarTexto("p", "Carregando produtos...")
+        criarTexto("p", "Carregando produtos do Supabase...")
     );
 
     try {
-        const resposta = await fetch(API_URL);
+        const resposta = await fetch(API_URL, {
+            credentials: "same-origin"
+        });
+
+        const resultado = await resposta.json();
 
         if (!resposta.ok) {
-            throw new Error("Erro ao consultar os produtos.");
+            throw new Error(resultado.erro || "Erro ao consultar os produtos.");
         }
 
-        const produtos = await resposta.json();
+        const produtos = resultado;
         listaAdmin.replaceChildren();
 
         if (!Array.isArray(produtos) || produtos.length === 0) {
             listaAdmin.appendChild(
-                criarTexto("p", "Nenhum produto cadastrado.")
+                criarTexto("p", "Nenhum produto cadastrado na tabela do Supabase.")
             );
             return;
         }
@@ -100,7 +131,7 @@ async function carregarProdutos() {
             card.appendChild(
                 criarTexto(
                     "strong",
-                    produto.nome || "Produto sem nome"
+                    `#${produto.id} — ${produto.nome || "Produto sem nome"}`
                 )
             );
 
@@ -123,11 +154,27 @@ async function carregarProdutos() {
             card.appendChild(
                 criarTexto(
                     "p",
+                    `Estoque: ${produto.estoque ?? 0} un. | ${produto.peso_g ?? 250}g (${produto.comprimento_cm ?? 22}×${produto.largura_cm ?? 12}×${produto.altura_cm ?? 5} cm)`,
+                    "descricao-admin"
+                )
+            );
+
+            card.appendChild(
+                criarTexto(
+                    "p",
                     produto.descricao || "Sem descrição cadastrada.",
                     "descricao-admin"
                 )
             );
 
+            const botaoRemover = document.createElement("button");
+            botaoRemover.type = "button";
+            botaoRemover.textContent = "Remover produto";
+            botaoRemover.style.cssText =
+                "margin-top: auto; padding: 8px 12px; border: 1px solid #d9b8b4; border-radius: 6px; background: #fff5f4; color: #b42318; font-size: 13px; font-weight: 700; cursor: pointer;";
+            botaoRemover.addEventListener("click", () => removerProduto(produto));
+
+            card.appendChild(botaoRemover);
             listaAdmin.appendChild(card);
         });
     } catch (erro) {
@@ -136,7 +183,7 @@ async function carregarProdutos() {
         listaAdmin.replaceChildren(
             criarTexto(
                 "p",
-                "Não foi possível carregar os produtos. Verifique se o servidor Node.js está funcionando."
+                `Não foi possível carregar os produtos: ${erro.message}`
             )
         );
     }
@@ -149,6 +196,12 @@ formulario.addEventListener("submit", async evento => {
         nome: document.querySelector("#nome").value.trim(),
         preco: Number(document.querySelector("#preco").value),
         categoria: document.querySelector("#categoria").value,
+        estoque: Number(document.querySelector("#estoque")?.value ?? 10),
+        tipo: document.querySelector("#tipo")?.value || "simples",
+        peso_g: Number(document.querySelector("#peso_g")?.value ?? 250),
+        altura_cm: Number(document.querySelector("#altura_cm")?.value ?? 5),
+        largura_cm: Number(document.querySelector("#largura_cm")?.value ?? 12),
+        comprimento_cm: Number(document.querySelector("#comprimento_cm")?.value ?? 22),
         descricao: document.querySelector("#descricao").value.trim(),
         imagem: document.querySelector("#imagem").value.trim()
     };
@@ -183,6 +236,7 @@ formulario.addEventListener("submit", async evento => {
     try {
         const resposta = await fetch(API_URL, {
             method: "POST",
+            credentials: "same-origin",
             headers: {
                 "Content-Type": "application/json"
             },
@@ -199,7 +253,7 @@ formulario.addEventListener("submit", async evento => {
 
         mensagem.className = "sucesso";
         mensagem.textContent =
-            `Produto "${resultado.produto.nome}" cadastrado com sucesso!`;
+            `Produto "${resultado.produto.nome}" (ID #${resultado.produto.id}) cadastrado com sucesso no Supabase!`;
 
         formulario.reset();
 
