@@ -36,13 +36,23 @@
     "nome": "Faca",
     "preco": 35.99,
     "categoria": "facas",
-    "descricao": "faca boa"
+    "descricao": "faca boa",
+    "imagem": ""
   },
   {
     "id": 6,
     "nome": "faca teste",
     "preco": 25.99,
     "categoria": "facas",
-    "descricao": "faca boa"
+    "descricao": "faca boa",
+    "imagem": ""
+  },
+  {
+    "id": 7,
+    "nome": "PRODUTO TESTE",
+    "preco": 2,
+    "categoria": "facas",
+    "descricao": "DESCRIÇÃO",
+    "imagem": ""
   }
 ]

@@ -8,11 +8,11 @@ const session = require("express-session");
 const { criarCobrancaPixPagarme } = require("./pix");
 const { calcularFrete } = require("./frete");
 const { enviarEmailPedidoCriado, enviarEmailPagamentoAprovado } = require("./email");
+const { supabase, supabaseConfigurado } = require("./supabase");
 
 const app = express();
 const PORTA = process.env.PORT || 3000;
 
-const ARQUIVO_DADOS = path.join(__dirname, "produtos.json");
 const ARQUIVO_PEDIDOS = path.join(__dirname, "pedidos.json");
 const PASTA_FRONTEND = path.join(__dirname, "../frontend");
 
@@ -115,18 +115,99 @@ function salvarArquivo(caminho, dados) {
 }
 
 // ======================================================
-// PRODUTOS
+// PRODUTOS (SUPABASE SQL)
 // ======================================================
 
-function carregarProdutos() {
-    return lerArquivo(ARQUIVO_DADOS, "produtos").map(produto => ({
-        ...produto,
-        imagem: produto.imagem || ""
-    }));
+function garantirSupabase() {
+    if (!supabaseConfigurado || !supabase) {
+        throw new Error(
+            "O Supabase não está configurado. Defina SUPABASE_URL e SUPABASE_KEY no arquivo backend/.env."
+        );
+    }
+
+    return supabase;
 }
 
-function salvarProdutos(produtos) {
-    salvarArquivo(ARQUIVO_DADOS, produtos);
+function gerarSlug(texto, comSufixo = false) {
+    const base = String(texto || "")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "") || "item";
+
+    if (!comSufixo) {
+        return base;
+    }
+
+    const sufixo = crypto.randomBytes(2).toString("hex");
+    return `${base}-${sufixo}`;
+}
+
+async function obterOuCriarCategoriaId(db, categoriaSlugOuNome) {
+    const slug = gerarSlug(categoriaSlugOuNome, false);
+    const nomeFormatado =
+        slug.charAt(0).toUpperCase() + slug.slice(1);
+
+    try {
+        const { data: existente } = await db
+            .from("categorias")
+            .select("id")
+            .eq("slug", slug)
+            .maybeSingle();
+
+        if (existente && existente.id) {
+            return existente.id;
+        }
+
+        const { data: criada } = await db
+            .from("categorias")
+            .insert([{ nome: nomeFormatado, slug }])
+            .select("id")
+            .single();
+
+        return criada ? criada.id : null;
+    } catch {
+        return null;
+    }
+}
+
+function normalizarProduto(produto) {
+    const imagemFinal = produto.imagem || produto.imagem_url || "";
+
+    return {
+        id: Number(produto.id),
+        categoria_id: produto.categoria_id ?? null,
+        nome: String(produto.nome || ""),
+        slug: String(produto.slug || ""),
+        preco: Number(produto.preco),
+        categoria: String(produto.categoria || "outros"),
+        descricao: String(produto.descricao || ""),
+        tipo: String(produto.tipo || "simples"),
+        estoque: Number(produto.estoque ?? 0),
+        peso_g: Number(produto.peso_g ?? 250),
+        altura_cm: Number(produto.altura_cm ?? 5),
+        largura_cm: Number(produto.largura_cm ?? 12),
+        comprimento_cm: Number(produto.comprimento_cm ?? 22),
+        ativo: produto.ativo !== false,
+        imagem: imagemFinal,
+        imagem_url: imagemFinal
+    };
+}
+
+async function carregarProdutos() {
+    const db = garantirSupabase();
+
+    const { data, error } = await db
+        .from("produtos")
+        .select("*")
+        .order("id", { ascending: true });
+
+    if (error) {
+        throw new Error(`Erro no Supabase ao consultar produtos: ${error.message}`);
+    }
+
+    return (data || []).map(normalizarProduto);
 }
 
 function validarImagem(imagem) {
@@ -305,19 +386,30 @@ app.post("/api/admin/logout", exigirAdmin, (req, res) => {
 });
 
 // ======================================================
-// LISTAR, FILTRAR E BUSCAR PRODUTOS
+// LISTAR, FILTRAR E BUSCAR PRODUTOS (SUPABASE SQL)
 // ======================================================
 
-app.get("/api/produtos", (req, res) => {
+app.get("/api/produtos", async (req, res) => {
     try {
         const { categoria, busca } = req.query;
-        let produtos = carregarProdutos();
+        const db = garantirSupabase();
+
+        let query = db
+            .from("produtos")
+            .select("*")
+            .order("id", { ascending: true });
 
         if (categoria && categoria !== "todos") {
-            produtos = produtos.filter(
-                produto => produto.categoria === categoria
-            );
+            query = query.eq("categoria", String(categoria).trim().toLowerCase());
         }
+
+        const { data, error } = await query;
+
+        if (error) {
+            throw new Error(error.message);
+        }
+
+        let produtos = (data || []).map(normalizarProduto);
 
         if (busca) {
             const termo = String(busca).trim().toLowerCase();
@@ -333,16 +425,16 @@ app.get("/api/produtos", (req, res) => {
         console.error("Erro ao listar produtos:", erro);
 
         return res.status(500).json({
-            erro: "Não foi possível carregar os produtos."
+            erro: erro.message || "Não foi possível carregar os produtos."
         });
     }
 });
 
 // ======================================================
-// BUSCAR PRODUTO POR ID
+// BUSCAR PRODUTO POR ID (SUPABASE SQL)
 // ======================================================
 
-app.get("/api/produtos/:id", (req, res) => {
+app.get("/api/produtos/:id", async (req, res) => {
     try {
         const id = Number(req.params.id);
 
@@ -352,34 +444,55 @@ app.get("/api/produtos/:id", (req, res) => {
             });
         }
 
-        const produto = carregarProdutos().find(
-            item => Number(item.id) === id
-        );
+        const db = garantirSupabase();
+        const { data, error } = await db
+            .from("produtos")
+            .select("*")
+            .eq("id", id)
+            .maybeSingle();
 
-        if (!produto) {
+        if (error) {
+            throw new Error(error.message);
+        }
+
+        if (!data) {
             return res.status(404).json({
                 erro: "Produto não encontrado."
             });
         }
 
-        return res.json(produto);
+        return res.json(normalizarProduto(data));
     } catch (erro) {
         console.error("Erro ao buscar produto:", erro);
 
         return res.status(500).json({
-            erro: "Não foi possível consultar o produto."
+            erro: erro.message || "Não foi possível consultar o produto."
         });
     }
 });
 
 // ======================================================
-// CADASTRAR PRODUTO
+// CADASTRAR PRODUTO NO SUPABASE SQL (PAINEL ADMIN)
 // ======================================================
 
-app.post("/api/produtos", exigirAdmin, (req, res) => {
+app.post("/api/produtos", exigirAdmin, async (req, res) => {
     try {
         const corpo = req.body || {};
-        const { nome, preco, categoria, descricao, imagem } = corpo;
+        const {
+            nome,
+            preco,
+            categoria,
+            descricao,
+            imagem,
+            imagem_url,
+            tipo,
+            estoque,
+            peso_g,
+            altura_cm,
+            largura_cm,
+            comprimento_cm,
+            ativo
+        } = corpo;
 
         if (
             typeof nome !== "string" ||
@@ -398,35 +511,73 @@ app.post("/api/produtos", exigirAdmin, (req, res) => {
             });
         }
 
-        const enderecoImagem = validarImagem(imagem);
-        const produtos = carregarProdutos();
+        const enderecoImagem = validarImagem(imagem || imagem_url);
+        const db = garantirSupabase();
 
-        const maiorId = produtos.reduce(
-            (maior, produto) => Math.max(
-                maior,
-                Number.isSafeInteger(Number(produto.id))
-                    ? Number(produto.id)
-                    : 0
-            ),
-            0
-        );
+        const categoriaLimpa = categoria.trim().toLowerCase();
+        const categoriaId = await obterOuCriarCategoriaId(db, categoriaLimpa);
 
-        const novoProduto = {
-            id: maiorId + 1,
+        const estoqueNum =
+            estoque !== undefined && estoque !== "" && Number.isFinite(Number(estoque))
+                ? Math.max(0, Math.round(Number(estoque)))
+                : 10;
+
+        const pesoNum =
+            peso_g !== undefined && peso_g !== "" && Number.isFinite(Number(peso_g)) && Number(peso_g) > 0
+                ? Math.round(Number(peso_g))
+                : 250;
+
+        const alturaNum =
+            altura_cm !== undefined && altura_cm !== "" && Number.isFinite(Number(altura_cm)) && Number(altura_cm) > 0
+                ? Number(Number(altura_cm).toFixed(2))
+                : 5;
+
+        const larguraNum =
+            largura_cm !== undefined && largura_cm !== "" && Number.isFinite(Number(largura_cm)) && Number(largura_cm) > 0
+                ? Number(Number(largura_cm).toFixed(2))
+                : 12;
+
+        const comprimentoNum =
+            comprimento_cm !== undefined && comprimento_cm !== "" && Number.isFinite(Number(comprimento_cm)) && Number(comprimento_cm) > 0
+                ? Number(Number(comprimento_cm).toFixed(2))
+                : 22;
+
+        const dadosNovoProduto = {
+            categoria_id: categoriaId,
             nome: nome.trim(),
+            slug: gerarSlug(nome.trim(), true),
             preco: Number(Number(preco).toFixed(2)),
-            categoria: categoria.trim().toLowerCase(),
+            categoria: categoriaLimpa,
             descricao: typeof descricao === "string"
                 ? descricao.trim()
                 : "",
-            imagem: enderecoImagem
+            tipo: typeof tipo === "string" && tipo.trim()
+                ? tipo.trim().toLowerCase()
+                : "simples",
+            estoque: estoqueNum,
+            peso_g: pesoNum,
+            altura_cm: alturaNum,
+            largura_cm: larguraNum,
+            comprimento_cm: comprimentoNum,
+            imagem: enderecoImagem,
+            imagem_url: enderecoImagem,
+            ativo: ativo !== false
         };
 
-        produtos.push(novoProduto);
-        salvarProdutos(produtos);
+        const { data: inserido, error } = await db
+            .from("produtos")
+            .insert([dadosNovoProduto])
+            .select("*")
+            .single();
+
+        if (error) {
+            throw new Error(error.message);
+        }
+
+        const novoProduto = normalizarProduto(inserido);
 
         return res.status(201).json({
-            mensagem: "Produto cadastrado com sucesso!",
+            mensagem: "Produto cadastrado com sucesso no Supabase!",
             produto: novoProduto
         });
     } catch (erro) {
@@ -434,6 +585,42 @@ app.post("/api/produtos", exigirAdmin, (req, res) => {
 
         return res.status(400).json({
             erro: erro.message || "Não foi possível cadastrar o produto."
+        });
+    }
+});
+
+// ======================================================
+// REMOVER PRODUTO NO SUPABASE SQL (PAINEL ADMIN)
+// ======================================================
+
+app.delete("/api/produtos/:id", exigirAdmin, async (req, res) => {
+    try {
+        const id = Number(req.params.id);
+
+        if (!Number.isSafeInteger(id) || id <= 0) {
+            return res.status(400).json({
+                erro: "ID de produto inválido."
+            });
+        }
+
+        const db = garantirSupabase();
+        const { error } = await db
+            .from("produtos")
+            .delete()
+            .eq("id", id);
+
+        if (error) {
+            throw new Error(error.message);
+        }
+
+        return res.json({
+            mensagem: "Produto removido com sucesso."
+        });
+    } catch (erro) {
+        console.error("Erro ao remover produto:", erro);
+
+        return res.status(500).json({
+            erro: erro.message || "Não foi possível remover o produto."
         });
     }
 });
@@ -559,8 +746,8 @@ app.post("/api/pedidos", async (req, res) => {
             });
         }
 
-        // Os preços e nomes são obtidos do servidor.
-        const produtosDisponiveis = carregarProdutos();
+        // Os preços e nomes são obtidos do servidor (Supabase).
+        const produtosDisponiveis = await carregarProdutos();
         const itensPedido = [];
         let totalCentavos = 0;
 
