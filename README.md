@@ -36,14 +36,15 @@ canivete-da-roca-pi2/
 │
 ├── backend/              # Servidor Node.js + Express
 │   ├── server.js         # API REST, autenticação de sessão e rotas
-│   ├── produtos.json     # Catálogo mock utilizado para testes locais
-│   ├── pedidos.json      # Pedidos mock gerados durante simulações
+│   ├── produtos.json     # Catálogo mock utilizado para testes locais / contingência
+│   ├── pedidos.json      # Pedidos mock gerados durante simulações / contingência
 │   ├── .env.example      # Modelo de variáveis de ambiente
 │   └── package.json      # Dependências do servidor
 │
 ├── database/             # Modelagem relacional e scripts SQL para o Supabase
 │   ├── schema.sql        # Criação de tabelas (categorias, produtos, pedidos, etc.)
 │   ├── seed.sql          # Carga de teste inicial de produtos e categorias
+│   ├── GUIA_CONFIGURACAO_SUPABASE.md # Guia de configuração para outra máquina
 │   └── README.md         # Manual de instruções para o DBA
 │
 └── DIRETRIZES_DO_PROJETO.md  # Especificação técnica e regras de negócio detalhadas
@@ -59,9 +60,8 @@ canivete-da-roca-pi2/
 | **Frete (Melhor Envio Sandbox)** | ✅ 100% Integrado & Ativo | Cotação em tempo real no carrinho e no checkout via API v2 do Melhor Envio Sandbox com cálculo de cubagem, fallback e seleção de Correios/Jadlog. |
 | **Pagamento PIX (Pagar.me v5)** | ✅ 100% Integrado & Ativo | Geração de BR Code (Bacen / EMV) com QR Code dinâmico, código Copia e Cola, validade estrita de 30 min (TTL) e botão de simulação para PI2. |
 | **E-mails Transacionais (Nodemailer)** | ✅ 100% Integrado & Ativo | Disparo automático de e-mail ao criar pedido (com QR Code Pix) e ao confirmar pagamento, com templates HTML elegantes e suporte ao Gmail oficial (`canivetedarocaunivesp@gmail.com`). |
-| **Banco de Dados (Supabase)** | ⏳ Aguardando DBA | Scripts SQL prontos ([`schema.sql`](./database/schema.sql) e [`seed.sql`](./database/seed.sql)) e instruções detalhadas aguardando execução pelo DBA no painel do Supabase. |
-| **Backend (Conexão Supabase)** | ⏳ Próxima Etapa | O backend está preparado; assim que o DBA entregar a URL e a Anon Key, faremos a substituição dos dados mock (`produtos.json`/`pedidos.json`) pelas tabelas reais. |
-
+| **Banco de Dados (Supabase)** | ✅ 100% Modelado & DDL Completo | Scripts SQL geradores ([`schema.sql`](./database/schema.sql) e [`seed.sql`](./database/seed.sql)) com todas as 6 tabelas relacionais (`categorias`, `produtos`, `kit_itens`, `avise_me`, `pedidos` e `pedido_itens`), índices e compatibilidade com checkout simplificado. |
+| **Backend (Conexão Supabase)** | ✅ 100% Integrado & Dual-Mode | Integração completa no backend para produtos e pedidos, com persistência relacional, baixa automática de estoque e fallback tolerante a falhas para `produtos.json`/`pedidos.json` se as chaves não estiverem configuradas. |
 
 ---
 
@@ -98,18 +98,44 @@ Abra seu navegador em:
 
 ---
 
+## 🔑 Como Ativar o Supabase em Outra Máquina (Passo a Passo)
+
+Para configurar e rodar o projeto conectando diretamente ao banco de dados Supabase na sua outra máquina de trabalho:
+
+1. **Atualize o código com o GitHub:**
+   ```bash
+   git checkout main
+   git pull origin main
+   ```
+2. **Obtenha as chaves no Supabase:**
+   * Acesse [supabase.com/dashboard](https://supabase.com/dashboard);
+   * Selecione seu projeto e vá em **Project Settings** -> **API**;
+   * Copie o **Project URL** e a chave **`anon` / `public`**.
+3. **Preencha no `backend/.env`:**
+   ```env
+   SUPABASE_URL=https://xxxxxxxxxxxxxxxxxxxx.supabase.co
+   SUPABASE_KEY=sua_chave_anon_aqui
+   ```
+4. **Instale e inicie o backend:**
+   ```bash
+   cd backend
+   npm install
+   npm start
+   ```
+   > 💡 *Dica:* Se você ainda não colou as chaves, o backend funcionará normalmente no **Modo Local (Mock)** com os arquivos `produtos.json` e `pedidos.json`, sem dar erro.
+   > 
+   > Para instruções detalhadas com imagens e verificação do bucket de fotos, leia o guia completo:  
+   > 👉 **[`database/GUIA_CONFIGURACAO_SUPABASE.md`](./database/GUIA_CONFIGURACAO_SUPABASE.md)**
+
+---
+
 ## 👥 Guia Rápido para a Equipe
 
 ### 🗄️ Próximos Passos para o DBA (Banco de Dados):
 Consulte o guia detalhado em [`database/README.md`](./database/README.md) para:
 1. Criar a conta gratuita no [Supabase](https://supabase.com).
 2. Rodar o [`schema.sql`](./database/schema.sql) e o [`seed.sql`](./database/seed.sql) no *SQL Editor*.
-3. Criar o bucket público **`produtos`** no *Supabase Storage* e disponibilizar a URL e a Anon Key para o backend.
-
-### ⚙️ Próximos Passos para o Backend:
-1. Instalar a biblioteca oficial: `npm install @supabase/supabase-js`.
-2. Criar uma conexão simples em `backend/supabase.js`.
-3. Substituir a leitura dos arquivos `produtos.json` por consultas diretas à tabela do Supabase.
+3. Criar o bucket público **`produtos`** no *Supabase Storage*.
 
 ---
 

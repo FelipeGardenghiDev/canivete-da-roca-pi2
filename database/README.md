@@ -6,8 +6,9 @@ Módulo responsável pela modelagem, scripts DDL, migrations e dados de teste do
 
 ## 📁 Conteúdo deste Módulo
 
-* **[`schema.sql`](./schema.sql):** Script DDL com a criação das tabelas sugeridas (`categorias`, `produtos`, `kit_itens`, `avise_me`, `pedidos` e `pedido_itens`).
+* **[`schema.sql`](./schema.sql):** Script DDL completo e idempotente com a criação das 6 tabelas (`categorias`, `produtos`, `kit_itens`, `avise_me`, `pedidos` e `pedido_itens`), colunas de logística/frete e recarregamento de schema no PostgREST.
 * **[`seed.sql`](./seed.sql):** Carga inicial de dados para testes, incluindo as categorias do menu superior e produtos exemplares de cutelaria com fotos, dimensões para frete e amarração de kit.
+* **[`GUIA_CONFIGURACAO_SUPABASE.md`](./GUIA_CONFIGURACAO_SUPABASE.md):** Checklist prático passo a passo para configurar e ativar as credenciais em outra máquina.
 
 ---
 
@@ -36,12 +37,17 @@ Se esta é a sua primeira vez configurando um banco na nuvem, siga este roteiro:
 4. **IMPORTANTE:** Ative a chavinha **"Public bucket"** (isso permite que as imagens dos produtos apareçam na vitrine da loja sem bloqueio de permissão).
 5. Clique em **"Save"**.
 
-### 4. Fornecer as Credenciais para o Backend
+### 4. Configurar as Credenciais no Backend (.env)
 1. No menu lateral esquerdo, clique na engrenagem **Project Settings**.
 2. Clique na aba **API**.
-3. Copie e envie para o time de backend os seguintes dados:
+3. Copie os seguintes dados:
    * **Project URL** (exemplo: `https://abcdefg12345.supabase.co`)
-   * **Project API Keys — anon / public** (a chave pública de acesso)
+   * **Project API Keys — anon / public** (chave pública de acesso)
+4. No arquivo `backend/.env`, preencha:
+   ```env
+   SUPABASE_URL=https://abcdefg12345.supabase.co
+   SUPABASE_KEY=sua_chave_anon_aqui
+   ```
+5. Inicie o servidor (`npm start` na pasta `backend`). O servidor detectará a conexão com o Supabase automaticamente.
 
-Pronto! Com essas 4 etapas, o banco e o storage estarão 100% operacionais para o projeto.
-
+Para o passo a passo detalhado ao clonar o projeto em uma nova máquina, consulte o [`GUIA_CONFIGURACAO_SUPABASE.md`](./GUIA_CONFIGURACAO_SUPABASE.md).
