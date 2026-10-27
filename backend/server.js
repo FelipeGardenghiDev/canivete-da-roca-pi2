@@ -14,6 +14,7 @@ const app = express();
 const PORTA = process.env.PORT || 3000;
 
 const ARQUIVO_PEDIDOS = path.join(__dirname, "pedidos.json");
+const ARQUIVO_PRODUTOS = path.join(__dirname, "produtos.json");
 const PASTA_FRONTEND = path.join(__dirname, "../frontend");
 
 const STATUS_PEDIDOS = [
@@ -114,6 +115,18 @@ function salvarArquivo(caminho, dados) {
     );
 }
 
+function lerProdutosArquivo() {
+    try {
+        return lerArquivo(ARQUIVO_PRODUTOS, "produtos");
+    } catch {
+        return [];
+    }
+}
+
+function salvarProdutosArquivo(produtos) {
+    salvarArquivo(ARQUIVO_PRODUTOS, produtos);
+}
+
 // ======================================================
 // PRODUTOS (SUPABASE SQL)
 // ======================================================
@@ -196,18 +209,24 @@ function normalizarProduto(produto) {
 }
 
 async function carregarProdutos() {
-    const db = garantirSupabase();
+    if (supabaseConfigurado && supabase) {
+        try {
+            const { data, error } = await supabase
+                .from("produtos")
+                .select("*")
+                .order("id", { ascending: true });
 
-    const { data, error } = await db
-        .from("produtos")
-        .select("*")
-        .order("id", { ascending: true });
+            if (!error && Array.isArray(data)) {
+                return data.map(normalizarProduto);
+            }
 
-    if (error) {
-        throw new Error(`Erro no Supabase ao consultar produtos: ${error.message}`);
+            console.warn("[SUPABASE] Falha ao consultar produtos no Supabase, usando produtos.json:", error?.message);
+        } catch (err) {
+            console.warn("[SUPABASE] Erro ao consultar produtos no Supabase, usando produtos.json:", err.message);
+        }
     }
 
-    return (data || []).map(normalizarProduto);
+    return lerProdutosArquivo().map(normalizarProduto);
 }
 
 function validarImagem(imagem) {
@@ -392,24 +411,15 @@ app.post("/api/admin/logout", exigirAdmin, (req, res) => {
 app.get("/api/produtos", async (req, res) => {
     try {
         const { categoria, busca } = req.query;
-        const db = garantirSupabase();
 
-        let query = db
-            .from("produtos")
-            .select("*")
-            .order("id", { ascending: true });
+        let produtos = await carregarProdutos();
 
         if (categoria && categoria !== "todos") {
-            query = query.eq("categoria", String(categoria).trim().toLowerCase());
+            const termoCat = String(categoria).trim().toLowerCase();
+            produtos = produtos.filter(produto =>
+                String(produto.categoria || "").trim().toLowerCase() === termoCat
+            );
         }
-
-        const { data, error } = await query;
-
-        if (error) {
-            throw new Error(error.message);
-        }
-
-        let produtos = (data || []).map(normalizarProduto);
 
         if (busca) {
             const termo = String(busca).trim().toLowerCase();
@@ -444,24 +454,32 @@ app.get("/api/produtos/:id", async (req, res) => {
             });
         }
 
-        const db = garantirSupabase();
-        const { data, error } = await db
-            .from("produtos")
-            .select("*")
-            .eq("id", id)
-            .maybeSingle();
+        if (supabaseConfigurado && supabase) {
+            try {
+                const { data, error } = await supabase
+                    .from("produtos")
+                    .select("*")
+                    .eq("id", id)
+                    .maybeSingle();
 
-        if (error) {
-            throw new Error(error.message);
+                if (!error && data) {
+                    return res.json(normalizarProduto(data));
+                }
+            } catch (errSupabase) {
+                console.warn("[SUPABASE] Falha ao buscar produto por ID no Supabase:", errSupabase.message);
+            }
         }
 
-        if (!data) {
+        const produtos = await carregarProdutos();
+        const produto = produtos.find(p => Number(p.id) === id);
+
+        if (!produto) {
             return res.status(404).json({
                 erro: "Produto não encontrado."
             });
         }
 
-        return res.json(normalizarProduto(data));
+        return res.json(normalizarProduto(produto));
     } catch (erro) {
         console.error("Erro ao buscar produto:", erro);
 
@@ -512,10 +530,7 @@ app.post("/api/produtos", exigirAdmin, async (req, res) => {
         }
 
         const enderecoImagem = validarImagem(imagem || imagem_url);
-        const db = garantirSupabase();
-
         const categoriaLimpa = categoria.trim().toLowerCase();
-        const categoriaId = await obterOuCriarCategoriaId(db, categoriaLimpa);
 
         const estoqueNum =
             estoque !== undefined && estoque !== "" && Number.isFinite(Number(estoque))
@@ -543,7 +558,6 @@ app.post("/api/produtos", exigirAdmin, async (req, res) => {
                 : 22;
 
         const dadosNovoProduto = {
-            categoria_id: categoriaId,
             nome: nome.trim(),
             slug: gerarSlug(nome.trim(), true),
             preco: Number(Number(preco).toFixed(2)),
@@ -564,20 +578,55 @@ app.post("/api/produtos", exigirAdmin, async (req, res) => {
             ativo: ativo !== false
         };
 
-        const { data: inserido, error } = await db
-            .from("produtos")
-            .insert([dadosNovoProduto])
-            .select("*")
-            .single();
+        if (supabaseConfigurado && supabase) {
+            try {
+                const categoriaId = await obterOuCriarCategoriaId(supabase, categoriaLimpa);
+                dadosNovoProduto.categoria_id = categoriaId;
 
-        if (error) {
-            throw new Error(error.message);
+                const { data: inserido, error } = await supabase
+                    .from("produtos")
+                    .insert([dadosNovoProduto])
+                    .select("*")
+                    .single();
+
+                if (error) {
+                    throw new Error(error.message);
+                }
+
+                const novoProduto = normalizarProduto(inserido);
+
+                // Salvar como backup/espelho em produtos.json
+                try {
+                    const locais = lerProdutosArquivo();
+                    locais.push(novoProduto);
+                    salvarProdutosArquivo(locais);
+                } catch {}
+
+                return res.status(201).json({
+                    mensagem: "Produto cadastrado com sucesso no Supabase!",
+                    produto: novoProduto
+                });
+            } catch (erroSupabase) {
+                console.error("[SUPABASE] Falha ao cadastrar no Supabase, salvando localmente:", erroSupabase.message);
+            }
         }
 
-        const novoProduto = normalizarProduto(inserido);
+        // Modo Local (produtos.json)
+        const locais = lerProdutosArquivo();
+        const proximoId = locais.length > 0
+            ? Math.max(...locais.map(p => Number(p.id) || 0)) + 1
+            : 1;
+
+        const novoProduto = normalizarProduto({
+            id: proximoId,
+            ...dadosNovoProduto
+        });
+
+        locais.push(novoProduto);
+        salvarProdutosArquivo(locais);
 
         return res.status(201).json({
-            mensagem: "Produto cadastrado com sucesso no Supabase!",
+            mensagem: "Produto cadastrado com sucesso (modo local)!",
             produto: novoProduto
         });
     } catch (erro) {
@@ -603,15 +652,24 @@ app.delete("/api/produtos/:id", exigirAdmin, async (req, res) => {
             });
         }
 
-        const db = garantirSupabase();
-        const { error } = await db
-            .from("produtos")
-            .delete()
-            .eq("id", id);
+        if (supabaseConfigurado && supabase) {
+            try {
+                const { error } = await supabase
+                    .from("produtos")
+                    .delete()
+                    .eq("id", id);
 
-        if (error) {
-            throw new Error(error.message);
+                if (error) {
+                    throw new Error(error.message);
+                }
+            } catch (erroSupabase) {
+                console.warn("[SUPABASE] Falha ao remover produto no Supabase:", erroSupabase.message);
+            }
         }
+
+        const locais = lerProdutosArquivo();
+        const filtrados = locais.filter(p => Number(p.id) !== id);
+        salvarProdutosArquivo(filtrados);
 
         return res.json({
             mensagem: "Produto removido com sucesso."
@@ -868,6 +926,87 @@ app.post("/api/pedidos", async (req, res) => {
         pedidos.push(pedido);
         salvarPedidos(pedidos);
 
+        // Persistência em Supabase SQL (se configurado)
+        if (supabaseConfigurado && supabase) {
+            try {
+                const dadosPedidoDb = {
+                    codigo: pedido.numero,
+                    cliente_nome: nome,
+                    cliente_cpf: cliente.cpf ? String(cliente.cpf).replace(/\D/g, "").slice(0, 14) : "",
+                    cliente_email: email,
+                    cliente_telefone: telefone.slice(0, 20),
+                    endereco_cep: cep.slice(0, 9),
+                    endereco_rua: endereco.slice(0, 255),
+                    endereco_numero: String(cliente.numero || "").slice(0, 50),
+                    endereco_complemento: String(complemento || "").slice(0, 100),
+                    endereco_bairro: String(cliente.bairro || "").slice(0, 100),
+                    endereco_cidade: cidade.slice(0, 100),
+                    endereco_estado: estado.slice(0, 2),
+                    valor_produtos: pedido.subtotal,
+                    valor_frete: pedido.frete ? Number(pedido.frete.valor || 0) : 0,
+                    valor_total: pedido.total,
+                    transportadora: pedido.frete ? String(pedido.frete.transportadora || pedido.frete.nome || "").slice(0, 100) : "",
+                    servico_frete_id: pedido.frete?.id ? String(pedido.frete.id).slice(0, 50) : "",
+                    prazo_frete_dias: pedido.frete?.prazo ? Number(pedido.frete.prazo) : null,
+                    status: pedido.status,
+                    pagarme_order_id: pedido.pagamento?.cobranca_id || pedido.pagamento?.transacao_id || null,
+                    pix_qr_code_url: pedido.pagamento?.qr_code_url || null,
+                    pix_copia_cola: pedido.pagamento?.qr_code || null,
+                    expira_em: pedido.pagamento?.expira_em || null
+                };
+
+                const { data: pedidoDb, error: erroPedido } = await supabase
+                    .from("pedidos")
+                    .insert([dadosPedidoDb])
+                    .select("id")
+                    .single();
+
+                if (erroPedido) {
+                    console.error("[SUPABASE] Erro ao gravar pedido:", erroPedido.message);
+                } else if (pedidoDb && pedidoDb.id) {
+                    const itensDb = itensPedido.map(item => ({
+                        pedido_id: pedidoDb.id,
+                        produto_id: item.id,
+                        produto_nome: item.nome,
+                        quantidade: item.quantidade,
+                        preco_unitario: item.preco,
+                        subtotal: item.subtotal
+                    }));
+
+                    const { error: erroItens } = await supabase
+                        .from("pedido_itens")
+                        .insert(itensDb);
+
+                    if (erroItens) {
+                        console.error("[SUPABASE] Erro ao gravar itens do pedido:", erroItens.message);
+                    }
+
+                    // Decrementar estoque no Supabase
+                    for (const item of itensPedido) {
+                        try {
+                            const { data: prodDb } = await supabase
+                                .from("produtos")
+                                .select("estoque")
+                                .eq("id", item.id)
+                                .maybeSingle();
+
+                            if (prodDb && typeof prodDb.estoque === "number") {
+                                const novoEstoque = Math.max(0, prodDb.estoque - item.quantidade);
+                                await supabase
+                                    .from("produtos")
+                                    .update({ estoque: novoEstoque })
+                                    .eq("id", item.id);
+                            }
+                        } catch (erroEstoque) {
+                            console.error(`[SUPABASE] Falha ao atualizar estoque do produto ${item.id}:`, erroEstoque.message);
+                        }
+                    }
+                }
+            } catch (erroDb) {
+                console.error("[SUPABASE] Falha ao persistir pedido no Supabase:", erroDb.message);
+            }
+        }
+
         // Disparo assíncrono de confirmação de pedido por e-mail com Pix
         enviarEmailPedidoCriado(pedido).catch(erroEmail => {
             console.error("[EMAIL] Erro no envio assíncrono do pedido criado:", erroEmail.message);
@@ -899,8 +1038,70 @@ app.post("/api/pedidos", async (req, res) => {
 // ======================================================
 
 // Listar pedidos
-app.get("/api/admin/pedidos", exigirAdmin, (req, res) => {
+app.get("/api/admin/pedidos", exigirAdmin, async (req, res) => {
     try {
+        if (supabaseConfigurado && supabase) {
+            try {
+                const { data: pedidosDb, error: erroDb } = await supabase
+                    .from("pedidos")
+                    .select(`
+                        *,
+                        pedido_itens (*)
+                    `)
+                    .order("created_at", { ascending: false });
+
+                if (!erroDb && Array.isArray(pedidosDb)) {
+                    const formatados = pedidosDb.map(p => ({
+                        numero: p.codigo || `PED-${p.id}`,
+                        criadoEm: p.created_at,
+                        cliente: {
+                            nome: p.cliente_nome,
+                            cpf: p.cliente_cpf,
+                            email: p.cliente_email,
+                            telefone: p.cliente_telefone,
+                            cep: p.endereco_cep,
+                            endereco: p.endereco_rua,
+                            numero: p.endereco_numero,
+                            complemento: p.endereco_complemento,
+                            bairro: p.endereco_bairro,
+                            cidade: p.endereco_cidade,
+                            estado: p.endereco_estado
+                        },
+                        itens: (p.pedido_itens || []).map(i => ({
+                            id: i.produto_id,
+                            nome: i.produto_nome,
+                            preco: Number(i.preco_unitario),
+                            quantidade: Number(i.quantidade),
+                            subtotal: Number(i.subtotal)
+                        })),
+                        subtotal: Number(p.valor_produtos || 0),
+                        frete: p.valor_frete ? {
+                            transportadora: p.transportadora,
+                            valor: Number(p.valor_frete),
+                            prazo: p.prazo_frete_dias,
+                            rastreio: p.rastreio_codigo
+                        } : null,
+                        total: Number(p.valor_total || 0),
+                        status: p.status,
+                        pagamento: {
+                            metodo: "PIX",
+                            status: p.status === "Pagamento aprovado" ? "Aprovado" : "Aguardando pagamento",
+                            cobranca_id: p.pagarme_order_id,
+                            qr_code: p.pix_copia_cola,
+                            qr_code_url: p.pix_qr_code_url,
+                            expira_em: p.expira_em
+                        }
+                    }));
+
+                    return res.json(formatados);
+                }
+
+                console.warn("[SUPABASE] Falha ao listar pedidos no Supabase, usando pedidos.json:", erroDb?.message);
+            } catch (erroSupabase) {
+                console.warn("[SUPABASE] Erro ao buscar pedidos no Supabase, usando pedidos.json:", erroSupabase.message);
+            }
+        }
+
         const pedidos = carregarPedidos();
 
         pedidos.sort((a, b) =>
@@ -918,7 +1119,7 @@ app.get("/api/admin/pedidos", exigirAdmin, (req, res) => {
 });
 
 // Atualizar status do pedido
-app.patch("/api/admin/pedidos/:numero/status", exigirAdmin, (req, res) => {
+app.patch("/api/admin/pedidos/:numero/status", exigirAdmin, async (req, res) => {
     try {
         const numero = String(req.params.numero || "").trim();
         const status = req.body?.status;
@@ -929,33 +1130,49 @@ app.patch("/api/admin/pedidos/:numero/status", exigirAdmin, (req, res) => {
             });
         }
 
-        const pedidos = carregarPedidos();
-        const pedido = encontrarPedido(pedidos, numero);
-
-        if (!pedido) {
-            return res.status(404).json({
-                erro: "Pedido não encontrado."
-            });
-        }
-
-        if (pedido.status === "Cancelado" && status !== "Cancelado") {
-            return res.status(400).json({
-                erro: "Pedido cancelado não pode ter o status alterado."
-            });
-        }
-
         if (status === "Pagamento aprovado") {
             return res.status(400).json({
                 erro: "A aprovação de pagamento exige confirmação válida do provedor."
             });
         }
 
-        pedido.status = status;
-        salvarPedidos(pedidos);
+        const pedidos = carregarPedidos();
+        const pedido = encontrarPedido(pedidos, numero);
+
+        if (pedido) {
+            if (pedido.status === "Cancelado" && status !== "Cancelado") {
+                return res.status(400).json({
+                    erro: "Pedido cancelado não pode ter o status alterado."
+                });
+            }
+
+            pedido.status = status;
+            salvarPedidos(pedidos);
+        }
+
+        if (supabaseConfigurado && supabase) {
+            try {
+                await supabase
+                    .from("pedidos")
+                    .update({
+                        status,
+                        updated_at: new Date().toISOString()
+                    })
+                    .eq("codigo", numero);
+            } catch (errSupabase) {
+                console.warn("[SUPABASE] Falha ao atualizar status do pedido no Supabase:", errSupabase.message);
+            }
+        }
+
+        if (!pedido && (!supabaseConfigurado || !supabase)) {
+            return res.status(404).json({
+                erro: "Pedido não encontrado."
+            });
+        }
 
         return res.json({
             mensagem: "Status atualizado com sucesso.",
-            pedido
+            pedido: pedido || { numero, status }
         });
     } catch (erro) {
         console.error("Erro ao atualizar pedido:", erro);
@@ -974,7 +1191,62 @@ app.get("/api/pedidos/:numero/pagamento", async (req, res) => {
     try {
         const numero = String(req.params.numero || "").trim();
         const pedidos = carregarPedidos();
-        const pedido = encontrarPedido(pedidos, numero);
+        let pedido = encontrarPedido(pedidos, numero);
+
+        if (!pedido && supabaseConfigurado && supabase) {
+            try {
+                const { data: pDb } = await supabase
+                    .from("pedidos")
+                    .select("*, pedido_itens(*)")
+                    .eq("codigo", numero)
+                    .maybeSingle();
+
+                if (pDb) {
+                    pedido = {
+                        numero: pDb.codigo,
+                        criadoEm: pDb.created_at,
+                        cliente: {
+                            nome: pDb.cliente_nome,
+                            cpf: pDb.cliente_cpf,
+                            email: pDb.cliente_email,
+                            telefone: pDb.cliente_telefone,
+                            cep: pDb.endereco_cep,
+                            endereco: pDb.endereco_rua,
+                            numero: pDb.endereco_numero,
+                            complemento: pDb.endereco_complemento,
+                            bairro: pDb.endereco_bairro,
+                            cidade: pDb.endereco_cidade,
+                            estado: pDb.endereco_estado
+                        },
+                        itens: (pDb.pedido_itens || []).map(i => ({
+                            id: i.produto_id,
+                            nome: i.produto_nome,
+                            preco: Number(i.preco_unitario),
+                            quantidade: Number(i.quantidade),
+                            subtotal: Number(i.subtotal)
+                        })),
+                        subtotal: Number(pDb.valor_produtos || 0),
+                        frete: pDb.valor_frete ? {
+                            transportadora: pDb.transportadora,
+                            valor: Number(pDb.valor_frete),
+                            prazo: pDb.prazo_frete_dias
+                        } : null,
+                        total: Number(pDb.valor_total || 0),
+                        status: pDb.status,
+                        pagamento: {
+                            metodo: "PIX",
+                            status: pDb.status === "Pagamento aprovado" ? "Aprovado" : "Aguardando pagamento",
+                            cobranca_id: pDb.pagarme_order_id,
+                            qr_code: pDb.pix_copia_cola,
+                            qr_code_url: pDb.pix_qr_code_url,
+                            expira_em: pDb.expira_em
+                        }
+                    };
+                }
+            } catch (errSupabase) {
+                console.warn("[SUPABASE] Falha ao consultar pedido no Supabase:", errSupabase.message);
+            }
+        }
 
         if (!pedido) {
             return res.status(404).json({
@@ -990,6 +1262,20 @@ app.get("/api/pedidos/:numero/pagamento", async (req, res) => {
                 clienteNome: pedido.cliente?.nome
             });
             salvarPedidos(pedidos);
+
+            if (supabaseConfigurado && supabase) {
+                try {
+                    await supabase
+                        .from("pedidos")
+                        .update({
+                            pix_qr_code_url: pedido.pagamento?.qr_code_url || null,
+                            pix_copia_cola: pedido.pagamento?.qr_code || null,
+                            expira_em: pedido.pagamento?.expira_em || null,
+                            pagarme_order_id: pedido.pagamento?.cobranca_id || pedido.pagamento?.transacao_id || null
+                        })
+                        .eq("codigo", numero);
+                } catch {}
+            }
         }
 
         return res.json({
@@ -1014,42 +1300,59 @@ app.get("/api/pedidos/:numero/pagamento", async (req, res) => {
 // SIMULAR APROVAÇÃO DO PAGAMENTO PIX (Pagar.me v5)
 // ======================================================
 
-app.post("/api/pedidos/:numero/pagamento/simular", (req, res) => {
+app.post("/api/pedidos/:numero/pagamento/simular", async (req, res) => {
     try {
         const numero = String(req.params.numero || "").trim();
         const pedidos = carregarPedidos();
         const pedido = encontrarPedido(pedidos, numero);
 
-        if (!pedido) {
+        if (!pedido && (!supabaseConfigurado || !supabase)) {
             return res.status(404).json({
                 erro: "Pedido não encontrado."
             });
         }
 
-        if (pedido.status === "Cancelado") {
+        if (pedido && pedido.status === "Cancelado") {
             return res.status(400).json({
                 erro: "Este pedido foi cancelado."
             });
         }
 
-        pedido.pagamento = {
-            ...(pedido.pagamento || {}),
-            status: "Aprovado",
-            confirmadoEm: new Date().toISOString()
-        };
+        if (pedido) {
+            pedido.pagamento = {
+                ...(pedido.pagamento || {}),
+                status: "Aprovado",
+                confirmadoEm: new Date().toISOString()
+            };
 
-        pedido.status = "Pagamento aprovado";
+            pedido.status = "Pagamento aprovado";
+            salvarPedidos(pedidos);
+        }
 
-        salvarPedidos(pedidos);
+        if (supabaseConfigurado && supabase) {
+            try {
+                await supabase
+                    .from("pedidos")
+                    .update({
+                        status: "Pagamento aprovado",
+                        updated_at: new Date().toISOString()
+                    })
+                    .eq("codigo", numero);
+            } catch (errSupabase) {
+                console.warn("[SUPABASE] Falha ao atualizar pagamento no Supabase:", errSupabase.message);
+            }
+        }
 
         // Disparo assíncrono de e-mail de pagamento aprovado
-        enviarEmailPagamentoAprovado(pedido).catch(erroEmail => {
-            console.error("[EMAIL] Erro no envio assíncrono do pagamento aprovado:", erroEmail.message);
-        });
+        if (pedido) {
+            enviarEmailPagamentoAprovado(pedido).catch(erroEmail => {
+                console.error("[EMAIL] Erro no envio assíncrono do pagamento aprovado:", erroEmail.message);
+            });
+        }
 
         return res.json({
             mensagem: "Pagamento aprovado com sucesso via simulação PI2.",
-            pedido: {
+            pedido: pedido ? {
                 numero: pedido.numero,
                 itens: pedido.itens || [],
                 subtotal: pedido.subtotal ?? pedido.total,
@@ -1057,6 +1360,9 @@ app.post("/api/pedidos/:numero/pagamento/simular", (req, res) => {
                 total: pedido.total,
                 status: pedido.status,
                 pagamento: pedido.pagamento
+            } : {
+                numero,
+                status: "Pagamento aprovado"
             }
         });
     } catch (erro) {
