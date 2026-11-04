@@ -5,7 +5,7 @@ const path = require("path");
 const crypto = require("crypto");
 require("dotenv").config({ path: path.join(__dirname, ".env") });
 const session = require("express-session");
-const { criarCobrancaPixPagarme } = require("./pix");
+const { criarCobrancaPix, criarCobrancaPixPagarme } = require("./pix");
 const { calcularFrete } = require("./frete");
 const { enviarEmailPedidoCriado, enviarEmailPagamentoAprovado } = require("./email");
 const { supabase, supabaseConfigurado } = require("./supabase");
@@ -1297,7 +1297,7 @@ app.get("/api/pedidos/:numero/pagamento", async (req, res) => {
 });
 
 // ======================================================
-// SIMULAR APROVAÇÃO DO PAGAMENTO PIX (Pagar.me v5)
+// SIMULAR APROVAÇÃO DO PAGAMENTO PIX (Motor Próprio Bacen / BR Code)
 // ======================================================
 
 app.post("/api/pedidos/:numero/pagamento/simular", async (req, res) => {

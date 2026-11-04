@@ -95,7 +95,7 @@ CREATE TABLE IF NOT EXISTS public.pedidos (
     prazo_frete_dias INT,
     rastreio_codigo VARCHAR(100),
 
-    -- Pagamento Pix (Pagar.me v5)
+    -- Pagamento Pix (Motor Próprio Bacen / BR Code - Campos compatíveis)
     status VARCHAR(50) DEFAULT 'Aguardando pagamento',
     pagarme_order_id VARCHAR(100),
     pagarme_charge_id VARCHAR(100),

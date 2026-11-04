@@ -14,7 +14,7 @@ Este é o repositório oficial do **Projeto Integrador II (UNIVESP)** da nossa e
 * **Banco de Dados:** **PostgreSQL no Supabase** (Nuvem gratuita), eliminando a necessidade de banco local complexo.
 * **Fotos e Arquivos:** **Supabase Storage** (bucket público `produtos`), armazenando apenas as URLs nas tabelas.
 * **Decisão de Hospedagem:** **Não utilizaremos o Render**. A aplicação roda localmente ou em servidor independente, conectando-se ao Supabase.
-* **Pagamentos & Frete (Sandbox/Produção):** Exclusivo via **PIX (Pagar.me v5)** e cotação de frete dinâmica via **Melhor Envio v2**.
+* **Pagamentos & Frete (Sandbox/Produção):** Exclusivo via **PIX (Motor Nativo Bacen / BR Code)** e cotação de frete dinâmica via **Melhor Envio v2**.
 
 ---
 
@@ -58,7 +58,7 @@ canivete-da-roca-pi2/
 | :--- | :---: | :--- |
 | **Frontend** | ✅ 100% Pronto & Acessível | Todas as telas finalizadas, 100% responsivas (mobile-first), com acessibilidade WCAG 2.1 AA, navegação por teclado, leitor de tela e foco visível. |
 | **Frete (Melhor Envio Sandbox)** | ✅ 100% Integrado & Ativo | Cotação em tempo real no carrinho e no checkout via API v2 do Melhor Envio Sandbox com cálculo de cubagem, fallback e seleção de Correios/Jadlog. |
-| **Pagamento PIX (Pagar.me v5)** | ✅ 100% Integrado & Ativo | Geração de BR Code (Bacen / EMV) com QR Code dinâmico, código Copia e Cola, validade estrita de 30 min (TTL) e botão de simulação para PI2. |
+| **Pagamento PIX (Motor Próprio)** | ✅ 100% Integrado & Ativo | Motor nativo aderente à especificação Bacen / BR Code (EMV) com geração de QR Code dinâmico, código Copia e Cola com CRC16, validade estrita de 30 min (TTL) e rota de simulação para o PI2 (substituindo sandboxes restritos de terceiros como Pagar.me). |
 | **E-mails Transacionais (Nodemailer)** | ✅ 100% Integrado & Ativo | Disparo automático de e-mail ao criar pedido (com QR Code Pix) e ao confirmar pagamento, com templates HTML elegantes e suporte ao Gmail oficial (`canivetedarocaunivesp@gmail.com`). |
 | **Banco de Dados (Supabase)** | ✅ 100% Modelado & DDL Completo | Scripts SQL geradores ([`schema.sql`](./database/schema.sql) e [`seed.sql`](./database/seed.sql)) com todas as 6 tabelas relacionais (`categorias`, `produtos`, `kit_itens`, `avise_me`, `pedidos` e `pedido_itens`), índices e compatibilidade com checkout simplificado. |
 | **Backend (Conexão Supabase)** | ✅ 100% Integrado & Dual-Mode | Integração completa no backend para produtos e pedidos, com persistência relacional, baixa automática de estoque e fallback tolerante a falhas para `produtos.json`/`pedidos.json` se as chaves não estiverem configuradas. |

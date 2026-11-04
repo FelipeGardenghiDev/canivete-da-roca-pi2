@@ -61,9 +61,11 @@ function gerarPixCopiaECola({ chave, nome, cidade, valor, txid }) {
 }
 
 /**
- * Cria uma cobrança Pix no padrão Pagar.me v5 com TTL estrito de 30 minutos (RN04).
+ * Cria uma cobrança Pix no padrão Bacen / BR Code com TTL estrito de 30 minutos (RN04).
+ * Motor próprio nativo implementado para o PI2 da UNIVESP devido a restrições/descontinuidade
+ * de QR Codes dinâmicos em ambiente sandbox de gateways comerciais (Pagar.me).
  */
-async function criarCobrancaPixPagarme({ pedidoNumero, valor, clienteNome }) {
+async function criarCobrancaPix({ pedidoNumero, valor, clienteNome }) {
     const chavePix = process.env.PIX_CHAVE || "canivetedarocaunivesp@gmail.com";
     const nomeRecebedor = "CANIVETE DA ROCA PI2";
     const cidadeRecebedor = "SERTAOZINHO";
@@ -91,7 +93,7 @@ async function criarCobrancaPixPagarme({ pedidoNumero, valor, clienteNome }) {
 
     return {
         id: `ch_pix_${crypto.randomBytes(8).toString("hex")}`,
-        gateway: "pagarme_v5_pix",
+        gateway: "pix_nativo_bacen",
         metodo: "pix",
         status: "Pendente",
         valor: Number(valor),
@@ -105,5 +107,7 @@ async function criarCobrancaPixPagarme({ pedidoNumero, valor, clienteNome }) {
 
 module.exports = {
     gerarPixCopiaECola,
-    criarCobrancaPixPagarme
+    criarCobrancaPix,
+    // Alias para compatibilidade reversa com chamadas legadas
+    criarCobrancaPixPagarme: criarCobrancaPix
 };

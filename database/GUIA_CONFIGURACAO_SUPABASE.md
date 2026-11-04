@@ -75,7 +75,7 @@ MELHOR_ENVIO_URL=https://sandbox.melhorenvio.com.br
 MELHOR_ENVIO_TOKEN=seu_token_aqui
 CEP_ORIGEM=14170460
 
-# Pix (Pagar.me v5)
+# Pix (Motor Próprio Bacen / BR Code)
 PIX_CHAVE=canivetedarocaunivesp@gmail.com
 
 # E-mail (Nodemailer / SMTP)

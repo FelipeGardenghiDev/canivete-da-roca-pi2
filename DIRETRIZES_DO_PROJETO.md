@@ -11,7 +11,7 @@ Documento oficial de alinhamento técnico, arquitetural e regras de negócio do 
 * **Decisão de Infraestrutura:** **O serviço Render NÃO será utilizado.** A hospedagem da aplicação/API será definida separadamente pela equipe, mantendo a centralização dos dados no Supabase.
 * **Modelo de Compra:** **Guest Checkout (Sem Login Obrigatório)**. O cliente preenche seus dados diretamente na finalização da compra, eliminando o atrito de senhas e aumentando a taxa de conversão. O acompanhamento de compras é feito via consulta rápida por **CPF ou Código do Pedido**.
 * **Imagens de Produtos:** Hospedadas no **Supabase Storage** (armazenamento em nuvem gratuito de arquivos). O banco de dados guarda apenas o link (URL pública em texto).
-* **Escopo de Pagamento:** Exclusivo via **PIX (Pagar.me v5)** com QR Code dinâmico e expiração estrita de 30 minutos.
+* **Escopo de Pagamento:** Exclusivo via **PIX com Motor Próprio Bacen/EMV** (QR Code dinâmico, código Copia e Cola com cálculo de CRC16 e expiração estrita de 30 minutos). Substituiu a dependência do sandbox de gateways de terceiros (como Pagar.me) para garantir autonomia e confiabilidade nos testes do PI2.
 * **Escopo Logístico:** Cálculo de frete dinâmico e cotações integradas à API do **Melhor Envio v2** (Correios PAC/SEDEX e Jadlog).
 * **Notificações:** Disparo de e-mails transacionais gratuitos via **Nodemailer (Gmail)**.
 
@@ -39,7 +39,7 @@ flowchart TD
     end
 
     subgraph Integracoes ["Serviços Externos Nacionais"]
-        API <-->|"Cobrança Pix & Webhook"| Pagarme["Pagar.me v5 (Stone)"]
+        API <-->|"Geração Pix Bacen / EMV"| EnginePix["Motor Próprio Pix (Bacen / BR Code)"]
         API <-->|"Cotação de Frete (Correios/Jadlog)"| MelhorEnvio["Melhor Envio API v2"]
     end
 
@@ -54,7 +54,7 @@ flowchart TD
 | **Backend** | Node.js + Express | Servidor Node.js *(Sem Render)* | R$ 0,00 | Rotas limpas, leitura direta de JSON (`req.body`), regras comerciais. |
 | **Banco de Dados**| **PostgreSQL** | **Supabase** (Free Tier) | R$ 0,00 | Armazenamento relacional de produtos, categorias, pedidos e clientes. |
 | **Fotos / Imagens**| **Supabase Storage** | Bucket público (`produtos`) | R$ 0,00 | Hospedagem das fotos dos produtos; o banco guarda apenas a URL. |
-| **Pagamentos** | API REST v5 (Stone) | **Pagar.me** (Sandbox / Prod) | Por transação | Pix com QR Code dinâmico, código copia-e-cola e Webhook `order.paid`. |
+| **Pagamentos** | Motor Nativo (Bacen/EMV) | Servidor Local / Node.js | R$ 0,00 | Pix com QR Code dinâmico, código copia-e-cola (CRC16) e rota de simulação de aprovação para PI2. |
 | **Logística** | API v2 de Cotação | **Melhor Envio** (Sandbox / Prod)| R$ 0,00 (API) | Cotação em tempo real de PAC, SEDEX e Jadlog com base no CEP. |
 | **E-mails** | Nodemailer (SMTP Gmail) | Google App Password | R$ 0,00 (até 500/dia)| Confirmação imediata do pagamento e envio do código de rastreio. |
 
@@ -115,21 +115,21 @@ Para permitir que o cliente filtre os produtos facilmente, o topo da loja contar
 
 ---
 
-## 💳 6. Pagamento Exclusivo via PIX (Pagar.me v5)
+## 💳 6. Pagamento Exclusivo via PIX (Motor Próprio Bacen / BR Code)
 
 ### RN03 — Modalidade Única
 * A plataforma trabalha exclusivamente com **PIX**, evitando a complexidade de gateways de cartão de crédito e prevenindo fraudes/chargebacks.
 
 ### RN04 — Checkout, Reserva de Estoque e TTL de 30 Minutos
-1. **Geração do Pix:** Ao clicar em "Finalizar Pedido", o backend cria uma `order` na API do Pagar.me com método `pix`.
-2. **Retorno:** O Pagar.me devolve o código Pix "copia e cola" e a URL da imagem do QR Code.
+1. **Geração do Pix:** Ao clicar em "Finalizar Pedido", o backend gera um payload BR Code EMV válido pelo motor próprio em `backend/pix.js`.
+2. **Retorno:** O backend devolve a string Pix "copia e cola" com CRC16-CCITT e a imagem do QR Code em Base64 Data URL.
 3. **Reserva Temporária:** No instante da geração, os itens do pedido entram em estado de reserva no banco.
 4. **Tempo de Expiração (TTL):** O Pix tem validade estrita de **30 minutos**.
    * A tela de checkout exibe um **cronômetro regressivo visual**.
    * Se o tempo expirar sem pagamento: o pedido passa para `CANCELADO` e os itens voltam ao estoque disponível da loja.
 
-### RN05 — Webhooks e Confirmação Automática
-* **Rota do Webhook:** `POST /api/webhooks/pagarme`.
+### RN05 — Confirmação e Simulação de Pagamento
+* **Simulador Acadêmico:** Rota `POST /api/pedidos/:numero/pagamento/simular` para demonstração em tempo real sem custo.
 * **Evento `order.paid`:**
   1. Altera status do pedido para `PAGO`.
   2. Confirma a baixa definitiva do estoque.
@@ -161,7 +161,7 @@ stateDiagram-v2
     [*] --> NOVO: Carrinho em montagem
     NOVO --> AGUARDANDO_PAGAMENTO: Finaliza com Pix (Reserva por 30 min)
     
-    AGUARDANDO_PAGAMENTO --> PAGO: Webhook Pagar.me 'order.paid' (Baixa definitiva)
+    AGUARDANDO_PAGAMENTO --> PAGO: Confirmação / Simulação de Pagamento (Baixa definitiva)
     AGUARDANDO_PAGAMENTO --> CANCELADO: Timeout 30 min sem pagar (Devolve estoque)
     
     PAGO --> ENVIADO: Lojista posta na agência e insere rastreio
@@ -191,7 +191,7 @@ Para manter o custo em **R$ 0,00**, o backend utiliza o **Nodemailer** conectado
 1. **`categorias`**: Armazena as seções do menu (`Canivetes`, `Bainhas`, `Kits`, `Polimento`).
 2. **`produtos`**: Informações comerciais, estoque, dimensões de frete (`peso_g`, `altura_cm`, etc.) e a URL do Supabase Storage (`imagem_url`).
 3. **`kit_itens`**: Liga os produtos avulsos que formam um Kit.
-4. **`pedidos`**: Registra as compras (Guest Checkout por CPF), frete escolhido e dados do Pix da Pagar.me.
+4. **`pedidos`**: Registra as compras (Guest Checkout por CPF), frete escolhido e dados do Pix (BR Code Bacen).
 5. **`pedido_itens`**: Produtos e quantidades de cada pedido.
 6. **`avise_me`**: Fila de clientes interessados em produtos fora de estoque.
 
@@ -201,6 +201,6 @@ Para manter o custo em **R$ 0,00**, o backend utiliza o **Nodemailer** conectado
 
 1. [ ] **DBA:** Acessar o Supabase, abrir o *SQL Editor*, revisar e executar o [`schema.sql`](./database/schema.sql) e [`seed.sql`](./database/seed.sql).
 2. [ ] **DBA / Frontend:** Criar o bucket público **`produtos`** no Supabase Storage e subir as fotos iniciais.
-3. [ ] **Backend:** Obter as chaves de teste do Pagar.me (Sandbox) e Melhor Envio (Sandbox).
+3. [x] **Backend:** Implementado motor nativo Pix Bacen/EMV e integração de frete com Melhor Envio Sandbox.
 4. [ ] **Grupo:** Criar e-mail no Gmail para o projeto e gerar a Senha de Aplicativo.
 5. [ ] **Desenvolvimento:** Iniciar a codificação do layout base (`frontend/`) e do servidor Express (`backend/`).

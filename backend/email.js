@@ -163,7 +163,7 @@ async function enviarEmailPedidoCriado(pedido) {
 
                     <!-- Bloco PIX -->
                     <div style="background-color: #fdfbf7; border: 1px solid #e2d9cb; border-radius: 8px; padding: 20px; text-align: center; margin-bottom: 24px;">
-                        <h3 style="margin: 0 0 8px; font-size: 16px; color: #3b4231;">Pagamento via PIX (Pagar.me v5)</h3>
+                        <h3 style="margin: 0 0 8px; font-size: 16px; color: #3b4231;">Pagamento via PIX (BR Code / Bacen)</h3>
                         <p style="margin: 0 0 14px; font-size: 13px; color: #666;">Validade do QR Code: 30 minutos</p>
 
                         ${qrCodeUrl ? `
