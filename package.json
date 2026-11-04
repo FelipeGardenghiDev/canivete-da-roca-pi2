@@ -1,5 +1,19 @@
 {
+  "name": "canivete-da-roca-pi2",
+  "version": "1.0.0",
+  "description": "Plataforma completa de e-commerce dedicada à cutelaria artesanal brasileira - UNIVESP PI2",
+  "main": "api/index.js",
+  "scripts": {
+    "start": "node backend/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
   "dependencies": {
-    "@supabase/supabase-js": "^2.118.0"
+    "@supabase/supabase-js": "^2.49.1",
+    "cors": "^2.8.6",
+    "dotenv": "^18.0.8",
+    "express": "^5.3.0",
+    "express-session": "^1.19.0",
+    "nodemailer": "^10.1.7",
+    "qrcode": "^1.5.4"
   }
 }

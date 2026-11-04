@@ -15,7 +15,9 @@ const PORTA = process.env.PORT || 3000;
 
 const ARQUIVO_PEDIDOS = path.join(__dirname, "pedidos.json");
 const ARQUIVO_PRODUTOS = path.join(__dirname, "produtos.json");
-const PASTA_FRONTEND = path.join(__dirname, "../frontend");
+const PASTA_FRONTEND = fs.existsSync(path.join(__dirname, "../frontend"))
+    ? path.join(__dirname, "../frontend")
+    : path.join(process.cwd(), "frontend");
 
 const STATUS_PEDIDOS = [
     "Aguardando pagamento",
@@ -26,8 +28,10 @@ const STATUS_PEDIDOS = [
     "Cancelado"
 ];
 
+app.set("trust proxy", 1);
+
 app.use(cors({
-    origin: "http://localhost:3000",
+    origin: (origin, callback) => callback(null, true),
     credentials: true
 }));
 
@@ -1405,6 +1409,10 @@ app.use((erro, req, res, next) => {
 // INICIAR SERVIDOR
 // ======================================================
 
-app.listen(PORTA, () => {
-    console.log(`API funcionando em http://localhost:${PORTA}`);
-});
+if (require.main === module) {
+    app.listen(PORTA, () => {
+        console.log(`API funcionando em http://localhost:${PORTA}`);
+    });
+}
+
+module.exports = app;
