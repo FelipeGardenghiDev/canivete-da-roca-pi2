@@ -220,11 +220,11 @@ function inferirCategoriaProduto(produto) {
     }
 
     const textoBase = `${produto.nome || ""} ${produto.slug || ""}`.toLowerCase();
-    if (textoBase.includes("canivete")) return "canivetes";
-    if (textoBase.includes("bainha")) return "bainhas";
-    if (textoBase.includes("strop")) return "strops";
+    if (textoBase.includes("kit") || produto.tipo === "kit") return "kits-de-afiacao";
     if (textoBase.includes("polimento") || textoBase.includes("pasta")) return "polimento-e-afiacao";
-    if (textoBase.includes("kit")) return "kits-de-afiacao";
+    if (textoBase.includes("strop")) return "strops";
+    if (textoBase.includes("bainha")) return "bainhas";
+    if (textoBase.includes("canivete")) return "canivetes";
     if (textoBase.includes("faca") || textoBase.includes("cutelo") || textoBase.includes("chifradeira")) return "facas";
 
     return catBruta || "outros";
