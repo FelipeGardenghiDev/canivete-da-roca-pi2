@@ -230,7 +230,8 @@ async function simularFreteCarrinho() {
     `;
 
     try {
-        const resposta = await fetch("http://localhost:3000/api/frete/calcular", {
+        const API = window.location.protocol === "file:" ? "http://localhost:3000/api" : "/api";
+        const resposta = await fetch(`${API}/frete/calcular`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

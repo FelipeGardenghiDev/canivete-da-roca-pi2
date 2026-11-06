@@ -90,33 +90,57 @@ app.use(express.static(PASTA_FRONTEND));
 // ARQUIVOS E DADOS
 // ======================================================
 
+const cacheArquivos = new Map();
+
 function garantirArquivo(caminho) {
     if (!fs.existsSync(caminho)) {
-        fs.writeFileSync(caminho, "[]", "utf8");
+        try {
+            fs.writeFileSync(caminho, "[]", "utf8");
+        } catch {
+            // Ambiente serverless somente leitura (/var/task)
+        }
     }
 }
 
 function lerArquivo(caminho, descricao) {
-    garantirArquivo(caminho);
-
-    const conteudo = fs.readFileSync(caminho, "utf8");
-    const dados = JSON.parse(conteudo);
-
-    if (!Array.isArray(dados)) {
-        throw new Error(
-            `O arquivo de ${descricao} precisa conter uma lista.`
-        );
+    if (cacheArquivos.has(caminho)) {
+        return cacheArquivos.get(caminho);
     }
 
-    return dados;
+    try {
+        garantirArquivo(caminho);
+
+        if (!fs.existsSync(caminho)) {
+            return [];
+        }
+
+        const conteudo = fs.readFileSync(caminho, "utf8");
+        const dados = JSON.parse(conteudo);
+
+        if (!Array.isArray(dados)) {
+            throw new Error(
+                `O arquivo de ${descricao} precisa conter uma lista.`
+            );
+        }
+
+        return dados;
+    } catch {
+        return [];
+    }
 }
 
 function salvarArquivo(caminho, dados) {
-    fs.writeFileSync(
-        caminho,
-        JSON.stringify(dados, null, 2),
-        "utf8"
-    );
+    cacheArquivos.set(caminho, dados);
+
+    try {
+        fs.writeFileSync(
+            caminho,
+            JSON.stringify(dados, null, 2),
+            "utf8"
+        );
+    } catch {
+        // Ambiente serverless somente leitura (/var/task) — mantido em memória/Supabase
+    }
 }
 
 function lerProdutosArquivo() {
@@ -189,6 +213,23 @@ async function obterOuCriarCategoriaId(db, categoriaSlugOuNome) {
     }
 }
 
+function inferirCategoriaProduto(produto) {
+    const catBruta = String(produto.categoria || produto.categorias?.slug || "").trim().toLowerCase();
+    if (catBruta && catBruta !== "outros") {
+        return catBruta;
+    }
+
+    const textoBase = `${produto.nome || ""} ${produto.slug || ""}`.toLowerCase();
+    if (textoBase.includes("canivete")) return "canivetes";
+    if (textoBase.includes("bainha")) return "bainhas";
+    if (textoBase.includes("strop")) return "strops";
+    if (textoBase.includes("polimento") || textoBase.includes("pasta")) return "polimento-e-afiacao";
+    if (textoBase.includes("kit")) return "kits-de-afiacao";
+    if (textoBase.includes("faca") || textoBase.includes("cutelo") || textoBase.includes("chifradeira")) return "facas";
+
+    return catBruta || "outros";
+}
+
 function normalizarProduto(produto) {
     const imagemFinal = produto.imagem || produto.imagem_url || "";
 
@@ -198,7 +239,7 @@ function normalizarProduto(produto) {
         nome: String(produto.nome || ""),
         slug: String(produto.slug || ""),
         preco: Number(produto.preco),
-        categoria: String(produto.categoria || "outros"),
+        categoria: inferirCategoriaProduto(produto),
         descricao: String(produto.descricao || ""),
         tipo: String(produto.tipo || "simples"),
         estoque: Number(produto.estoque ?? 0),

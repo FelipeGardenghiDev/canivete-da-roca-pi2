@@ -1,4 +1,4 @@
-const API = "http://localhost:3000/api";
+const API = window.location.protocol === "file:" ? "http://localhost:3000/api" : "/api";
 
 const resumo = document.querySelector("#resumo");
 const formulario = document.querySelector("#form-checkout");

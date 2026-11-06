@@ -1,5 +1,5 @@
 
-const API = "http://localhost:3000/api/admin/pedidos";
+const API = window.location.protocol === "file:" ? "http://localhost:3000/api/admin/pedidos" : "/api/admin/pedidos";
 
 const lista = document.querySelector("#lista-pedidos");
 const busca = document.querySelector("#busca");

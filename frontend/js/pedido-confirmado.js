@@ -15,7 +15,7 @@ const fretePedido = document.querySelector("#frete-pedido");
 const avisoEmailCliente = document.querySelector("#aviso-email-cliente");
 const emailConfirmado = document.querySelector("#email-confirmado");
 
-const API = "http://localhost:3000/api";
+const API = window.location.protocol === "file:" ? "http://localhost:3000/api" : "/api";
 
 
 let pedidoAtual = null;
