@@ -31,7 +31,7 @@ VALUES
     15,
     180, -- 180g
     4.0, 6.0, 20.0,
-    '/img/produtos/canivete.png',
+    'https://wgoauprjdrvgcjtxtxrq.supabase.co/storage/v1/object/public/produtos/canivete.png',
     true
 ),
 (
@@ -45,7 +45,7 @@ VALUES
     20,
     110, -- 110g
     3.0, 5.0, 14.0,
-    '/img/produtos/bainha.png',
+    'https://wgoauprjdrvgcjtxtxrq.supabase.co/storage/v1/object/public/produtos/bainha.png',
     true
 ),
 (
@@ -59,7 +59,7 @@ VALUES
     25,
     350, -- 350g
     5.0, 8.0, 38.0,
-    '/img/produtos/strop.png',
+    'https://wgoauprjdrvgcjtxtxrq.supabase.co/storage/v1/object/public/produtos/strop.png',
     true
 ),
 (
@@ -73,7 +73,7 @@ VALUES
     40,
     145, -- 145g
     3.0, 4.0, 10.0,
-    '/img/produtos/pasta.png',
+    'https://wgoauprjdrvgcjtxtxrq.supabase.co/storage/v1/object/public/produtos/pasta.png',
     true
 ),
 (
@@ -87,7 +87,7 @@ VALUES
     10,
     495, -- peso acumulado (350g strop + 145g pasta)
     8.0, 15.0, 40.0,
-    '/img/produtos/kit.png',
+    'https://wgoauprjdrvgcjtxtxrq.supabase.co/storage/v1/object/public/produtos/kit.png',
     true
 )
 ON CONFLICT (id) DO NOTHING;
