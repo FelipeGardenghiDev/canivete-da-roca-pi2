@@ -1,0 +1,1686 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apresentação Projeto Integrador II (UNIVESP) — Canivete da Roça</title>
+    <style>
+        /* ==========================================================================
+           CANIVETE DA ROÇA — APRESENTAÇÃO DE SLIDES (PROJETO INTEGRADOR II - UNIVESP)
+           Identidade Visual: Rústica Premium (Carvão, Couro, Bege Natural e Oliva)
+           ========================================================================== */
+        :root {
+            --fundo-1: #161715;
+            --fundo-2: #1f211d;
+            --fundo-card: #252823;
+            --fundo-card-2: #2c3029;
+            --madeira: #493326;
+            --couro: #7a4f35;
+            --couro-claro: #a87351;
+            --oliva: #68734d;
+            --oliva-claro: #8ca063;
+            --oliva-bg: rgba(104, 115, 77, 0.18);
+            --bege: #f0e8d8;
+            --bege-2: #cfc2ab;
+            --texto-suave: #aeb0a8;
+            --metal: #9fa39d;
+            --borda: rgba(233, 223, 204, 0.14);
+            --borda-forte: rgba(140, 160, 99, 0.45);
+            --sucesso: #4ca96b;
+            --alerta: #d99b43;
+            --perigo: #d15b5b;
+            --univesp-vermelho: #af1e23;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: var(--fundo-1);
+            color: var(--bege);
+            font-family: 'Segoe UI', system-ui, -apple-system, Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ==================== ESTRUTURA DO DECK ==================== */
+        .deck-wrapper {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+             flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background:
+                radial-gradient(circle at 12% 15%, rgba(104, 115, 77, 0.14), transparent 40%),
+                radial-gradient(circle at 88% 85%, rgba(122, 79, 53, 0.16), transparent 42%),
+                linear-gradient(160deg, #141513 0%, #1d1f1b 100%);
+        }
+
+        .slides-viewport {
+            position: relative;
+            width: min(94vw, 1520px);
+            height: min(86vh, 855px);
+            border: 1px solid var(--borda);
+            border-radius: 16px;
+            background: rgba(25, 26, 24, 0.88);
+            box-shadow: 0 28px 70px rgba(0, 0, 0, 0.65);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Barra Superior Institucional do Slide */
+        .slide-topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 36px;
+            background: #111210;
+            border-bottom: 1px solid var(--borda);
+            font-size: 12px;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            color: var(--bege-2);
+            flex-shrink: 0;
+        }
+
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-weight: 700;
+        }
+
+        .badge-univesp {
+            background: var(--univesp-vermelho);
+            color: #fff;
+            padding: 3px 9px;
+            border-radius: 4px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            font-size: 11px;
+        }
+
+        .badge-pi {
+            background: var(--oliva-bg);
+            border: 1px solid var(--borda-forte);
+            color: var(--oliva-claro);
+            padding: 3px 9px;
+            border-radius: 4px;
+            font-weight: 700;
+            font-size: 11px;
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            color: var(--texto-suave);
+            font-weight: 600;
+        }
+
+        .criterio-pill {
+            color: var(--bege);
+            background: rgba(255, 255, 255, 0.06);
+            padding: 4px 10px;
+            border-radius: 999px;
+            border: 1px solid var(--borda);
+            font-size: 11px;
+        }
+
+        /* ==================== SLIDES ==================== */
+        .slide {
+            display: none;
+            flex: 1;
+            padding: 32px 44px 26px;
+            overflow-y: auto;
+            flex-direction: column;
+            justify-content: space-between;
+            animation: fadeSlide 0.28s ease-out;
+        }
+
+        .slide.active {
+            display: flex;
+        }
+
+        @keyframes fadeSlide {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Cabeçalho interno de cada slide */
+        .slide-header {
+            margin-bottom: 18px;
+            border-left: 4px solid var(--oliva-claro);
+            padding-left: 16px;
+        }
+
+        .slide-kicker {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--oliva-claro);
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .slide-title {
+            font-size: clamp(24px, 2.3vw, 34px);
+            color: var(--bege);
+            font-weight: 800;
+            line-height: 1.18;
+        }
+
+        .slide-subtitle {
+            font-size: 15px;
+            color: var(--texto-suave);
+            margin-top: 4px;
+        }
+
+        /* Grids e Cartões */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 22px;
+            flex: 1;
+            align-items: stretch;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+            flex: 1;
+            align-items: stretch;
+        }
+
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            flex: 1;
+            align-items: stretch;
+        }
+
+        .grid-team {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+            flex: 1;
+        }
+
+        .card {
+            background: var(--fundo-card);
+            border: 1px solid var(--borda);
+            border-radius: 12px;
+            padding: 20px 22px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .card-highlight {
+            background: linear-gradient(145deg, rgba(104, 115, 77, 0.22), rgba(37, 40, 35, 0.95));
+            border-color: var(--borda-forte);
+        }
+
+        .card-leather {
+            background: linear-gradient(145deg, rgba(122, 79, 53, 0.24), rgba(37, 40, 35, 0.95));
+            border-color: rgba(168, 115, 81, 0.45);
+        }
+
+        .card-danger {
+            background: linear-gradient(145deg, rgba(209, 91, 91, 0.14), rgba(37, 40, 35, 0.95));
+            border-color: rgba(209, 91, 91, 0.4);
+        }
+
+        .card h3 {
+            font-size: 18px;
+            color: var(--bege);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card p, .card li {
+            font-size: 14.5px;
+            line-height: 1.52;
+            color: var(--bege-2);
+        }
+
+        .card ul {
+            padding-left: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .card li strong {
+            color: #fff;
+        }
+
+        /* Métricas / KPIs */
+        .kpi-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+            margin-top: 14px;
+        }
+
+        .kpi-box {
+            background: #171916;
+            border: 1px solid var(--borda);
+            border-radius: 10px;
+            padding: 14px 16px;
+            text-align: center;
+        }
+
+        .kpi-value {
+            font-size: 26px;
+            font-weight: 800;
+            color: var(--oliva-claro);
+            display: block;
+        }
+
+        .kpi-label {
+            font-size: 12px;
+            color: var(--texto-suave);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-top: 3px;
+            display: block;
+        }
+
+        /* Tabelas Estilizadas */
+        .slide-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13.5px;
+            background: var(--fundo-card);
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid var(--borda);
+        }
+
+        .slide-table th {
+            background: #151714;
+            color: var(--oliva-claro);
+            text-align: left;
+            padding: 11px 14px;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 1px solid var(--borda);
+        }
+
+        .slide-table td {
+            padding: 10px 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--bege-2);
+            vertical-align: middle;
+        }
+
+        .slide-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .status-ok {
+            display: inline-block;
+            padding: 3px 9px;
+            border-radius: 999px;
+            background: rgba(76, 169, 107, 0.18);
+            color: #7be09b;
+            font-weight: 700;
+            font-size: 11.5px;
+            border: 1px solid rgba(76, 169, 107, 0.4);
+        }
+
+        .code-pill {
+            font-family: Consolas, Monaco, monospace;
+            font-size: 12.5px;
+            background: #121311;
+            color: #e5c07b;
+            padding: 3px 8px;
+            border-radius: 5px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Slide 1 - Capa Especial */
+        .cover-layout {
+            display: grid;
+            grid-template-columns: 1.35fr 0.85fr;
+            gap: 36px;
+            align-items: center;
+            flex: 1;
+        }
+
+        .cover-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(104, 115, 77, 0.2);
+            border: 1px solid var(--borda-forte);
+            color: var(--oliva-claro);
+            padding: 6px 14px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1.4px;
+            text-transform: uppercase;
+            margin-bottom: 18px;
+        }
+
+        .cover-title {
+            font-size: clamp(28px, 3vw, 44px);
+            font-weight: 800;
+            line-height: 1.15;
+            color: var(--bege);
+            margin-bottom: 16px;
+        }
+
+        .cover-title span {
+            color: var(--oliva-claro);
+        }
+
+        .cover-desc {
+            font-size: 16.5px;
+            line-height: 1.6;
+            color: var(--bege-2);
+            margin-bottom: 24px;
+        }
+
+        .cover-meta-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .meta-item {
+            background: var(--fundo-card);
+            border: 1px solid var(--borda);
+            padding: 12px 15px;
+            border-radius: 10px;
+        }
+
+        .meta-item small {
+            display: block;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--texto-suave);
+            margin-bottom: 3px;
+        }
+
+        .meta-item strong {
+            font-size: 14px;
+            color: var(--bege);
+        }
+
+        .cover-brand-showcase {
+            background: linear-gradient(155deg, #232620 0%, #171815 100%);
+            border: 1px solid var(--borda-forte);
+            border-radius: 16px;
+            padding: 26px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 16px;
+            position: relative;
+        }
+
+        .selo-cr {
+            width: 84px;
+            height: 84px;
+            border-radius: 50%;
+            border: 2px solid var(--couro-claro);
+            background: #141513;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            color: var(--bege);
+            letter-spacing: 1px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.45);
+        }
+
+        .selo-cr span:first-child {
+            font-size: 24px;
+            color: var(--oliva-claro);
+        }
+
+        .selo-cr small {
+            font-size: 9px;
+            color: var(--bege-2);
+        }
+
+        .showcase-products {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            width: 100%;
+        }
+
+        .showcase-products img {
+            width: 100%;
+            height: 105px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid var(--borda);
+            background: #111;
+        }
+
+        /* Galeria de Produtos nos Slides */
+        .product-strip {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+            margin-top: 8px;
+        }
+
+        .product-mini {
+            background: #171915;
+            border: 1px solid var(--borda);
+            border-radius: 10px;
+            padding: 8px;
+            text-align: center;
+        }
+
+        .product-mini img {
+            width: 100%;
+            height: 88px;
+            object-fit: cover;
+            border-radius: 6px;
+            margin-bottom: 6px;
+        }
+
+        .product-mini strong {
+            display: block;
+            font-size: 12px;
+            color: var(--bege);
+        }
+
+        .product-mini span {
+            font-size: 11px;
+            color: var(--oliva-claro);
+            font-weight: 700;
+        }
+
+        /* Diagrama de Arquitetura Visual */
+        .arch-diagram {
+            display: grid;
+            grid-template-columns: 1fr auto 1.15fr auto 1.1fr;
+            align-items: center;
+            gap: 12px;
+            margin: 6px 0;
+            flex: 1;
+        }
+
+        .arch-col {
+            background: var(--fundo-card);
+            border: 1px solid var(--borda);
+            border-radius: 12px;
+            padding: 16px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .arch-col-title {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1.3px;
+            color: var(--oliva-claro);
+            font-weight: 800;
+            border-bottom: 1px solid var(--borda);
+            padding-bottom: 8px;
+        }
+
+        .arch-node {
+            background: #171916;
+            border: 1px solid var(--borda);
+            border-radius: 8px;
+            padding: 10px 12px;
+        }
+
+        .arch-node strong {
+            display: block;
+            font-size: 13.5px;
+            color: var(--bege);
+            margin-bottom: 3px;
+        }
+
+        .arch-node small {
+            font-size: 12px;
+            color: var(--texto-suave);
+            line-height: 1.35;
+            display: block;
+        }
+
+        .arch-arrow {
+            font-size: 20px;
+            color: var(--oliva-claro);
+            font-weight: 800;
+            text-align: center;
+            padding: 0 4px;
+        }
+
+        .arch-arrow span {
+            display: block;
+            font-size: 10px;
+            color: var(--texto-suave);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        /* Barra Inferior de Controle e Progresso */
+        .slide-bottombar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 28px;
+            background: #111210;
+            border-top: 1px solid var(--borda);
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .progress-track {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--oliva), var(--oliva-claro));
+            width: 8.33%;
+            transition: width 0.25s ease;
+        }
+
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-deck {
+            background: #222520;
+            color: var(--bege);
+            border: 1px solid var(--borda);
+            padding: 6px 13px;
+            border-radius: 6px;
+            font-size: 12.5px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.18s ease;
+        }
+
+        .btn-deck:hover {
+            background: var(--oliva);
+            border-color: var(--oliva-claro);
+            color: #fff;
+        }
+
+        .btn-deck.active-toggle {
+            background: var(--oliva);
+            border-color: var(--oliva-claro);
+            color: #fff;
+        }
+
+        .btn-demo-cta {
+            background: var(--oliva);
+            color: #fff;
+            border: 1px solid var(--oliva-claro);
+            padding: 14px 26px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 800;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 10px 24px rgba(104, 115, 77, 0.35);
+            transition: transform 0.18s ease, background 0.18s ease;
+        }
+
+        .btn-demo-cta:hover {
+            background: var(--oliva-claro);
+            color: #111;
+            transform: translateY(-2px);
+        }
+
+        .timer-badge {
+            font-family: Consolas, Monaco, monospace;
+            font-size: 13px;
+            padding: 5px 11px;
+            border-radius: 6px;
+            background: #181a17;
+            border: 1px solid var(--borda);
+            color: var(--bege-2);
+        }
+
+        .timer-badge.in-target {
+            border-color: var(--sucesso);
+            color: #7be09b;
+            background: rgba(76, 169, 107, 0.15);
+        }
+
+        /* ==================== TELEPROMPTER / ROTEIRO DE FALA ==================== */
+        .teleprompter-drawer {
+            position: fixed;
+            bottom: 58px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: min(90vw, 1180px);
+            background: rgba(15, 16, 14, 0.96);
+            border: 1px solid var(--borda-forte);
+            border-radius: 12px;
+            padding: 16px 22px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+            z-index: 100;
+            display: none;
+            backdrop-filter: blur(10px);
+        }
+
+        .teleprompter-drawer.visible {
+            display: block;
+        }
+
+        .tp-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--oliva-claro);
+            font-weight: 700;
+        }
+
+        .tp-text {
+            font-size: 16px;
+            line-height: 1.58;
+            color: #fff;
+        }
+
+        /* Impressão / Exportação PDF */
+        @media print {
+            @page {
+                size: 16in 9in;
+                margin: 0;
+            }
+            html, body {
+                overflow: visible;
+                height: auto;
+                background: #161715 !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            .deck-wrapper {
+                height: auto;
+                display: block;
+            }
+            .slides-viewport {
+                width: 100%;
+                height: auto;
+                border: none;
+                box-shadow: none;
+            }
+            .slide-topbar, .slide-bottombar, .teleprompter-drawer {
+                display: none !important;
+            }
+            .slide {
+                display: flex !important;
+                width: 16in;
+                height: 9in;
+                page-break-after: always;
+                break-after: page;
+                background: #181a17 !important;
+                padding: 48px 56px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="deck-wrapper">
+        <div class="slides-viewport">
+            <!-- BARRA SUPERIOR FIXA -->
+            <header class="slide-topbar">
+                <div class="topbar-left">
+                    <span class="badge-univesp">UNIVESP</span>
+                    <span class="badge-pi">PROJETO INTEGRADOR II (PJI240)</span>
+                    <span>CANIVETE DA ROÇA • E-COMMERCE EM NUVEM COM PIX NATIVO</span>
+                </div>
+                <div class="topbar-right">
+                    <span class="criterio-pill" id="criterio-atual">Critério UNIVESP: Identificação do Grupo</span>
+                    <span id="slide-counter-top">Slide 01 / 12</span>
+                </div>
+            </header>
+
+            <!-- =================================================================
+                 SLIDE 01: CAPA E IDENTIFICAÇÃO DO PROJETO
+                 ================================================================= -->
+            <section class="slide active" data-criterio="Critério UNIVESP: Identificação do Grupo e Projeto" data-time="~30 seg" data-notes="Olá a todos! Somos alunos do Eixo de Computação da UNIVESP, pertencentes à Regional DRP 10 — polos de Colina, Pitangueiras, Ribeirão Preto e Sertãozinho, sob orientação do professor Francisco Leitão de Oliveira Neto. Apresentamos o nosso Projeto Integrador em Computação II, intitulado: Desenvolvimento de E-commerce Escalável em Nuvem com Processamento Automatizado de Pagamentos via Pix, desenvolvido em parceria com a comunidade externa Canivete da Roça.">
+                <div class="cover-layout">
+                    <div>
+                        <div class="cover-eyebrow">
+                            <span>✦</span> Eixo de Computação • DRP 10 (Sertãozinho, Ribeirão Preto, Pitangueiras e Colina)
+                        </div>
+                        <h1 class="cover-title">
+                            Desenvolvimento de <span>E-commerce Escalável em Nuvem</span> com Processamento Automatizado de Pagamentos via <span>Pix</span>
+                        </h1>
+                        <p class="cover-desc">
+                            Plataforma web proprietária de comércio eletrônico, responsiva, acessível (WCAG 2.1 AA) e com custo fixo de infraestrutura zero (R$ 0,00), concebida para emancipar pequenos negócios artesanais da dependência exclusiva de marketplaces.
+                        </p>
+
+                        <div class="cover-meta-grid">
+                            <div class="meta-item">
+                                <small>Comunidade Externa Parceira</small>
+                                <strong>Canivete da Roça (Sertãozinho – SP)</strong>
+                            </div>
+                            <div class="meta-item">
+                                <small>Proprietário / Responsável</small>
+                                <strong>Fernando Gonçalves</strong>
+                            </div>
+                            <div class="meta-item">
+                                <small>Cursos do Grupo (Eixo de Computação)</small>
+                                <strong>Eng. de Computação, Ciência de Dados e TI</strong>
+                            </div>
+                            <div class="meta-item">
+                                <small>Professor Orientador do PI</small>
+                                <strong>Francisco Leitão de Oliveira Neto</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="cover-brand-showcase">
+                        <div class="selo-cr">
+                            <span>CR</span>
+                            <small>ROÇA</small>
+                        </div>
+                        <div>
+                            <h2 style="font-size: 22px; color: var(--bege); letter-spacing: 1px;">CANIVETE DA ROÇA</h2>
+                            <p style="font-size: 13px; color: var(--oliva-claro); font-weight: 700; letter-spacing: 1.5px; margin-top: 2px;">CUTELARIA ARTESANAL & AFIAÇÃO DE PRECISÃO</p>
+                        </div>
+                        <div class="showcase-products">
+                            <img src="img/produtos/canivete.png" alt="Canivete Campeiro Artesanal">
+                            <img src="img/produtos/bainha.png" alt="Bainha de Couro Bovino Legítimo">
+                            <img src="img/produtos/kit.png" alt="Kit de Afiação Strop e Pasta Verde">
+                        </div>
+                        <div style="width: 100%; background: #141613; border: 1px solid var(--borda); border-radius: 10px; padding: 12px; font-size: 13px; color: var(--bege-2);">
+                            <strong style="color: var(--oliva-claro);">Stack Tecnológica Principal:</strong><br>
+                            HTML5 • CSS3 • Vanilla JS • Node.js • Express • PostgreSQL (Supabase) • Motor Pix Bacen/EMV • Melhor Envio API v2
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =================================================================
+                 SLIDE 02: IDENTIFICAÇÃO DA EQUIPE E PAPÉIS TÉCNICOS
+                 ================================================================= -->
+            <section class="slide" data-criterio="Critério UNIVESP: Identificação do Grupo e Organização" data-time="~35 seg" data-notes="Nosso grupo é composto por sete integrantes dos cursos de Ciência de Dados, Engenharia da Computação e Tecnologia da Informação. Para garantir agilidade e qualidade técnica, organizamos o trabalho em frentes especializadas utilizando GitHub e Kanban no Trello: Carlos Vinicius atuou na acessibilidade WCAG 2.1 AA; Felipe Gabriel desenvolveu o backend Node.js, motor Pix e integrações; eu, Felipe Gardenghi, atuei na liderança, documentação, versionamento e vídeo; João Paulo realizou o deploy serverless na Vercel; Lucas de Carvalho modelou o banco PostgreSQL e o Supabase Storage; Marina Barioni conduziu os testes funcionais de ponta a ponta; e Sidney Ferreira desenvolveu todo o frontend e o painel administrativo.">
+                <div class="slide-header">
+                    <div class="slide-kicker">01 • Identificação do Grupo</div>
+                    <h2 class="slide-title">Integrantes da Equipe e Divisão de Responsabilidades</h2>
+                    <p class="slide-subtitle">Gestão colaborativa estruturada com Kanban (Trello) e versionamento em Monorepo (GitHub)</p>
+                </div>
+
+                <div class="grid-team">
+                    <div class="card">
+                        <span class="badge-pi" style=" align-self: flex-start;">Acessibilidade WCAG 2.1 AA</span>
+                        <h3>Carlos Vinicius de O. Santos</h3>
+                        <p style="font-size: 12px; color: var(--oliva-claro); font-weight: 700;">RA: 24201757</p>
+                        <p>Conformidade com diretrizes internacionais WCAG 2.1 AA, navegação estruturada por teclado, foco visível, alto contraste e suporte a leitores de tela (ARIA).</p>
+                    </div>
+
+                    <div class="card">
+                        <span class="badge-pi" style="align-self: flex-start;">Backend & Integrações</span>
+                        <h3>Felipe Gabriel Marcelino</h3>
+                        <p style="font-size: 12px; color: var(--oliva-claro); font-weight: 700;">RA: 25205388</p>
+                        <p>API RESTful em Node.js + Express, construção do motor nativo Pix (padrão Bacen/EMV com CRC16), integração Melhor Envio v2 e e-mails via Nodemailer.</p>
+                    </div>
+
+                    <div class="card card-highlight">
+                        <span class="badge-pi" style="align-self: flex-start;">Liderança, Docs & Vídeo</span>
+                        <h3>Felipe Gardenghi Gonçalves</h3>
+                        <p style="font-size: 12px; color: var(--oliva-claro); font-weight: 700;">RA: 24214497</p>
+                        <p>Coordenação geral e fluxos ágeis da equipe, governança de código no GitHub, redação dos relatórios técnicos, documentação e produção audiovisual.</p>
+                    </div>
+
+                    <div class="card">
+                        <span class="badge-pi" style="align-self: flex-start;">Infra Serverless & Deploy</span>
+                        <h3>João Paulo Souza Martins</h3>
+                        <p style="font-size: 12px; color: var(--oliva-claro); font-weight: 700;">RA: 24220210</p>
+                        <p>Configuração da infraestrutura serverless na nuvem Vercel (<code class="code-pill">vercel.json</code> e <code class="code-pill">api/index.js</code>), variáveis de ambiente e estabilidade em produção.</p>
+                    </div>
+
+                    <div class="card">
+                        <span class="badge-pi" style="align-self: flex-start;">Banco de Dados & Storage</span>
+                        <h3>Lucas de Carvalho</h3>
+                        <p style="font-size: 12px; color: var(--oliva-claro); font-weight: 700;">RA: 24223366</p>
+                        <p>Modelagem relacional em PostgreSQL no Supabase, scripts DDL (<code class="code-pill">schema.sql</code>), carga inicial (<code class="code-pill">seed.sql</code>) e bucket público no Supabase Storage.</p>
+                    </div>
+
+                    <div class="card">
+                        <span class="badge-pi" style="align-self: flex-start;">QA & Testes E2E</span>
+                        <h3>Marina Berardi Barioni</h3>
+                        <p style="font-size: 12px; color: var(--oliva-claro); font-weight: 700;">RA: 24210281</p>
+                        <p>Bateria de testes funcionais de ponta a ponta (CT01 a CT06), validação do algoritmo de estoque de kits, expiração TTL do Pix e usabilidade mobile.</p>
+                    </div>
+
+                    <div class="card">
+                        <span class="badge-pi" style="align-self: flex-start;">Frontend & Painel Admin</span>
+                        <h3>Sidney Nunes Ferreira</h3>
+                        <p style="font-size: 12px; color: var(--oliva-claro); font-weight: 700;">RA: 2013327</p>
+                        <p>Desenvolvimento integral do frontend em HTML5 semântico, CSS3 Rústico Premium e Vanilla JS: vitrine dinâmica, carrinho, Guest Checkout e Painel Admin.</p>
+                    </div>
+
+                    <div class="card card-leather">
+                        <span class="badge-pi" style="align-self: flex-start;">Orientação & Polo</span>
+                        <h3>Tutoria e Regional</h3>
+                        <p style="font-size: 12px; color: var(--couro-claro); font-weight: 700;">UNIVESP — 2026</p>
+                        <p><strong>Orientador:</strong> Prof. Francisco Leitão de Oliveira Neto<br><strong>Polos DRP 10:</strong> Colina, Pitangueiras, Ribeirão Preto e Sertãozinho.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =================================================================
+                 SLIDE 03: APRESENTAÇÃO DO PROBLEMA E COMUNIDADE EXTERNA
+                 ================================================================= -->
+            <section class="slide" data-criterio="Critério UNIVESP: Apresentação do Problema e Relevância Comunitária" data-time="~40 seg" data-notes="A comunidade externa atendida é a microempresa Canivete da Roça, de Sertãozinho, São Paulo, gerida pelo senhor Fernando Gonçalves e especializada em cutelaria tradicional e afiação — como canivetes campeiros artesanais, bainhas em couro legítimo, strops e pastas de polimento. No diagnóstico inicial, identificamos que a empresa operava exclusivamente via marketplaces como Mercado Livre e Shopee. Embora tragam visibilidade inicial, esses canais impõem três gargalos severos: primeiro, a perda de 16% a 20% do faturamento bruto em comissões e taxas; segundo, o bloqueio do relacionamento direto com o cliente final; e terceiro, a dificuldade de controlar o estoque simultâneo entre peças vendidas avulsas e montadas em kits promocionais.">
+                <div class="slide-header">
+                    <div class="slide-kicker">02 • Apresentação do Problema</div>
+                    <h2 class="slide-title">Cenário da Comunidade Externa e Gargalos dos Marketplaces</h2>
+                    <p class="slide-subtitle">Diagnóstico situacional realizado junto à microempresa parceira Canivete da Roça (Sertãozinho – SP)</p>
+                </div>
+
+                <div class="grid-3">
+                    <div class="card card-danger">
+                        <h3>1. Compressão da Margem Financeira</h3>
+                        <p>A dependência exclusiva de plataformas intermediárias (Mercado Livre e Shopee) acarreta tarifas e comissões onerosas que retêm entre <strong>16% e 20% sobre o valor bruto</strong> de cada venda.</p>
+                        <p style="margin-top: auto; font-size: 13px; color: #f29b9b;"><strong>Impacto:</strong> Corrói o lucro líquido de produtos artesanais que exigem matéria-prima nobre (aço inox/carbono e couro soleta).</p>
+                    </div>
+
+                    <div class="card card-danger">
+                        <h3>2. Alienação do Relacionamento Comercial</h3>
+                        <p>Os marketplaces restringem o acesso aos dados de contato do comprador, impedindo que a microempresa construa sua própria carteira de clientes.</p>
+                        <p style="margin-top: auto; font-size: 13px; color: #f29b9b;"><strong>Impacto:</strong> Inviabiliza ações estruturadas de pós-venda, suporte técnico de afiação, recompra direta e fidelização à marca.</p>
+                    </div>
+
+                    <div class="card card-danger">
+                        <h3>3. Rigidez Logística e Ruptura em Kits</h3>
+                        <p>Falta de conciliação automática de fretes multicanal e extrema dificuldade em sincronizar o saldo físico entre itens vendidos individualmente e agrupados em <strong>Kits de Afiação</strong>.</p>
+                        <p style="margin-top: auto; font-size: 13px; color: #f29b9b;"><strong>Impacto:</strong> Risco de vendas sem estoque disponível, cancelamentos e perda de reputação.</p>
+                    </div>
+                </div>
+
+                <!-- Faixa real com as fotos dos produtos da empresa -->
+                <div class="product-strip">
+                    <div class="product-mini">
+                        <img src="img/produtos/canivete.png" alt="Canivete Campeiro">
+                        <strong>Canivete Campeiro Inox</strong>
+                        <span>Cabo em Chifre • R$ 139,90</span>
+                    </div>
+                    <div class="product-mini">
+                        <img src="img/produtos/bainha.png" alt="Bainha em Couro">
+                        <strong>Bainha Couro Legítimo</strong>
+                        <span>Costura Manual • R$ 49,90</span>
+                    </div>
+                    <div class="product-mini">
+                        <img src="img/produtos/strop.png" alt="Strop de Couro">
+                        <strong>Strop Dupla Face</strong>
+                        <span>Madeira Maciça • R$ 79,90</span>
+                    </div>
+                    <div class="product-mini">
+                        <img src="img/produtos/pasta.png" alt="Pasta Verde Jacaré">
+                        <strong>Pasta Verde Jacaré</strong>
+                        <span>Óxido de Cromo • R$ 34,90</span>
+                    </div>
+                    <div class="product-mini">
+                        <img src="img/produtos/kit.png" alt="Kit de Afiação">
+                        <strong>Kit Mestre de Afiação</strong>
+                        <span>Combo Composto • R$ 229,90</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =================================================================
+                 SLIDE 04: PROBLEMA DE PESQUISA E RELAÇÃO COM O TEMA NORTEADOR UNIVESP
+                 ================================================================= -->
+            <section class="slide" data-criterio="Critério UNIVESP: Problema de Pesquisa e Tema Norteador" data-time="~35 seg" data-notes="Diante desse cenário, formulamos a nossa questão norteadora de pesquisa: Como projetar, desenvolver e implantar uma plataforma própria de e-commerce, com custo fixo de infraestrutura nulo de zero reais e arquitetura modular em nuvem, capaz de superar a dependência de marketplaces, integrando catálogo, frete dinâmico e pagamento instantâneo via Pix? Esse desafio conecta-se diretamente ao Tema Norteador do Projeto Integrador II da UNIVESP, que propõe o desenvolvimento de um sistema web integrado a banco de dados relacional, controle de versão e recursos de acessibilidade, articulando na prática cinco disciplinas fundamentais do nosso curso.">
+                <div class="slide-header">
+                    <div class="slide-kicker">03 • Questão de Pesquisa & Tema Norteador</div>
+                    <h2 class="slide-title">Problema de Pesquisa e Interdisciplinaridade na UNIVESP</h2>
+                    <p class="slide-subtitle">Alinhamento direto às diretrizes curriculares do Projeto Integrador em Computação II (PJI240)</p>
+                </div>
+
+                <div class="grid-2">
+                    <div style="display: flex; flex-direction: column; gap: 16px;">
+                        <div class="card card-highlight">
+                            <h3>🎯 Problema de Pesquisa Proposto</h3>
+                            <p style="font-size: 15.5px; color: #fff; font-style: italic; line-height: 1.58;">
+                                “Como projetar, desenvolver e implantar uma plataforma própria de comércio eletrônico, com <strong>custo fixo de infraestrutura nulo (R$ 0,00)</strong> e arquitetura modular em nuvem, capaz de mitigar a dependência operacional de marketplaces intermediários, integrando catálogo comercial, cotação logística dinâmica e liquidação automatizada de pagamentos instantâneos via Pix para um pequeno empreendimento de cutelaria?”
+                            </p>
+                        </div>
+
+                        <div class="card card-leather">
+                            <h3>🏛️ Relação com o Tema Norteador da UNIVESP</h3>
+                            <ul>
+                                <li><strong>Sistema Web + Banco Relacional:</strong> Aplicação cliente-servidor com persistência relacional em nuvem (PostgreSQL no Supabase).</li>
+                                <li><strong>Framework Backend & APIs:</strong> Servidor RESTful em Node.js com Express integrando serviços logísticos e financeiros nacionais.</li>
+                                <li><strong>Acessibilidade & Inclusão Digital:</strong> Atendimento integral aos critérios internacionais <strong>WCAG 2.1 Nível AA</strong>.</li>
+                                <li><strong>Governança & Controle de Versão:</strong> Repositório estruturado em monorepo no GitHub com entregas iterativas.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>📚 Conhecimentos e Disciplinas Aplicadas na Solução</h3>
+                        <table class="slide-table" style="margin-top: 4px;">
+                            <thead>
+                                <tr>
+                                    <th>Disciplina UNIVESP</th>
+                                    <th>Aplicação Prática no Projeto</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Engenharia de Software</strong></td>
+                                    <td>Design Thinking, requisitos (RN01–RN07), máquina de estados do pedido, Git/GitHub e testes E2E.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Bancos de Dados</strong></td>
+                                    <td>Modelagem DER em 3ª Forma Normal (3FN), scripts DDL (<code class="code-pill">schema.sql</code>), índices e PostgreSQL.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Desenvolvimento Web</strong></td>
+                                    <td>HTML5 semântico, CSS3 responsivo, JavaScript Vanilla (Fetch API) e backend Node.js + Express.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Redes e Sist. Distribuídos</strong></td>
+                                    <td>Protocolo HTTP/HTTPS, payloads JSON, CORS, mensageria SMTP (Nodemailer) e nuvem Serverless.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Acessibilidade & IHC</strong></td>
+                                    <td>Design centrado no usuário, <em>Guest Checkout</em> sem atrito, navegação por teclado e atributos ARIA.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =================================================================
+                 SLIDE 05: METODOLOGIA DESIGN THINKING
+                 ================================================================= -->
+            <section class="slide" data-criterio="Critério UNIVESP: Conhecimentos Desenvolvidos e Metodologia" data-time="~35 seg" data-notes="Para conduzir o desenvolvimento, aplicamos a metodologia do Design Thinking dividida em três grandes ciclos: na etapa Ouvir e Interpretar, realizamos entrevistas com o lojista em Sertãozinho e mapeamos seu catálogo e dificuldades logísticas. Na etapa Criar e Prototipar, desenhamos a arquitetura de custo zero, modelamos as seis tabelas relacionais e concebemos o modelo Guest Checkout sem obrigatoriedade de senha, além da regra matemática para o estoque virtual de kits. Por fim, na etapa Implementar e Testar, realizamos a codificação full stack, integramos o motor Pix e o Melhor Envio, fizemos o deploy na Vercel e homologamos o sistema junto ao proprietário.">
+                <div class="slide-header">
+                    <div class="slide-kicker">04 • Metodologia Científica e Ágil</div>
+                    <h2 class="slide-title">Ciclo Metodológico do Design Thinking Aplicado</h2>
+                    <p class="slide-subtitle">Empatia com a comunidade parceira, ideação orientada à viabilidade econômica e prototipagem iterativa</p>
+                </div>
+
+                <div class="grid-3">
+                    <div class="card">
+                        <span class="badge-pi" style="align-self: flex-start;">Etapa 1 • Imersão</span>
+                        <h3>1. Ouvir e Interpretar</h3>
+                        <ul>
+                            <li><strong>Entrevistas com o Lojista:</strong> Imersão presencial e remota com o proprietário da Canivete da Roça em Sertãozinho/SP.</li>
+                            <li><strong>Análise Documental:</strong> Levantamento das taxas de 16% a 20% retidas nos marketplaces e do fluxo atual de envios.</li>
+                            <li><strong>Mapeamento do Catálogo:</strong> Levantamento de pesos em gramas e dimensões reais (cm) de canivetes, bainhas, strops e pastas.</li>
+                        </ul>
+                    </div>
+
+                    <div class="card card-highlight">
+                        <span class="badge-pi" style="align-self: flex-start;">Etapa 2 • Ideação</span>
+                        <h3>2. Criar e Prototipar</h3>
+                        <ul>
+                            <li><strong>Arquitetura Custo R$ 0,00:</strong> Seleção de camadas gratuitas consolidadas (Supabase, Vercel e Nodemailer Gmail).</li>
+                            <li><strong>Modelo <em>Guest Checkout</em>:</strong> Eliminação de cadastro/senha obrigatória (responsável por +25% dos abandonos de carrinho).</li>
+                            <li><strong>Algoritmo de Kits Virtuais:</strong> Disponibilidade calculada dinamicamente pelo item componente de menor saldo físico:
+                                <div style="margin-top: 8px; padding: 8px; background: #141612; border-radius: 6px; text-align: center; font-family: Consolas, monospace; color: var(--oliva-claro); font-size: 12.5px;">
+                                    Estoque(Kit) = min(Estoque Item 1, Item 2, ...)
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="card">
+                        <span class="badge-pi" style="align-self: flex-start;">Etapa 3 • Execução</span>
+                        <h3>3. Implementar e Testar</h3>
+                        <ul>
+                            <li><strong>Codificação Monorepo:</strong> Estrutura organizada em <code class="code-pill">frontend/</code>, <code class="code-pill">backend/</code>, <code class="code-pill">database/</code> e <code class="code-pill">api/</code>.</li>
+                            <li><strong>Integrações Nacionais:</strong> Motor próprio Pix (padrão Bacen/BR Code) e API v2 do Melhor Envio (Correios e Jadlog).</li>
+                            <li><strong>Homologação Real:</strong> Bateria de testes funcionais (CT01–CT06) e validação presencial/remota com o gestor da loja.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =================================================================
+                 SLIDE 06: ARQUITETURA TÉCNICA E CUSTO FIXO ZERO
+                 ================================================================= -->
+            <section class="slide" data-criterio="Critério UNIVESP: Apresentação da Solução e Conhecimentos Técnicos" data-time="~40 seg" data-notes="Neste slide apresentamos a arquitetura técnica desacoplada da nossa solução. No navegador do cliente, construímos o frontend com HTML5 semântico, CSS3 e JavaScript puro, sem frameworks pesados, garantindo carregamento imediato e acessibilidade WCAG 2.1 AA. Essa interface se comunica via API REST com nosso servidor Node.js e Express hospedado de forma serverless na Vercel. Na camada de persistência, utilizamos o PostgreSQL na nuvem do Supabase para os dados relacionais e o Supabase Storage para servir as fotos otimizadas via URL pública, evitando guardar arquivos binários pesados no banco. Além disso, o backend conta com contingência Dual-Mode: caso a rede externa oscile, ele aciona automaticamente o fallback local em JSON sem tirar a loja do ar.">
+                <div class="slide-header">
+                    <div class="slide-kicker">05 • Arquitetura de Software e Nuvem</div>
+                    <h2 class="slide-title">Arquitetura Desacoplada, Serverless e Resiliente (Custo R$ 0,00)</h2>
+                    <p class="slide-subtitle">Separação limpa de responsabilidades, imagens em Object Storage e tolerância a falhas (Dual-Mode Fallback)</p>
+                </div>
+
+                <div class="arch-diagram">
+                    <div class="arch-col">
+                        <div class="arch-col-title">1. Camada Cliente (Frontend)</div>
+                        <div class="arch-node">
+                            <strong>HTML5 + CSS3 + Vanilla JS</strong>
+                            <small>Interface leve, sem etapa de build pesada e com estética Rústica Premium.</small>
+                        </div>
+                        <div class="arch-node">
+                            <strong>Acessibilidade WCAG 2.1 AA</strong>
+                            <small>Skip links, navegação completa via <code class="code-pill">TAB</code>, <code class="code-pill">:focus-visible</code> e <code class="code-pill">aria-live</code>.</small>
+                        </div>
+                        <div class="arch-node">
+                            <strong>Guest Checkout & SPA</strong>
+                            <small>Filtros assíncronos sem reload e compra rápida sem senha obrigatória.</small>
+                        </div>
+                    </div>
+
+                    <div class="arch-arrow">
+                        ⇄
+                        <span>Fetch REST<br>HTTPS / JSON</span>
+                    </div>
+
+                    <div class="arch-col" style="border-color: var(--borda-forte);">
+                        <div class="arch-col-title">2. Servidor & API (Node.js + Express)</div>
+                        <div class="arch-node">
+                            <strong>Hospedagem Serverless (Vercel)</strong>
+                            <small>Respostas rápidas (&lt; 250ms) via <code class="code-pill">api/index.js</code> e <code class="code-pill">vercel.json</code> a custo R$ 0,00.</small>
+                        </div>
+                        <div class="arch-node">
+                            <strong>Motor Nativo Pix (Bacen / EMV)</strong>
+                            <small>Geração autônoma de QR Code dinâmico, CRC16-CCITT e controle de TTL (30 min).</small>
+                        </div>
+                        <div class="arch-node">
+                            <strong>Resiliência Dual-Mode (Fallback)</strong>
+                            <small>Prioriza o Supabase; em falha de rede, opera com <code class="code-pill">produtos.json</code> e <code class="code-pill">pedidos.json</code>.</small>
+                        </div>
+                    </div>
+
+                    <div class="arch-arrow">
+                        ⇄
+                        <span>SQL / HTTPS<br>& APIs</span>
+                    </div>
+
+                    <div class="arch-col">
+                        <div class="arch-col-title">3. Dados em Nuvem & Integrações</div>
+                        <div class="arch-node">
+                            <strong>Supabase PostgreSQL (3FN)</strong>
+                            <small>6 tabelas relacionais: <code class="code-pill">categorias</code>, <code class="code-pill">produtos</code>, <code class="code-pill">kit_itens</code>, <code class="code-pill">pedidos</code>, <code class="code-pill">pedido_itens</code>, <code class="code-pill">avise_me</code>.</small>
+                        </div>
+                        <div class="arch-node">
+                            <strong>Supabase Storage (Bucket Público)</strong>
+                            <small>Hospeda fotos dos produtos; o banco guarda apenas a URL pública otimizada.</small>
+                        </div>
+                        <div class="arch-node">
+                            <strong>Melhor Envio v2 + Nodemailer</strong>
+                            <small>Cotação real Correios/Jadlog por CEP e disparo de e-mails HTML via Gmail SMTP.</small>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =================================================================
+                 SLIDE 07: INTEGRAÇÕES CRÍTICAS (MOTOR PIX BACEN & MELHOR ENVIO)
+                 ================================================================= -->
+            <section class="slide" data-criterio="Critério UNIVESP: Apresentação da Solução e Profundidade Técnica" data-time="~45 seg" data-notes="Um grande destaque técnico do projeto foi a construção do nosso próprio motor nativo de pagamentos Pix em Node.js, seguindo estritamente a especificação oficial do Banco Central e EMVCo. Em vez de depender de sandboxes instáveis ou taxas de gateways de terceiros, nosso módulo monta o payload BR Code com a chave Pix da loja, valor exato com frete, identificador único txid e calcula o polinômio de verificação cíclica CRC16-CCITT. Ele gera instantaneamente o QR Code em Base64 e o código Copia e Cola, iniciando um cronômetro de 30 minutos de validade: se o pedido não for pago nesse prazo, o sistema cancela a ordem e devolve os itens ao estoque. Em paralelo, integramos a API v2 do Melhor Envio, que soma o peso e cubagem do carrinho a partir do CEP de Sertãozinho para cotar Correios PAC, SEDEX e Jadlog em tempo real.">
+                <div class="slide-header">
+                    <div class="slide-kicker">06 • Engenharia das Integrações</div>
+                    <h2 class="slide-title">Motor Nativo Pix (Padrão BACEN/EMV) e Logística Dinâmica</h2>
+                    <p class="slide-subtitle">Autonomia financeira sem taxas de gateway e cálculo automatizado de cubagem no Melhor Envio v2</p>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card card-highlight">
+                        <h3>⚡ Motor Próprio de Pix (<code class="code-pill">backend/pix.js</code>)</h3>
+                        <ul>
+                            <li><strong>Padrão Oficial BR Code (EMVCo):</strong> Estruturação nativa dos campos EMV (<code class="code-pill">00</code> Payload Format, <code class="code-pill">26</code> Merchant Account GUI <code class="code-pill">br.gov.bcb.pix</code>, <code class="code-pill">53</code> Moeda 986 BRL, <code class="code-pill">54</code> Valor, <code class="code-pill">59</code> Recebedor, <code class="code-pill">60</code> Cidade Sertãozinho e <code class="code-pill">62</code> <code class="code-pill">txid</code>).</li>
+                            <li><strong>Cálculo Matemático CRC16-CCITT:</strong> Algoritmo bit a bit com polinômio <code class="code-pill">0x1021</code> no campo <code class="code-pill">6304</code>, garantindo leitura válida nos aplicativos bancários.</li>
+                            <li><strong>Reserva de Estoque e TTL de 30 Minutos:</strong> Cronômetro regressivo na tela do cliente; caso expire sem confirmação, o pedido muda para <code class="code-pill">Cancelado</code> e estorna o saldo ao estoque automaticamente.</li>
+                            <li><strong>Rota de Simulação Acadêmica:</strong> Permite demonstrar ao vivo a transição para <code class="code-pill">Pagamento aprovado</code> e o envio imediato de e-mails no PI2.</li>
+                        </ul>
+                    </div>
+
+                    <div style="display: flex; flex-direction: column; gap: 16px;">
+                        <div class="card">
+                            <h3>🚚 Cotação em Tempo Real (<code class="code-pill">backend/frete.js</code>)</h3>
+                            <ul>
+                                <li><strong>Cálculo de Cubagem Agrupada:</strong> Soma peso (<code class="code-pill">peso_g</code>) e estima dimensões físicas da caixa a partir do CEP de origem em Sertãozinho (<code class="code-pill">14170-460</code>).</li>
+                                <li><strong>Integração Melhor Envio API v2:</strong> Consulta simultânea de preços e prazos úteis para <strong>Correios (PAC e SEDEX)</strong> e <strong>Jadlog (.Package e .Com)</strong>, com fallback de contingência caso o sandbox externo oscile.</li>
+                            </ul>
+                        </div>
+
+                        <div class="card card-leather">
+                            <h3>📧 Mensageria Transacional (<code class="code-pill">backend/email.js</code>)</h3>
+                            <ul>
+                                <li><strong>Nodemailer + SMTP Oficial:</strong> Integrado à conta institucional do projeto (<code class="code-pill">canivetedarocaunivesp@gmail.com</code>) com até 500 disparos gratuitos/dia.</li>
+                                <li><strong>Gatilhos Duplos em HTML:</strong> Envia e-mail imediato na emissão do pedido (com código Copia e Cola) e segundo e-mail automático na aprovação do pagamento.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =================================================================
+                 SLIDE 08: JORNADA DO USUÁRIO, ACESSIBILIDADE E PAINEL ADMIN
+                 ================================================================= -->
+            <section class="slide" data-criterio="Critério UNIVESP: Apresentação da Solução e Recursos Desenvolvidos" data-time="~35 seg" data-notes="Pensando na experiência tanto do comprador quanto do lojista, estruturamos quatro frentes funcionais completas: na vitrine, o cliente filtra canivetes, bainhas, strops e kits sem recarregar a página, e caso um item acabe, pode se cadastrar no recurso Avise-me quando chegar. Na finalização, o Guest Checkout elimina o atrito de criar senhas e permite rastrear o pedido apenas com o código ou CPF. Toda a interface segue o padrão WCAG 2.1 AA de acessibilidade. Já para o senhor Fernando, construímos um painel administrativo seguro onde ele cadastra produtos, compõe kits, atualiza estoques e gerencia o status de envio dos pedidos.">
+                <div class="slide-header">
+                    <div class="slide-kicker">07 • Módulos da Plataforma</div>
+                    <h2 class="slide-title">Experiência do Comprador, Acessibilidade e Gestão do Lojista</h2>
+                    <p class="slide-subtitle">Fluxo comercial de ponta a ponta desenhado para máxima conversão e facilidade operacional</p>
+                </div>
+
+                <div class="grid-4">
+                    <div class="card">
+                        <span class="badge-pi" style="align-self: flex-start;">Módulo 1</span>
+                        <h3>Vitrine Dinâmica & "Avise-me"</h3>
+                        <p>Navegação fluida por categorias (<code class="code-pill">GET /api/produtos?categoria=slug</code>) sem recarregar a página.</p>
+                        <p>Quando <code class="code-pill">estoque &lt;= 0</code>, desabilita a compra e ativa captura de lead na tabela <code class="code-pill">avise_me</code>.</p>
+                    </div>
+
+                    <div class="card card-highlight">
+                        <span class="badge-pi" style="align-self: flex-start;">Módulo 2</span>
+                        <h3>Guest Checkout & Rastreio</h3>
+                        <p>Compra em etapa única sem exigir criação de conta ou senha.</p>
+                        <p>Gera protocolo público (ex: <code class="code-pill">PED-...</code>) e permite consulta rápida de status por <strong>Código do Pedido ou CPF</strong>.</p>
+                    </div>
+
+                    <div class="card">
+                        <span class="badge-pi" style="align-self: flex-start;">Módulo 3</span>
+                        <h3>Acessibilidade WCAG 2.1 AA</h3>
+                        <p>Atalhos de salto (<em>Skip Links</em>), navegação integral via teclado (<code class="code-pill">TAB</code>), foco destacado (<code class="code-pill">:focus-visible</code>).</p>
+                        <p>Regiões dinâmicas <code class="code-pill">aria-live="polite"</code>, textos alternativos e suporte a <code class="code-pill">prefers-reduced-motion</code>.</p>
+                    </div>
+
+                    <div class="card card-leather">
+                        <span class="badge-pi" style="align-self: flex-start;">Módulo 4</span>
+                        <h3>Painel Admin do Lojista</h3>
+                        <p>Autenticação protegida por sessão HTTP-Only (<code class="code-pill">express-session</code>).</p>
+                        <p>Permite cadastrar produtos e kits, controlar estoque, aprovar pagamentos e atualizar códigos de rastreio.</p>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: 14px; padding: 14px 20px;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+                        <strong style="font-size: 13px; color: var(--oliva-claro); text-transform: uppercase; letter-spacing: 1px;">Ciclo de Vida do Pedido (Máquina de Estados):</strong>
+                        <span class="code-pill">1. Carrinho (Novo)</span>
+                        <span style="color: var(--oliva-claro);">→</span>
+                        <span class="code-pill">2. Aguardando pagamento (Reserva 30m)</span>
+                        <span style="color: var(--oliva-claro);">→</span>
+                        <span class="code-pill">3. Pagamento aprovado (Baixa estoque + E-mail)</span>
+                        <span style="color: var(--oliva-claro);">→</span>
+                        <span class="code-pill">4. Em preparação / Enviado (Rastreio)</span>
+                        <span style="color: var(--oliva-claro);">→</span>
+                        <span class="code-pill">5. Entregue</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =================================================================
+                 SLIDE 09: TESTES FUNCIONAIS E VALIDAÇÃO DE QUALIDADE
+                 ================================================================= -->
+            <section class="slide" data-criterio="Critério UNIVESP: Validação Técnica e Qualidade da Solução" data-time="~30 seg" data-notes="Antes da entrega à comunidade externa, submetemos a plataforma a uma bateria rigorosa de seis casos de teste funcionais e de usabilidade: validamos a filtragem assíncrona do catálogo, o cálculo de frete para diferentes CEPs no Melhor Envio, a leitura do QR Code Pix e seu checksum CRC16 em aplicativos bancários, o cancelamento automático por expiração dos 30 minutos com estorno de estoque, a entrega dos e-mails HTML pelo Nodemailer e a navegação acessível via teclado e leitor de tela. Todos os seis cenários obtiveram 100% de aprovação.">
+                <div class="slide-header">
+                    <div class="slide-kicker">08 • Qualidade de Software e Homologação</div>
+                    <h2 class="slide-title">Matriz de Testes Funcionais, Regras de Negócio e Acessibilidade</h2>
+                    <p class="slide-subtitle">Verificação empírica de ponta a ponta (End-to-End) antes da disponibilização em ambiente de produção</p>
+                </div>
+
+                <table class="slide-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Módulo Avaliado</th>
+                            <th>Procedimento de Teste Executado</th>
+                            <th>Resultado Obtido</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code class="code-pill">CT01</code></td>
+                            <td><strong>Catálogo & Filtros</strong></td>
+                            <td>Filtragem sucessiva por Canivetes, Bainhas, Strops, Polimento e Kits.</td>
+                            <td>Vitrine atualizada dinamicamente via Fetch sem recarregar a página.</td>
+                            <td><span class="status-ok">✔ Sucesso</span></td>
+                        </tr>
+                        <tr>
+                            <td><code class="code-pill">CT02</code></td>
+                            <td><strong>Cotação de Frete</strong></td>
+                            <td>Inserção de CEPs do Sudeste e demais regiões no Produto e Checkout.</td>
+                            <td>Cálculo instantâneo de PAC, SEDEX e Jadlog com cubagem e peso reais.</td>
+                            <td><span class="status-ok">✔ Sucesso</span></td>
+                        </tr>
+                        <tr>
+                            <td><code class="code-pill">CT03</code></td>
+                            <td><strong>Motor Pix Bacen</strong></td>
+                            <td>Geração de QR Code dinâmico e validação da string Copia e Cola (CRC16).</td>
+                            <td>Payload aderente ao padrão EMVCo com leitura imediata em app bancário.</td>
+                            <td><span class="status-ok">✔ Sucesso</span></td>
+                        </tr>
+                        <tr>
+                            <td><code class="code-pill">CT04</code></td>
+                            <td><strong>Expiração TTL (30m)</strong></td>
+                            <td>Simulação de decurso de 30 minutos sem pagamento da cobrança Pix.</td>
+                            <td>Pedido alterado para <em>Cancelado</em> e itens devolvidos ao estoque disponível.</td>
+                            <td><span class="status-ok">✔ Sucesso</span></td>
+                        </tr>
+                        <tr>
+                            <td><code class="code-pill">CT05</code></td>
+                            <td><strong>E-mails Nodemailer</strong></td>
+                            <td>Fechamento de compra Guest Checkout e confirmação de pagamento.</td>
+                            <td>E-mails HTML transacionais entregues na caixa de entrada do cliente.</td>
+                            <td><span class="status-ok">✔ Sucesso</span></td>
+                        </tr>
+                        <tr>
+                            <td><code class="code-pill">CT06</code></td>
+                            <td><strong>Acessibilidade WCAG</strong></td>
+                            <td>Navegação integral via tecla <code class="code-pill">TAB</code>, Skip Link e leitor de tela.</td>
+                            <td>Foco visível em todos os controles interativos e anúncios ARIA corretos.</td>
+                            <td><span class="status-ok">✔ Sucesso</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- =================================================================
+                 SLIDE 10: IMPLEMENTAÇÃO NA COMUNIDADE EXTERNA E IMPACTOS REAIS
+                 ================================================================= -->
+            <section class="slide" data-criterio="Critério UNIVESP: Implementação na Comunidade Externa e Impactos" data-time="~40 seg" data-notes="A implementação e homologação junto à comunidade externa foi realizada com o proprietário da Canivete da Roça, senhor Fernando Gonçalves, gerando impactos concretos em três dimensões: na viabilidade econômica, o custo fixo mensal de hospedagem e banco de dados manteve-se em zero reais, permitindo à microempresa recuperar de 16% a 20% de margem líquida em cada venda direta, além de ter liquidez imediata e taxa zero pelo Pix nativo. Na viabilidade operacional, o lojista elogiou a simplicidade do painel administrativo para controlar o estoque unificado de kits e o checkout sem senha, que combina perfeitamente com seu público no WhatsApp e Instagram.">
+                <div class="slide-header">
+                    <div class="slide-kicker">09 • Implementação na Comunidade Externa</div>
+                    <h2 class="slide-title">Validação com o Lojista e Impactos Gerados na Canivete da Roça</h2>
+                    <p class="slide-subtitle">Resultados alcançados na homologação em produção junto ao responsável Sr. Fernando Gonçalves (Sertãozinho – SP)</p>
+                </div>
+
+                <div class="grid-3">
+                    <div class="card card-highlight">
+                        <h3>💰 Impacto Econômico</h3>
+                        <ul>
+                            <li><strong>Recuperação de 16% a 20% da Margem:</strong> Eliminação das comissões abusivas retidas por marketplaces nas vendas diretas.</li>
+                            <li><strong>Custo Fixo Mensal R$ 0,00:</strong> Hospedagem, banco de dados, storage de fotos e disparos de e-mail operando integralmente em camadas gratuitas.</li>
+                            <li><strong>Liquidez Instantânea sem Taxas:</strong> Recebimento direto via Pix nativo sem custo de adquirente e sem risco de <em>chargeback</em>.</li>
+                        </ul>
+                    </div>
+
+                    <div class="card">
+                        <h3>⚙️ Impacto Operacional</h3>
+                        <ul>
+                            <li><strong>Autonomia de Catálogo e Kits:</strong> Sincronização automática do estoque entre peças vendidas avulsas e montadas em kits promocionais.</li>
+                            <li><strong>Desburocratização Logística:</strong> Cálculo transparente de frete em tempo real sem necessidade de cotação manual pelo lojista.</li>
+                            <li><strong>Painel Intuitivo:</strong> O proprietário gerencia pedidos, preços e rastreio sem depender de conhecimentos de programação.</li>
+                        </ul>
+                    </div>
+
+                    <div class="card card-leather">
+                        <h3>🤝 Impacto Comercial e Social</h3>
+                        <ul>
+                            <li><strong>Canal Direto com o Cliente:</strong> Posse da base de clientes (Nome, E-mail, Telefone) para pós-venda e reengajamento via <em>Avise-me</em>.</li>
+                            <li><strong>Alta Conversão Mobile:</strong> O <em>Guest Checkout</em> sem senha foi destacado pelo gestor como ideal para o perfil tradicional de seus compradores.</li>
+                            <li><strong>Consolidação da Marca:</strong> Link oficial próprio para divulgação no Instagram, WhatsApp e feiras de cutelaria.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="kpi-row">
+                    <div class="kpi-box">
+                        <span class="kpi-value">R$ 0,00</span>
+                        <span class="kpi-label">Custo Fixo de Infraestrutura</span>
+                    </div>
+                    <div class="kpi-box">
+                        <span class="kpi-value">+16% a 20%</span>
+                        <span class="kpi-label">Margem Bruta Recuperada</span>
+                    </div>
+                    <div class="kpi-box">
+                        <span class="kpi-value">&lt; 250 ms</span>
+                        <span class="kpi-label">Tempo Médio de Resposta API</span>
+                    </div>
+                    <div class="kpi-box">
+                        <span class="kpi-value">WCAG 2.1 AA</span>
+                        <span class="kpi-label">Conformidade de Acessibilidade</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =================================================================
+                 SLIDE 11: CONSIDERAÇÕES FINAIS E TRABALHOS FUTUROS
+                 ================================================================= -->
+            <section class="slide" data-criterio="Critério UNIVESP: Síntese dos Conhecimentos e Evolução" data-time="~30 seg" data-notes="Como considerações finais, este Projeto Integrador comprovou que é plenamente possível empoderar microempresas tradicionais com engenharia de software moderna, acessível e de custo zero em nuvem. Também mapeamos com transparência a estratégia de mitigação para atração de tráfego orgânico via redes sociais e deixamos planejados como trabalhos futuros a adição de um dashboard de Business Intelligence para análise de conversão, cupons de desconto sazonais e impressão térmica direta de etiquetas logísticas.">
+                <div class="slide-header">
+                    <div class="slide-kicker">10 • Conclusão e Visão de Futuro</div>
+                    <h2 class="slide-title">Considerações Finais, Mitigação de Riscos e Trabalhos Futuros</h2>
+                    <p class="slide-subtitle">Papel extensionista da universidade pública na transformação digital de pequenos produtores locais</p>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <h3>✅ Principais Contribuições do Projeto</h3>
+                        <ul>
+                            <li><strong>Solução Real em Produção:</strong> Plataforma completa, responsiva e homologada que restitui a soberania comercial à microempresa Canivete da Roça.</li>
+                            <li><strong>Maturidade de Engenharia:</strong> Aplicação integrada de Bancos de Dados, Engenharia de Software, Desenvolvimento Web, Redes e Acessibilidade Digital.</li>
+                            <li><strong>Mitigação de Obstáculos Mapeados:</strong>
+                                <ul style="margin-top: 6px;">
+                                    <li><em>Indisponibilidade de serviços externos:</em> Resolvida com arquitetura <strong>Dual-Mode Fallback</strong> local em JSON e contingência de frete.</li>
+                                    <li><em>Atração inicial de tráfego:</em> Vinculação direta da loja própria aos canais de Instagram e atendimento WhatsApp da marca.</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="card card-highlight">
+                        <h3>🚀 Evoluções e Trabalhos Futuros</h3>
+                        <ul>
+                            <li><strong>1. Painel de Business Intelligence (BI):</strong> Implementação de gráficos analíticos no painel administrativo para acompanhamento de ticket médio, produtos mais vendidos e taxa de conversão.</li>
+                            <li><strong>2. Motor de Cupons Promocionais:</strong> Criação de regras de desconto percentual ou frete grátis para campanhas sazonais e fidelização de clientes recorrentes.</li>
+                            <li><strong>3. Impressão Térmica de Etiquetas:</strong> Automação da geração e impressão direta de etiquetas de despacho dos Correios e Jadlog a partir do painel administrativo.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =================================================================
+                 SLIDE 12: TRANSIÇÃO PARA A DEMONSTRAÇÃO PRÁTICA EM FUNCIONAMENTO
+                 ================================================================= -->
+            <section class="slide" data-criterio="Critério UNIVESP: Apresentação da Solução em Funcionamento (Demo)" data-time="Transição p/ Demo (~3 a 4 min)" data-notes="Agora que apresentamos o problema de pesquisa, a fundamentação metodológica, a arquitetura em nuvem e os impactos gerados na comunidade externa, vamos passar para a demonstração prática da plataforma Canivete da Roça funcionando em tempo real. Vamos navegar pela vitrine, testar a acessibilidade e os filtros, calcular o frete pelo Melhor Envio, fechar um pedido no Guest Checkout com emissão instantânea do QR Code Pix no padrão do Banco Central, simular a aprovação com envio de e-mail e visualizar a gestão do pedido no Painel Administrativo. Vamos lá!">
+                <div class="slide-header">
+                    <div class="slide-kicker">11 • Demonstração Prática do Sistema</div>
+                    <h2 class="slide-title">A Solução em Funcionamento — Roteiro da Gravação de Tela</h2>
+                    <p class="slide-subtitle">A seguir, demonstraremos ao vivo o fluxo completo do cliente e do lojista na aplicação Canivete da Roça</p>
+                </div>
+
+                <div class="grid-3" style="margin-bottom: 18px;">
+                    <div class="card">
+                        <span class="badge-pi" style="align-self: flex-start;">Etapa 1 da Demo</span>
+                        <h3>1. Vitrine, Filtros e Acessibilidade</h3>
+                        <p>Navegação na Home Rústica Premium, uso do atalho de teclado (<em>Skip Link</em> / <code class="code-pill">TAB</code>), filtragem dinâmica por categorias e visualização de detalhes do produto.</p>
+                    </div>
+
+                    <div class="card card-highlight">
+                        <span class="badge-pi" style="align-self: flex-start;">Etapa 2 da Demo</span>
+                        <h3>2. Frete Real, Guest Checkout & Pix</h3>
+                        <p>Cálculo dinâmico de frete por CEP (Melhor Envio v2), compra sem senha (<em>Guest Checkout</em>), geração do <strong>QR Code Pix Bacen (CRC16)</strong> com timer de 30 min e simulação de aprovação com e-mail.</p>
+                    </div>
+
+                    <div class="card card-leather">
+                        <span class="badge-pi" style="align-self: flex-start;">Etapa 3 da Demo</span>
+                        <h3>3. Rastreio e Painel Administrativo</h3>
+                        <p>Acompanhamento público do pedido pelo cliente e acesso ao <strong>Painel Administrativo</strong> do lojista para gestão de catálogo, estoque de kits e status dos pedidos.</p>
+                    </div>
+                </div>
+
+                <div class="card card-highlight" style="flex-direction: row; align-items: center; justify-content: space-between; padding: 22px 30px;">
+                    <div>
+                        <h3 style="font-size: 22px; margin-bottom: 4px;">🔪 Pronto para iniciar a Demonstração Prática na Tela!</h3>
+                        <p style="font-size: 14.5px; color: var(--bege-2);">Clique no botão ao lado para abrir a vitrine principal da <strong>Canivete da Roça</strong> e continuar a gravação mostrando o sistema em funcionamento.</p>
+                    </div>
+                    <a href="index.html" target="_blank" class="btn-demo-cta">
+                        ABRIR LOJA AO VIVO (INICIAR DEMO) →
+                    </a>
+                </div>
+            </section>
+
+            <!-- BARRA INFERIOR DE CONTROLE -->
+            <footer class="slide-bottombar">
+                <div class="progress-track">
+                    <div class="progress-bar" id="progress-bar"></div>
+                </div>
+
+                <div class="nav-controls">
+                    <button class="btn-deck" id="btn-prev" title="Slide Anterior (Seta Esquerda)">← Anterior</button>
+                    <button class="btn-deck" id="btn-next" title="Próximo Slide (Seta Direita ou Espaço)">Próximo →</button>
+                    <span style="font-size: 12px; color: var(--texto-suave); margin-left: 8px;" id="time-estimate-badge">⏱ Tempo sugerido deste slide: ~30 seg</span>
+                </div>
+
+                <div class="nav-controls">
+                    <span class="timer-badge" id="recording-timer" title="Meta UNIVESP: entre 05:00 e 10:00">⏺ 00:00 (Meta: 05:00–10:00)</span>
+                    <button class="btn-deck" id="btn-timer-toggle" title="Iniciar/Pausar Cronômetro de Ensaio">▶ Cronômetro</button>
+                    <button class="btn-deck" id="btn-notes" title="Mostrar/Ocultar Roteiro de Fala na Tela (Tecla R)">🗒️ Roteiro (R)</button>
+                    <button class="btn-deck" id="btn-popup-notes" title="Abre o Teleprompter em uma janela separada sincronizada para você ler em outro monitor sem aparecer na gravação!">↗ Teleprompter Externo</button>
+                    <button class="btn-deck" id="btn-print" title="Imprimir ou Salvar como PDF">🖨️ Salvar PDF</button>
+                    <button class="btn-deck" id="btn-fullscreen" title="Alternar Tela Cheia (Tecla F)">⛶ Tela Cheia (F)</button>
+                </div>
+            </footer>
+        </div>
+
+        <!-- GAVETA DO TELEPROMPTER (OPCIONAL) -->
+        <aside class="teleprompter-drawer" id="teleprompter-drawer">
+            <div class="tp-header">
+                <span id="tp-slide-title">🎙️ Roteiro de Narração Sugerido — Slide 01</span>
+                <span id="tp-slide-time">Tempo de leitura: ~30 seg</span>
+            </div>
+            <p class="tp-text" id="tp-text"></p>
+        </aside>
+    </div>
+
+    <script>
+        (function () {
+            const slides = Array.from(document.querySelectorAll('.slide'));
+            const totalSlides = slides.length;
+            let currentIndex = 0;
+
+            const counterTop = document.getElementById('slide-counter-top');
+            const criterioAtual = document.getElementById('criterio-atual');
+            const progressBar = document.getElementById('progress-bar');
+            const timeEstimateBadge = document.getElementById('time-estimate-badge');
+
+            const tpDrawer = document.getElementById('teleprompter-drawer');
+            const tpSlideTitle = document.getElementById('tp-slide-title');
+            const tpSlideTime = document.getElementById('tp-slide-time');
+            const tpText = document.getElementById('tp-text');
+
+            const btnPrev = document.getElementById('btn-prev');
+            const btnNext = document.getElementById('btn-next');
+            const btnNotes = document.getElementById('btn-notes');
+            const btnPopupNotes = document.getElementById('btn-popup-notes');
+            const btnPrint = document.getElementById('btn-print');
+            const btnFullscreen = document.getElementById('btn-fullscreen');
+
+            let popupWindow = null;
+
+            function pad(n) {
+                return String(n).padStart(2, '0');
+            }
+
+            function updateSlide(index) {
+                if (index < 0) index = 0;
+                if (index >= totalSlides) index = totalSlides - 1;
+                currentIndex = index;
+
+                slides.forEach((s, idx) => {
+                    s.classList.toggle('active', idx === currentIndex);
+                });
+
+                const activeSlide = slides[currentIndex];
+                const criterio = activeSlide.getAttribute('data-criterio') || '';
+                const tempo = activeSlide.getAttribute('data-time') || '';
+                const notes = activeSlide.getAttribute('data-notes') || '';
+
+                counterTop.textContent = `Slide ${pad(currentIndex + 1)} / ${pad(totalSlides)}`;
+                criterioAtual.textContent = criterio;
+                progressBar.style.width = `${((currentIndex + 1) / totalSlides) * 100}%`;
+                timeEstimateBadge.textContent = `⏱ Tempo sugerido deste slide: ${tempo}`;
+
+                tpSlideTitle.textContent = `🎙️ Roteiro de Narração — Slide ${pad(currentIndex + 1)} de ${pad(totalSlides)}`;
+                tpSlideTime.textContent = `Tempo sugerido: ${tempo}`;
+                tpText.textContent = notes;
+
+                syncPopupTeleprompter(currentIndex + 1, totalSlides, criterio, tempo, notes);
+            }
+
+            function syncPopupTeleprompter(num, total, criterio, tempo, notes) {
+                if (popupWindow && !popupWindow.closed) {
+                    const doc = popupWindow.document;
+                    const elTitle = doc.getElementById('ext-title');
+                    const elMeta = doc.getElementById('ext-meta');
+                    const elNotes = doc.getElementById('ext-notes');
+                    if (elTitle && elMeta && elNotes) {
+                        elTitle.textContent = `Slide ${pad(num)} / ${pad(total)} — ${criterio}`;
+                        elMeta.textContent = `⏱ Tempo sugerido neste slide: ${tempo}`;
+                        elNotes.textContent = notes;
+                    }
+                }
+            }
+
+            btnPrev.addEventListener('click', () => updateSlide(currentIndex - 1));
+            btnNext.addEventListener('click', () => updateSlide(currentIndex + 1));
+
+            btnNotes.addEventListener('click', () => {
+                tpDrawer.classList.toggle('visible');
+                btnNotes.classList.toggle('active-toggle', tpDrawer.classList.contains('visible'));
+            });
+
+            btnPopupNotes.addEventListener('click', () => {
+                popupWindow = window.open('', 'TeleprompterPI2', 'width=680,height=420,menubar=no,toolbar=no,location=no,status=no');
+                if (popupWindow) {
+                    popupWindow.document.open();
+                    popupWindow.document.write(`
+                        <!DOCTYPE html>
+                        <html lang="pt-BR">
+                        <head>
+                            <meta charset="UTF-8">
+                            <title>Teleprompter Sincronizado — PI2 Canivete da Roça</title>
+                            <style>
+                                body {
+                                    background: #121311;
+                                    color: #f0e8d8;
+                                    font-family: 'Segoe UI', system-ui, sans-serif;
+                                    padding: 24px 28px;
+                                    margin: 0;
+                                }
+                                h2 {
+                                    font-size: 16px;
+                                    color: #8ca063;
+                                    text-transform: uppercase;
+                                    letter-spacing: 1px;
+                                    margin: 0 0 6px 0;
+                                }
+                                .meta {
+                                    font-size: 13px;
+                                    color: #aeb0a8;
+                                    margin-bottom: 18px;
+                                    padding-bottom: 12px;
+                                    border-bottom: 1px solid rgba(255,255,255,0.12);
+                                }
+                                .notes {
+                                    font-size: 22px;
+                                    line-height: 1.6;
+                                    color: #ffffff;
+                                    font-weight: 500;
+                                }
+                                .hint {
+                                    margin-top: 22px;
+                                    font-size: 12px;
+                                    color: #888;
+                                }
+                            </style>
+                        </head>
+                        <body>
+                            <h2 id="ext-title"></h2>
+                            <div class="meta" id="ext-meta"></div>
+                            <div class="notes" id="ext-notes"></div>
+                            <div class="hint">💡 Dica: Posicione esta janela em outro monitor ou fora da área de captura de vídeo. O texto muda sozinho quando você avança os slides!</div>
+                        </body>
+                        </html>
+                    `);
+                    popupWindow.document.close();
+                    updateSlide(currentIndex);
+                }
+            });
+
+            btnPrint.addEventListener('click', () => {
+                window.print();
+            });
+
+            function toggleFullScreen() {
+                if (!document.fullscreenElement) {
+                    document.documentElement.requestFullscreen().catch(() => {});
+                } else {
+                    document.exitFullscreen().catch(() => {});
+                }
+            }
+
+            btnFullscreen.addEventListener('click', toggleFullScreen);
+
+            // Cronômetro de Gravação (Meta 05:00 a 10:00)
+            let timerInterval = null;
+            let elapsedSeconds = 0;
+            const timerBadge = document.getElementById('recording-timer');
+            const btnTimerToggle = document.getElementById('btn-timer-toggle');
+
+            btnTimerToggle.addEventListener('click', () => {
+                if (timerInterval) {
+                    clearInterval(timerInterval);
+                    timerInterval = null;
+                    btnTimerToggle.textContent = '▶ Continuar';
+                } else {
+                    btnTimerToggle.textContent = '⏸ Pausar';
+                    timerInterval = setInterval(() => {
+                        elapsedSeconds++;
+                        const mins = pad(Math.floor(elapsedSeconds / 60));
+                        const secs = pad(elapsedSeconds % 60);
+                        const insideTarget = elapsedSeconds >= 300 && elapsedSeconds <= 600;
+                        timerBadge.textContent = `⏺ ${mins}:${secs} (Meta: 05:00–10:00)`;
+                        timerBadge.classList.toggle('in-target', insideTarget);
+                    }, 1000);
+                }
+            });
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') {
+                    e.preventDefault();
+                    updateSlide(currentIndex + 1);
+                } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+                    e.preventDefault();
+                    updateSlide(currentIndex - 1);
+                } else if (e.key === 'Home') {
+                    e.preventDefault();
+                    updateSlide(0);
+                } else if (e.key === 'End') {
+                    e.preventDefault();
+                    updateSlide(totalSlides - 1);
+                } else if (e.key === 'r' || e.key === 'R') {
+                    tpDrawer.classList.toggle('visible');
+                    btnNotes.classList.toggle('active-toggle', tpDrawer.classList.contains('visible'));
+                } else if (e.key === 'f' || e.key === 'F') {
+                    toggleFullScreen();
+                }
+            });
+
+            updateSlide(0);
+        })();
+    </script>
+</body>
+</html>
