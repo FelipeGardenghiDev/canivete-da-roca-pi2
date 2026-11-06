@@ -213,6 +213,120 @@ async function obterOuCriarCategoriaId(db, categoriaSlugOuNome) {
     }
 }
 
+const PRODUTOS_OFICIAIS_PI2 = {
+    1: {
+        nome: "Canivete Campeiro Aço Inox com Cabo em Chifre",
+        slug: "canivete-campeiro-aco-inox",
+        categoria: "canivetes",
+        descricao: "Canivete clássico artesanal com lâmina em aço inox de alta resistência à oxidação, excelente retenção de fio e cabo trabalhado em chifre bovino legítimo.",
+        chaveStorage: "canivete",
+        imagemLocal: "/img/produtos/canivete.png"
+    },
+    2: {
+        nome: "Bainha em Couro Bovino Legítimo com Passador de Cinto",
+        slug: "bainha-couro-legitimo-passador",
+        categoria: "bainhas",
+        descricao: "Bainha artesanal costurada à mão em soleta de couro bovino premium. Possui passador reforçado para cinto, ideal para canivetes de até 10cm fechados.",
+        chaveStorage: "bainha",
+        imagemLocal: "/img/produtos/bainha.png"
+    },
+    3: {
+        nome: "Strop de Couro Bovino Dupla Face para Afiação",
+        slug: "strop-de-couro-dupla-face",
+        categoria: "strops",
+        descricao: "Assentador de fio artesanal em madeira maciça com couro bovino selecionado em ambas as faces (lado carnal e flor). Indispensável para deixar a lâmina com fio cirúrgico.",
+        chaveStorage: "strop",
+        imagemLocal: "/img/produtos/strop.png"
+    },
+    4: {
+        nome: "Pasta de Polimento Verde Jacaré (Óxido de Cromo)",
+        slug: "pasta-polimento-verde-jacare",
+        categoria: "polimento-e-afiacao",
+        descricao: "Pasta abrasiva fina de óxido de cromo (145g) especial para aplicação em strops de couro. Proporciona polimento espelhado e acabamento de fio excepcional.",
+        chaveStorage: "pasta",
+        imagemLocal: "/img/produtos/pasta.png"
+    },
+    5: {
+        nome: "Kit de Afiação (Strop de Couro + Pasta Verde Jacaré)",
+        slug: "kit-strop-com-pasta-verde",
+        categoria: "kits-de-afiacao",
+        descricao: "Kit completo para afiação e polimento de precisão: 1 Strop de Couro Bovino Dupla Face em madeira maciça e 1 Pasta de Polimento Verde Jacaré (Óxido de Cromo 145g).",
+        peso_g: 495,
+        chaveStorage: "kit",
+        imagemLocal: "/img/produtos/kit.png"
+    }
+};
+
+const cacheUrlsStorage = new Map();
+
+async function resolverUrlImagemStorage(chaveStorage, imagemLocal) {
+    if (cacheUrlsStorage.has(chaveStorage)) {
+        return cacheUrlsStorage.get(chaveStorage);
+    }
+
+    if (supabaseConfigurado && supabase) {
+        const bucketsCandidatos = ["produtos", "imagens", "fotos", "public"];
+        try {
+            const { data: buckets } = await supabase.storage.listBuckets();
+            if (Array.isArray(buckets)) {
+                for (const b of buckets) {
+                    if (b?.name && !bucketsCandidatos.includes(b.name)) {
+                        bucketsCandidatos.unshift(b.name);
+                    }
+                }
+            }
+        } catch {}
+
+        const extensoes = ["png", "jpg", "jpeg", "webp"];
+
+        for (const bucket of bucketsCandidatos) {
+            let arquivosBucket = [];
+            try {
+                const { data: lista } = await supabase.storage.from(bucket).list("", { limit: 100 });
+                if (Array.isArray(lista)) {
+                    arquivosBucket = lista.map(a => a.name).filter(Boolean);
+                }
+            } catch {}
+
+            const candidatoLista = arquivosBucket.find(nomeArq =>
+                nomeArq.toLowerCase().startsWith(chaveStorage.toLowerCase() + ".") ||
+                nomeArq.toLowerCase().includes(chaveStorage.toLowerCase())
+            );
+
+            const nomesParaTestar = candidatoLista
+                ? [candidatoLista]
+                : extensoes.map(ext => `${chaveStorage}.${ext}`);
+
+            for (const nomeArquivo of nomesParaTestar) {
+                try {
+                    const { data } = supabase.storage.from(bucket).getPublicUrl(nomeArquivo);
+                    const publicUrl = data?.publicUrl;
+                    if (publicUrl) {
+                        const resp = await fetch(publicUrl, { method: "HEAD" });
+                        if (resp.ok) {
+                            cacheUrlsStorage.set(chaveStorage, publicUrl);
+                            return publicUrl;
+                        }
+                    }
+                } catch {}
+
+                try {
+                    const { data: signed } = await supabase.storage
+                        .from(bucket)
+                        .createSignedUrl(nomeArquivo, 60 * 60 * 24 * 365);
+                    if (signed?.signedUrl) {
+                        cacheUrlsStorage.set(chaveStorage, signed.signedUrl);
+                        return signed.signedUrl;
+                    }
+                } catch {}
+            }
+        }
+    }
+
+    cacheUrlsStorage.set(chaveStorage, imagemLocal);
+    return imagemLocal;
+}
+
 function inferirCategoriaProduto(produto) {
     const catBruta = String(produto.categoria || produto.categorias?.slug || "").trim().toLowerCase();
     if (catBruta && catBruta !== "outros") {
@@ -231,10 +345,16 @@ function inferirCategoriaProduto(produto) {
 }
 
 function normalizarProduto(produto) {
-    const imagemFinal = produto.imagem || produto.imagem_url || "";
+    const idNum = Number(produto.id);
+    const padraoOficial = PRODUTOS_OFICIAIS_PI2[idNum];
+    const imagemBruta = produto.imagem || produto.imagem_url || "";
+    const ehUnsplashAntigo = imagemBruta.includes("images.unsplash.com");
+    const imagemFinal = (!imagemBruta || ehUnsplashAntigo) && padraoOficial
+        ? padraoOficial.imagemLocal
+        : imagemBruta;
 
     return {
-        id: Number(produto.id),
+        id: idNum,
         categoria_id: produto.categoria_id ?? null,
         nome: String(produto.nome || ""),
         slug: String(produto.slug || ""),
@@ -249,8 +369,72 @@ function normalizarProduto(produto) {
         comprimento_cm: Number(produto.comprimento_cm ?? 22),
         ativo: produto.ativo !== false,
         imagem: imagemFinal,
-        imagem_url: imagemFinal
+        imagem_url: imagemFinal,
+        imagem_local: padraoOficial ? padraoOficial.imagemLocal : ""
     };
+}
+
+async function sincronizarCatalogoOficial(produtosBrutos) {
+    const resultado = [];
+
+    for (const prod of produtosBrutos) {
+        const idNum = Number(prod.id);
+        const padrao = PRODUTOS_OFICIAIS_PI2[idNum];
+
+        if (!padrao) {
+            resultado.push(normalizarProduto(prod));
+            continue;
+        }
+
+        const urlResolvida = await resolverUrlImagemStorage(padrao.chaveStorage, padrao.imagemLocal);
+        const imgAtual = String(prod.imagem || prod.imagem_url || "");
+        const precisaTrocarImagem =
+            !imgAtual ||
+            imgAtual.includes("images.unsplash.com") ||
+            imgAtual !== urlResolvida;
+
+        const nomeAtual = String(prod.nome || "");
+        const descAtual = String(prod.descricao || "");
+        const precisaAtualizarTexto =
+            (idNum === 1 && (nomeAtual.toLowerCase().includes("carbono") || descAtual.toLowerCase().includes("carbono"))) ||
+            (idNum === 5 && (nomeAtual.toLowerCase().includes("canivete") || descAtual.toLowerCase().includes("canivete")));
+
+        const camposAtualizados = {
+            nome: precisaAtualizarTexto ? padrao.nome : (prod.nome || padrao.nome),
+            slug: precisaAtualizarTexto ? padrao.slug : (prod.slug || padrao.slug),
+            categoria: padrao.categoria,
+            descricao: precisaAtualizarTexto ? padrao.descricao : (prod.descricao || padrao.descricao),
+            peso_g: padrao.peso_g || prod.peso_g || 250,
+            imagem: urlResolvida,
+            imagem_url: urlResolvida
+        };
+
+        if (supabaseConfigurado && supabase && (precisaTrocarImagem || precisaAtualizarTexto || prod.categoria !== padrao.categoria)) {
+            supabase
+                .from("produtos")
+                .update(camposAtualizados)
+                .eq("id", idNum)
+                .then(() => {})
+                .catch(() => {});
+
+            if (idNum === 5) {
+                supabase
+                    .from("kit_itens")
+                    .delete()
+                    .eq("kit_id", 5)
+                    .eq("produto_id", 1)
+                    .then(() => {})
+                    .catch(() => {});
+            }
+        }
+
+        resultado.push(normalizarProduto({
+            ...prod,
+            ...camposAtualizados
+        }));
+    }
+
+    return resultado;
 }
 
 async function carregarProdutos() {
@@ -262,7 +446,7 @@ async function carregarProdutos() {
                 .order("id", { ascending: true });
 
             if (!error && Array.isArray(data)) {
-                return data.map(normalizarProduto);
+                return await sincronizarCatalogoOficial(data);
             }
 
             console.warn("[SUPABASE] Falha ao consultar produtos no Supabase, usando produtos.json:", error?.message);
@@ -271,7 +455,7 @@ async function carregarProdutos() {
         }
     }
 
-    return lerProdutosArquivo().map(normalizarProduto);
+    return await sincronizarCatalogoOficial(lerProdutosArquivo());
 }
 
 function validarImagem(imagem) {
@@ -286,6 +470,10 @@ function validarImagem(imagem) {
     const endereco = imagem.trim();
 
     if (!endereco) return "";
+
+    if (endereco.startsWith("/img/") || endereco.startsWith("img/")) {
+        return endereco.startsWith("/") ? endereco : `/${endereco}`;
+    }
 
     let url;
 
@@ -499,22 +687,6 @@ app.get("/api/produtos/:id", async (req, res) => {
             });
         }
 
-        if (supabaseConfigurado && supabase) {
-            try {
-                const { data, error } = await supabase
-                    .from("produtos")
-                    .select("*")
-                    .eq("id", id)
-                    .maybeSingle();
-
-                if (!error && data) {
-                    return res.json(normalizarProduto(data));
-                }
-            } catch (errSupabase) {
-                console.warn("[SUPABASE] Falha ao buscar produto por ID no Supabase:", errSupabase.message);
-            }
-        }
-
         const produtos = await carregarProdutos();
         const produto = produtos.find(p => Number(p.id) === id);
 
@@ -524,7 +696,7 @@ app.get("/api/produtos/:id", async (req, res) => {
             });
         }
 
-        return res.json(normalizarProduto(produto));
+        return res.json(produto);
     } catch (erro) {
         console.error("Erro ao buscar produto:", erro);
 

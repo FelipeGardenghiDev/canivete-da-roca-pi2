@@ -318,9 +318,16 @@ textarea:focus-visible {
     justify-content: center;
     min-height: 350px;
     padding: 20px;
-    background: #e4e4df;
+    background: #ffffff;
     border: 1px solid var(--aco-claro);
     border-radius: 8px;
+}
+
+.imagem-detalhe img {
+    display: block;
+    width: 100%;
+    max-height: 360px;
+    object-fit: contain;
 }
 
 .informacoes-produto {

@@ -223,10 +223,15 @@ function criarImagemProduto(produto) {
         imagem.loading = "lazy";
 
         imagem.addEventListener("error", () => {
+            if (produto.imagem_local && !imagem.dataset.tentouLocal) {
+                imagem.dataset.tentouLocal = "1";
+                imagem.src = produto.imagem_local;
+                return;
+            }
             areaImagem.replaceChildren(
                 document.createTextNode("Imagem indisponível")
             );
-        }, { once: true });
+        });
 
         areaImagem.appendChild(imagem);
     } else {

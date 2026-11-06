@@ -876,9 +876,8 @@
     min-height: 225px;
     overflow: hidden;
     border-radius: 0;
-    background:
-        radial-gradient(ellipse at center, #51483a, #302d26 72%);
-    color: #c0b59f;
+    background: #ffffff;
+    color: #555046;
     font-size: 11px;
     letter-spacing: 1px;
 }

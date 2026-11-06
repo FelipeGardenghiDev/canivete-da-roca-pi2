@@ -141,10 +141,15 @@ async function carregarProduto() {
             imagem.loading = "lazy";
 
             imagem.addEventListener("error", () => {
+                if (dados.imagem_local && !imagem.dataset.tentouLocal) {
+                    imagem.dataset.tentouLocal = "1";
+                    imagem.src = dados.imagem_local;
+                    return;
+                }
                 imagemArea.replaceChildren(
                     document.createTextNode("Imagem indisponível")
                 );
-            }, { once: true });
+            });
 
             imagemArea.appendChild(imagem);
         } else {
