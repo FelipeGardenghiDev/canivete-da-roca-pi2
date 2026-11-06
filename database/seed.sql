@@ -26,7 +26,7 @@ VALUES
     'Canivete Campeiro Aço Inox com Cabo em Chifre',
     'canivete-campeiro-aco-inox',
     'Canivete clássico artesanal com lâmina em aço inox de alta resistência à oxidação, excelente retenção de fio e cabo trabalhado em chifre bovino legítimo.',
-    139.90,
+    59.90,
     'simples',
     15,
     180, -- 180g
@@ -40,7 +40,7 @@ VALUES
     'Bainha em Couro Bovino Legítimo com Passador de Cinto',
     'bainha-couro-legitimo-passador',
     'Bainha artesanal costurada à mão em soleta de couro bovino premium. Possui passador reforçado para cinto, ideal para canivetes de até 10cm fechados.',
-    49.90,
+    34.90,
     'simples',
     20,
     110, -- 110g
@@ -68,7 +68,7 @@ VALUES
     'Pasta de Polimento Verde Jacaré (Óxido de Cromo)',
     'pasta-polimento-verde-jacare',
     'Pasta abrasiva fina de óxido de cromo (145g) especial para aplicação em strops de couro. Proporciona polimento espelhado e acabamento de fio excepcional.',
-    34.90,
+    19.90,
     'simples',
     40,
     145, -- 145g
@@ -82,7 +82,7 @@ VALUES
     'Kit de Afiação (Strop de Couro + Pasta Verde Jacaré)',
     'kit-strop-com-pasta-verde',
     'Kit completo para afiação e polimento de precisão: 1 Strop de Couro Bovino Dupla Face em madeira maciça e 1 Pasta de Polimento Verde Jacaré (Óxido de Cromo 145g).',
-    229.90,
+    89.90,
     'kit',
     10,
     495, -- peso acumulado (350g strop + 145g pasta)

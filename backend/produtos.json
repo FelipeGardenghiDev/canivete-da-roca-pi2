@@ -4,7 +4,7 @@
     "categoria_id": 1,
     "nome": "Canivete Campeiro Aço Inox com Cabo em Chifre",
     "slug": "canivete-campeiro-aco-inox",
-    "preco": 139.9,
+    "preco": 59.9,
     "categoria": "canivetes",
     "descricao": "Canivete clássico artesanal com lâmina em aço inox de alta resistência à oxidação, excelente retenção de fio e cabo trabalhado em chifre bovino legítimo.",
     "tipo": "simples",
@@ -14,15 +14,15 @@
     "largura_cm": 6,
     "comprimento_cm": 20,
     "ativo": true,
-    "imagem": "/img/produtos/canivete.png",
-    "imagem_url": "/img/produtos/canivete.png"
+    "imagem": "https://wgoauprjdrvgcjtxtxrq.supabase.co/storage/v1/object/public/produtos/canivete.png",
+    "imagem_url": "https://wgoauprjdrvgcjtxtxrq.supabase.co/storage/v1/object/public/produtos/canivete.png"
   },
   {
     "id": 2,
     "categoria_id": 2,
     "nome": "Bainha em Couro Bovino Legítimo com Passador de Cinto",
     "slug": "bainha-couro-legitimo-passador",
-    "preco": 49.9,
+    "preco": 34.9,
     "categoria": "bainhas",
     "descricao": "Bainha artesanal costurada à mão em soleta de couro bovino premium. Possui passador reforçado para cinto, ideal para canivetes de até 10cm fechados.",
     "tipo": "simples",
@@ -32,8 +32,8 @@
     "largura_cm": 5,
     "comprimento_cm": 14,
     "ativo": true,
-    "imagem": "/img/produtos/bainha.png",
-    "imagem_url": "/img/produtos/bainha.png"
+    "imagem": "https://wgoauprjdrvgcjtxtxrq.supabase.co/storage/v1/object/public/produtos/bainha.png",
+    "imagem_url": "https://wgoauprjdrvgcjtxtxrq.supabase.co/storage/v1/object/public/produtos/bainha.png"
   },
   {
     "id": 3,
@@ -50,15 +50,15 @@
     "largura_cm": 8,
     "comprimento_cm": 38,
     "ativo": true,
-    "imagem": "/img/produtos/strop.png",
-    "imagem_url": "/img/produtos/strop.png"
+    "imagem": "https://wgoauprjdrvgcjtxtxrq.supabase.co/storage/v1/object/public/produtos/strop.png",
+    "imagem_url": "https://wgoauprjdrvgcjtxtxrq.supabase.co/storage/v1/object/public/produtos/strop.png"
   },
   {
     "id": 4,
     "categoria_id": 4,
     "nome": "Pasta de Polimento Verde Jacaré (Óxido de Cromo)",
     "slug": "pasta-polimento-verde-jacare",
-    "preco": 34.9,
+    "preco": 19.9,
     "categoria": "polimento-e-afiacao",
     "descricao": "Pasta abrasiva fina de óxido de cromo (145g) especial para aplicação em strops de couro. Proporciona polimento espelhado e acabamento de fio excepcional.",
     "tipo": "simples",
@@ -68,15 +68,15 @@
     "largura_cm": 4,
     "comprimento_cm": 10,
     "ativo": true,
-    "imagem": "/img/produtos/pasta.png",
-    "imagem_url": "/img/produtos/pasta.png"
+    "imagem": "https://wgoauprjdrvgcjtxtxrq.supabase.co/storage/v1/object/public/produtos/pasta.png",
+    "imagem_url": "https://wgoauprjdrvgcjtxtxrq.supabase.co/storage/v1/object/public/produtos/pasta.png"
   },
   {
     "id": 5,
     "categoria_id": 3,
     "nome": "Kit de Afiação (Strop de Couro + Pasta Verde Jacaré)",
     "slug": "kit-strop-com-pasta-verde",
-    "preco": 229.9,
+    "preco": 89.9,
     "categoria": "kits-de-afiacao",
     "descricao": "Kit completo para afiação e polimento de precisão: 1 Strop de Couro Bovino Dupla Face em madeira maciça e 1 Pasta de Polimento Verde Jacaré (Óxido de Cromo 145g).",
     "tipo": "kit",
@@ -86,7 +86,7 @@
     "largura_cm": 15,
     "comprimento_cm": 40,
     "ativo": true,
-    "imagem": "/img/produtos/kit.png",
-    "imagem_url": "/img/produtos/kit.png"
+    "imagem": "https://wgoauprjdrvgcjtxtxrq.supabase.co/storage/v1/object/public/produtos/kit.png",
+    "imagem_url": "https://wgoauprjdrvgcjtxtxrq.supabase.co/storage/v1/object/public/produtos/kit.png"
   }
 ]

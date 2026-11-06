@@ -217,6 +217,7 @@ const PRODUTOS_OFICIAIS_PI2 = {
     1: {
         nome: "Canivete Campeiro Aço Inox com Cabo em Chifre",
         slug: "canivete-campeiro-aco-inox",
+        preco: 59.9,
         categoria: "canivetes",
         descricao: "Canivete clássico artesanal com lâmina em aço inox de alta resistência à oxidação, excelente retenção de fio e cabo trabalhado em chifre bovino legítimo.",
         chaveStorage: "canivete",
@@ -225,6 +226,7 @@ const PRODUTOS_OFICIAIS_PI2 = {
     2: {
         nome: "Bainha em Couro Bovino Legítimo com Passador de Cinto",
         slug: "bainha-couro-legitimo-passador",
+        preco: 34.9,
         categoria: "bainhas",
         descricao: "Bainha artesanal costurada à mão em soleta de couro bovino premium. Possui passador reforçado para cinto, ideal para canivetes de até 10cm fechados.",
         chaveStorage: "bainha",
@@ -233,6 +235,7 @@ const PRODUTOS_OFICIAIS_PI2 = {
     3: {
         nome: "Strop de Couro Bovino Dupla Face para Afiação",
         slug: "strop-de-couro-dupla-face",
+        preco: 79.9,
         categoria: "strops",
         descricao: "Assentador de fio artesanal em madeira maciça com couro bovino selecionado em ambas as faces (lado carnal e flor). Indispensável para deixar a lâmina com fio cirúrgico.",
         chaveStorage: "strop",
@@ -241,6 +244,7 @@ const PRODUTOS_OFICIAIS_PI2 = {
     4: {
         nome: "Pasta de Polimento Verde Jacaré (Óxido de Cromo)",
         slug: "pasta-polimento-verde-jacare",
+        preco: 19.9,
         categoria: "polimento-e-afiacao",
         descricao: "Pasta abrasiva fina de óxido de cromo (145g) especial para aplicação em strops de couro. Proporciona polimento espelhado e acabamento de fio excepcional.",
         chaveStorage: "pasta",
@@ -249,6 +253,7 @@ const PRODUTOS_OFICIAIS_PI2 = {
     5: {
         nome: "Kit de Afiação (Strop de Couro + Pasta Verde Jacaré)",
         slug: "kit-strop-com-pasta-verde",
+        preco: 89.9,
         categoria: "kits-de-afiacao",
         descricao: "Kit completo para afiação e polimento de precisão: 1 Strop de Couro Bovino Dupla Face em madeira maciça e 1 Pasta de Polimento Verde Jacaré (Óxido de Cromo 145g).",
         peso_g: 495,
@@ -399,9 +404,13 @@ async function sincronizarCatalogoOficial(produtosBrutos) {
             (idNum === 1 && (nomeAtual.toLowerCase().includes("carbono") || descAtual.toLowerCase().includes("carbono"))) ||
             (idNum === 5 && (nomeAtual.toLowerCase().includes("canivete") || descAtual.toLowerCase().includes("canivete")));
 
+        const precoAtual = Number(prod.preco || 0);
+        const precisaAtualizarPreco = Number.isFinite(padrao.preco) && Math.abs(precoAtual - padrao.preco) > 0.001;
+
         const camposAtualizados = {
             nome: precisaAtualizarTexto ? padrao.nome : (prod.nome || padrao.nome),
             slug: precisaAtualizarTexto ? padrao.slug : (prod.slug || padrao.slug),
+            preco: padrao.preco,
             categoria: padrao.categoria,
             descricao: precisaAtualizarTexto ? padrao.descricao : (prod.descricao || padrao.descricao),
             peso_g: padrao.peso_g || prod.peso_g || 250,
@@ -409,7 +418,7 @@ async function sincronizarCatalogoOficial(produtosBrutos) {
             imagem_url: urlResolvida
         };
 
-        if (supabaseConfigurado && supabase && (precisaTrocarImagem || precisaAtualizarTexto || prod.categoria !== padrao.categoria)) {
+        if (supabaseConfigurado && supabase && (precisaTrocarImagem || precisaAtualizarTexto || precisaAtualizarPreco || prod.categoria !== padrao.categoria)) {
             supabase
                 .from("produtos")
                 .update(camposAtualizados)
